@@ -1,0 +1,36 @@
+Test 1: Unsorted List
+ Words in the Document: 881082 words.
+ Distinct Words in the Document: 27844 words.
+ Time taken: 253360545315 nanoseconds (253.360545 seconds).
+ Comparisons made: 14463932110 comparisons.
+ Reference Changes made: 55688 reference changes.
+
+Test 2: Sorted List
+ Words in the Document: 881082 words.
+ Distinct Words in the Document: 27844 words.
+ Time taken: 338108935717 nanoseconds (338.108936 seconds).
+ Comparisons made: 8680847271 comparisons.
+ Reference Changes made: 55688 reference changes.
+
+Test 3: Move Match to First
+ Words in the Document: 881082 words.
+ Distinct Words in the Document: 27844 words.
+ Time taken: 36282645863 nanoseconds (36.282646 seconds).
+ Comparisons made: 1199332071 comparisons.
+ Reference Changes made: 2606957 reference changes.
+
+Test 4: Move Match Up One
+ Words in the Document: 881082 words.
+ Distinct Words in the Document: 27844 words.
+ Time taken: 165333914582 nanoseconds (165.333915 seconds).
+ Comparisons made: 12221714711 comparisons.
+ Reference Changes made: 2611568 reference changes.
+
+Test 5: Binary Tree Dictionary
+ Words in the Document: 881082 words.
+ Distinct Words in the Document: 27844 words.
+ Time taken: 3663157982 nanoseconds (3.663158 seconds).
+ Comparisons made: 10351495 comparisons.
+ Reference Changes made: 9498257 reference changes.
+
+Program Finished
