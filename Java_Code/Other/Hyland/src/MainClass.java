@@ -11,6 +11,7 @@ public class MainClass
 		}
 		System.out.println(sum(array));
 		System.out.println(sumR(array));
+		System.out.println(sumRR(array, 0));
 	}
 
 	static long sum(int[] array)
@@ -37,6 +38,18 @@ public class MainClass
 				trimmed[x] = array[x];
 			}
 			return (array[x] + sumR(trimmed));
+		}
+	}
+	
+	static long sumRR(int[] array, int index)
+	{
+		if(index == array.length)
+		{
+			return 0;
+		}
+		else
+		{
+			return array[index] + sumRR(array, index + 1);
 		}
 	}
 }
