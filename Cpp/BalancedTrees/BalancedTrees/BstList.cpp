@@ -1,5 +1,4 @@
 #include "BstList.h"
-#include "BstNode.h"
 
 using namespace std;
 

@@ -82,14 +82,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AvlList.cpp" />
     <ClCompile Include="BstList.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="WordList.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AvlList.h" />
     <ClInclude Include="AvlNode.h" />
     <ClInclude Include="BstList.h" />
     <ClInclude Include="BstNode.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="RbNode.h" />
     <ClInclude Include="WordList.h" />
   </ItemGroup>

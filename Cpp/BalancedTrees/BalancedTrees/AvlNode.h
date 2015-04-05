@@ -1,12 +1,24 @@
-#pragma once
-#include "BstNode.h"
+#include "Node.h"
 
 struct AvlNode :
-	public BstNode
+	public Node
 {
-	AvlNode(std::string k) : BstNode(k) {}
+	AvlNode(std::string k) : Node(k) {}
 
-	BstNode *parent = NULL;
+	AvlNode *left = NULL;
+	AvlNode *right = NULL;
+	AvlNode *parent = NULL;
+
 	int BF = 0;
+
+	Node* GetLeft()
+	{
+		return left;
+	}
+
+	Node* GetRight()
+	{
+		return right;
+	}
 };
 

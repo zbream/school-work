@@ -1,11 +1,23 @@
-#pragma once
-#include "BstNode.h"
+#include "Node.h"
 
 struct RbNode :
-	public BstNode
+	public Node
 {
-	RbNode(std::string k) : BstNode(k) {}
+	RbNode(std::string k) : Node(k) {}
+
+	RbNode *left = NULL;
+	RbNode *right = NULL;
 
 	bool isBlack = true;
+
+	Node* GetLeft()
+	{
+		return left;
+	}
+
+	Node* GetRight()
+	{
+		return right;
+	}
 };
 

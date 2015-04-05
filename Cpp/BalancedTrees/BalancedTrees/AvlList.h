@@ -1,14 +1,14 @@
 #include "WordList.h"
-#include "BstNode.h"
+#include "AvlNode.h"
 
-class BstList :
+class AvlList :
 	public WordList
 {
 public:
-	BstList();
-	~BstList();
+	AvlList();
+	~AvlList();
 
-    void Insert(std::string);
+	void Insert(std::string);
 
 	int GetHeight()
 	{
@@ -41,7 +41,7 @@ public:
 	}
 
 private:
-	BstNode* root = nullptr;
+	AvlNode* root = nullptr;
 
 	int comparisonsMade = 0;
 	int pointerChangesMade = 0;

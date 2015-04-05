@@ -1,19 +1,21 @@
-#pragma once
-#include <string>
+#include "Node.h"
 
-struct BstNode
+struct BstNode : 
+	public Node
 {
-	BstNode(std::string k) : key(k), count(1) {}
-
-	std::string key;
-	int count;
+	BstNode(std::string k) : Node(k) {}
 
 	BstNode *left = NULL;
 	BstNode *right = NULL;
 
-	std::string Format()
+	Node* GetLeft()
 	{
-		return key + " " + std::to_string(count);
+		return left;
+	}
+
+	Node* GetRight()
+	{
+		return right;
 	}
 };
 

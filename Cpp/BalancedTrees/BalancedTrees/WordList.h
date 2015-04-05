@@ -1,6 +1,6 @@
 #include <string>
 
-struct BstNode;
+struct Node;
 
 class WordList
 {
@@ -13,9 +13,9 @@ public:
 	virtual void PrintList() = 0;
 
 protected:
-	static int getLevelCount(BstNode*);
-	static int getWordCount(BstNode*);
-	static int getDistinctWordCount(BstNode*);
-	static void printNode(BstNode*);
+	static int getLevelCount(Node*);
+	static int getWordCount(Node*);
+	static int getDistinctWordCount(Node*);
+	static void printNode(Node*);
 };
 
