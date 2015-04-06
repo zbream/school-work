@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 
 struct Node;
@@ -13,9 +14,9 @@ public:
 	virtual void PrintList() = 0;
 
 protected:
-	static int getLevelCount(Node*);
-	static int getWordCount(Node*);
-	static int getDistinctWordCount(Node*);
-	static void printNode(Node*);
+	static int getLevelCount(Node*, Node* = nullptr);
+	static int getWordCount(Node*, Node* = nullptr);
+	static int getDistinctWordCount(Node*, Node* = nullptr);
+	static void printNode(Node*, Node* = nullptr);
 };
 

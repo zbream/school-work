@@ -32,18 +32,18 @@ public:
 
 	int GetComparisonsMade()
 	{
-		return comparisonsMade;
+		return numComparisonsMade;
 	}
 
 	int GetPointerChangesMade()
 	{
-		return pointerChangesMade;
+		return numPointerChangesMade;
 	}
 
 private:
 	BstNode* root = nullptr;
 
-	int comparisonsMade = 0;
-	int pointerChangesMade = 0;
+	int numComparisonsMade = 0;
+	int numPointerChangesMade = 0;
 };
 

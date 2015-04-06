@@ -3,12 +3,13 @@
 struct RbNode :
 	public Node
 {
-	RbNode(std::string k) : Node(k) {}
+	RbNode(std::string k, bool isBlack = false) : Node(k), isBlack(isBlack) {}
 
 	RbNode *left = NULL;
 	RbNode *right = NULL;
+	RbNode *parent = NULL;
 
-	bool isBlack = true;
+	bool isBlack;
 
 	Node* GetLeft()
 	{

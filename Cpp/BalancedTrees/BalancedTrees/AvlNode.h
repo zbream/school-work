@@ -7,7 +7,6 @@ struct AvlNode :
 
 	AvlNode *left = NULL;
 	AvlNode *right = NULL;
-	AvlNode *parent = NULL;
 
 	int BF = 0;
 

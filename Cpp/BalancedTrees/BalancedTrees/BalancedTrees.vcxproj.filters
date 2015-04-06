@@ -36,6 +36,9 @@
     <ClCompile Include="AvlList.cpp">
       <Filter>Source Files\Trees</Filter>
     </ClCompile>
+    <ClCompile Include="RbList.cpp">
+      <Filter>Source Files\Trees</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AvlNode.h">
@@ -58,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="RbList.h">
+      <Filter>Header Files\Trees</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

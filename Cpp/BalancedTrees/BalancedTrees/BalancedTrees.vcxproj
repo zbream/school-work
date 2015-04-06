@@ -85,6 +85,7 @@
     <ClCompile Include="AvlList.cpp" />
     <ClCompile Include="BstList.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="RbList.cpp" />
     <ClCompile Include="WordList.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +94,7 @@
     <ClInclude Include="BstList.h" />
     <ClInclude Include="BstNode.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="RbList.h" />
     <ClInclude Include="RbNode.h" />
     <ClInclude Include="WordList.h" />
   </ItemGroup>

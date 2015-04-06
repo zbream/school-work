@@ -17,35 +17,24 @@ void BstList::Insert(string key)
 	BstNode* x = root;
 	BstNode* y = NULL;
 
-	// first phase, look for the node, or where it should be
+	// first phase: look for the node, or where it should be
 	while (x != NULL)
 	{
-		// move 'x' node to parent reference 'y'
-		y = x;
-
 		// compare added word and current node
 		int comparison = key.compare(x->key);
 
-		// if the node is a match, increment its count and return
-		// if not, move left or right
 		if (comparison == 0)
 		{
-			x->count++;
+			// node is a match
+			++(x->count);
 			return;
 		}
-		else
-		{
-			if (comparison < 0)
-			{
-				x = x->left;
-			}
-			else
-			{
-				x = x->right;
-			}
-		}
+
+		// move down, following BST property
+		y = x;
+		x = (comparison < 0 ? x->left : x->right);
 	}
-	// at this point, x==null, y holds the parent of the new node
+	// x==null, y is parent of new node
 
 	// second phase: add the word to the tree in a new node
 	BstNode* newNode = new BstNode(key);
@@ -57,7 +46,7 @@ void BstList::Insert(string key)
 	}
 	else
 	{
-		// put new node to left/right child of the 'y'node
+		// put new node to left/right child of the 'y' node
 		if (key < y->key)
 		{
 			y->left = newNode;

@@ -1,33 +1,33 @@
 #include "WordList.h"
-#include "AvlNode.h"
+#include "RbNode.h"
 
-class AvlList :
+class RbList :
 	public WordList
 {
 public:
-	AvlList();
-	~AvlList();
+	RbList();
+	~RbList();
 
 	void Insert(std::string);
 
 	int GetHeight()
 	{
-		return getLevelCount(root) - 1;
+		return getLevelCount(root, nil);
 	}
 
 	int GetWordCount()
 	{
-		return getWordCount(root);
+		return getWordCount(root, nil);
 	}
 
 	int GetDistinctWordCount()
 	{
-		return getDistinctWordCount(root);
+		return getDistinctWordCount(root, nil);
 	}
 
 	void PrintList()
 	{
-		return printNode(root);
+		return printNode(root, nil);
 	}
 
 	int GetComparisonsMade()
@@ -40,17 +40,21 @@ public:
 		return numPointerChangesMade;
 	}
 
-	int GetBFChangesMade()
+	int GetRecoloringsMade()
 	{
-		return numBFChangesMade;
+		return numRecoloringsMade;
 	}
 
 private:
-	AvlNode* root = nullptr;
+	RbNode *root, *nil;
 
 	int numComparisonsMade = 0;
 	int numPointerChangesMade = 0;
 
-	int numBFChangesMade = 0;
+	int numRecoloringsMade = 0;
+
+	void fixup(RbNode*);
+	void leftRotate(RbNode*);
+	void rightRotate(RbNode*);
 };
 

@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 
 struct Node
@@ -13,6 +14,11 @@ struct Node
 	std::string Format()
 	{
 		return key + " " + std::to_string(count);
+	}
+
+	std::string ToString()
+	{
+		return key;
 	}
 };
 

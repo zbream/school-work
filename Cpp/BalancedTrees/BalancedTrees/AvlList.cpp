@@ -53,7 +53,7 @@ void AvlList::Insert(string X)
 		Q = P;
 		P = (X < P->key) ? P->left : P->right;
 	}
-	// at this point, P==null, Q holds parent of the new node
+	// P==null, Q is parent of new node
 
 	// hang the new node on the tree
 	AvlNode *Y = new AvlNode(X);
