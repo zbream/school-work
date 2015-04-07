@@ -1,15 +1,12 @@
+/* Ream, Zack - Lab3 Balanced Trees
+EECS 2510 - 4/7/2015
+
+BstList.cpp
+This class implements the WordList using a standard Binary Search Tree. */
+
 #include "BstList.h"
 
 using namespace std;
-
-BstList::BstList()
-{
-}
-
-
-BstList::~BstList()
-{
-}
 
 void BstList::Insert(string key)
 {
@@ -22,6 +19,7 @@ void BstList::Insert(string key)
 	{
 		// compare added word and current node
 		int comparison = key.compare(x->key);
+		++numComparisonsMade;
 
 		if (comparison == 0)
 		{
@@ -47,6 +45,7 @@ void BstList::Insert(string key)
 	else
 	{
 		// put new node to left/right child of the 'y' node
+		++numComparisonsMade;
 		if (key < y->key)
 		{
 			y->left = newNode;
@@ -56,4 +55,7 @@ void BstList::Insert(string key)
 			y->right = newNode;
 		}
 	}
+	
+	// root reassign is also a pointer change
+	++numPointerChangesMade;
 }

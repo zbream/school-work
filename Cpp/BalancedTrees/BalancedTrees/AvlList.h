@@ -1,3 +1,9 @@
+/* Ream, Zack - Lab3 Balanced Trees
+EECS 2510 - 4/7/2015
+
+AvlList.h
+This class implements the WordList using an AVL balanced tree. */
+
 #include "WordList.h"
 #include "AvlNode.h"
 
@@ -5,13 +11,11 @@ class AvlList :
 	public WordList
 {
 public:
-	AvlList();
-	~AvlList();
-
 	void Insert(std::string);
 
 	int GetHeight()
 	{
+		// since the height of a one-node tree is 0, height is one less than total levels
 		return getLevelCount(root) - 1;
 	}
 

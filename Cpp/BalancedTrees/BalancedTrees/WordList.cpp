@@ -1,3 +1,11 @@
+/* Ream, Zack - Lab3 Balanced Trees
+EECS 2510 - 4/7/2015
+
+WordList.cpp
+This class acts as a generic word list to determine stats about inserted words.
+Child classes will implement ways to gather metrics about the internal binary tree.
+Includes static methods that will determine metrics of a generic binary tree (given its root Node). */
+
 #include <iostream>
 #include "WordList.h"
 #include "BstNode.h"
@@ -11,6 +19,7 @@ int WordList::getLevelCount(Node* node, Node* empty)
 		return 0;
 	}
 
+	// find the maximum path from here down
 	int heightL = getLevelCount(node->GetLeft(), empty);
 	int heightR = getLevelCount(node->GetRight(), empty);
 

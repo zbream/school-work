@@ -1,3 +1,9 @@
+/* Ream, Zack - Lab3 Balanced Trees
+EECS 2510 - 4/7/2015
+
+RbList.h
+This class implements the WordList using a Red-Black balanced tree. */
+
 #include "WordList.h"
 #include "RbNode.h"
 
@@ -6,27 +12,31 @@ class RbList :
 {
 public:
 	RbList();
-	~RbList();
 
 	void Insert(std::string);
 
 	int GetHeight()
 	{
+		// traverse to NIL leaf
+		// height includes a level of NIL at the bottom, so no (-1)
 		return getLevelCount(root, nil);
 	}
 
 	int GetWordCount()
 	{
+		// traverse to NIL leaf
 		return getWordCount(root, nil);
 	}
 
 	int GetDistinctWordCount()
 	{
+		// traverse to NIL leaf
 		return getDistinctWordCount(root, nil);
 	}
 
 	void PrintList()
 	{
+		// traverse to NIL leaf
 		return printNode(root, nil);
 	}
 
@@ -53,8 +63,19 @@ private:
 
 	int numRecoloringsMade = 0;
 
+	/*
+	Perform an Insert-Fixup on the given new node Z.
+	*/
 	void fixup(RbNode*);
+
+	/*
+	Perform a Left-Rotate on the given X node.
+	*/
 	void leftRotate(RbNode*);
+
+	/*
+	Perform a Right-Rotate on the given X node.
+	*/
 	void rightRotate(RbNode*);
 };
 

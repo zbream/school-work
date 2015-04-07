@@ -1,3 +1,9 @@
+/* Ream, Zack - Lab3 Balanced Trees
+EECS 2510 - 4/7/2015
+
+BstList.h
+This class implements the WordList using a standard Binary Search Tree. */
+
 #include "WordList.h"
 #include "BstNode.h"
 
@@ -5,13 +11,11 @@ class BstList :
 	public WordList
 {
 public:
-	BstList();
-	~BstList();
-
     void Insert(std::string);
 
 	int GetHeight()
 	{
+		// since the height of a one-node tree is 0, height is one less than total levels
 		return getLevelCount(root) - 1;
 	}
 

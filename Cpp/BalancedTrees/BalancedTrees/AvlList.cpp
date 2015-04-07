@@ -1,15 +1,12 @@
+/* Ream, Zack - Lab3 Balanced Trees
+EECS 2510 - 4/7/2015
+
+AvlList.cpp
+This class implements the WordList using an AVL balanced tree. */
+
 #include "AvlList.h"
 
 using namespace std;
-
-AvlList::AvlList()
-{
-}
-
-
-AvlList::~AvlList()
-{
-}
 
 void AvlList::Insert(string X)
 {
@@ -17,6 +14,7 @@ void AvlList::Insert(string X)
 	if (root == NULL)
 	{
 		root = new AvlNode(X);
+		++numPointerChangesMade;
 		return;
 	}
 
@@ -35,8 +33,11 @@ void AvlList::Insert(string X)
 	// search until P falls off the tree
 	while (P != NULL)
 	{
-		// check if we found the string
-		if (X == P->key)
+		// compare added word and current node
+		int comparison = X.compare(P->key);
+		++numComparisonsMade;
+
+		if (comparison == 0)
 		{
 			++(P->count);
 			return;
@@ -51,12 +52,13 @@ void AvlList::Insert(string X)
 		
 		// move down, following BST property
 		Q = P;
-		P = (X < P->key) ? P->left : P->right;
+		P = (comparison < 0) ? P->left : P->right;
 	}
 	// P==null, Q is parent of new node
 
 	// hang the new node on the tree
 	AvlNode *Y = new AvlNode(X);
+	++numComparisonsMade;
 	if (X < Q->key)
 	{
 		Q->left = Y;
@@ -65,6 +67,7 @@ void AvlList::Insert(string X)
 	{
 		Q->right = Y;
 	}
+	++numPointerChangesMade;
 
 	// now we adjust and fix imbalance
 
@@ -74,6 +77,7 @@ void AvlList::Insert(string X)
 	AvlNode *B;
 
 	// see which subtree of A the new node went in
+	++numComparisonsMade;
 	if (X > A->key)
 	{
 		// right subtree
@@ -97,16 +101,21 @@ void AvlList::Insert(string X)
 	while (P != Y)
 	{
 		// check where imbalance at the current node is
+		++numComparisonsMade;
 		if (X > P->key)
 		{
 			// new node is in right subtree, BF of -1
 			P->BF = -1;
+			++numBFChangesMade;
+
 			P = P->right;
 		}
 		else
 		{
 			// new node is in left subtree, BF of +1
 			P->BF = 1;
+			++numBFChangesMade;
+
 			P = P->left;
 		}
 	}
@@ -116,6 +125,7 @@ void AvlList::Insert(string X)
 	{
 		// tree was balanced, and is now acceptably imbalanced
 		A->BF = d;
+		++numBFChangesMade;
 		return;
 	}
 
@@ -123,6 +133,7 @@ void AvlList::Insert(string X)
 	{
 		// tree was imbalanced the other way, and is now balanced
 		A->BF = 0;
+		++numBFChangesMade;
 		return;
 	}
 
@@ -139,7 +150,10 @@ void AvlList::Insert(string X)
 			// LL
 			A->left = B->right;
 			B->right = A;
+			numPointerChangesMade += 2;
+
 			A->BF = B->BF = 0;
+			numBFChangesMade += 2;
 		}
 		else
 		{
@@ -153,6 +167,7 @@ void AvlList::Insert(string X)
 			A->left = CR;
 			C->left = B;
 			C->right = A;
+			numPointerChangesMade += 4;
 
 			// change balance factors
 			switch (C->BF)
@@ -173,8 +188,9 @@ void AvlList::Insert(string X)
 				B->BF = 1;
 				break;
 			}
-
 			C->BF = 0;
+			numBFChangesMade += 3;
+			
 			B = C;
 		}
 	}
@@ -187,7 +203,10 @@ void AvlList::Insert(string X)
 			// RR
 			A->right = B->left;
 			B->left = A;
+			numPointerChangesMade += 2;
+
 			A->BF = B->BF = 0;
+			numBFChangesMade += 2;
 		}
 		else
 		{
@@ -201,6 +220,7 @@ void AvlList::Insert(string X)
 			A->right = CL;
 			C->right = B;
 			C->left = A;
+			numPointerChangesMade += 4;
 
 			// change balance factors
 			switch (C->BF)
@@ -221,8 +241,9 @@ void AvlList::Insert(string X)
 				B->BF = -1;
 				break;
 			}
-
 			C->BF = 0;
+			numBFChangesMade += 3;
+
 			B = C;
 		}
 	}
@@ -233,6 +254,7 @@ void AvlList::Insert(string X)
 	{
 		// root was rebalanced
 		root = B;
+		++numPointerChangesMade;
 		return;
 	}
 
@@ -241,12 +263,14 @@ void AvlList::Insert(string X)
 	{
 		// F's left child
 		F->left = B;
+		++numPointerChangesMade;
 		return;
 	}
 	if (A == F->right)
 	{
 		// F's right child
 		F->right = B;
+		++numPointerChangesMade;
 		return;
 	}
 

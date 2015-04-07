@@ -98,6 +98,9 @@
     <ClInclude Include="RbNode.h" />
     <ClInclude Include="WordList.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Shakespeare.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

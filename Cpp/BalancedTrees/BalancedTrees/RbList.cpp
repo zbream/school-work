@@ -1,18 +1,21 @@
+/* Ream, Zack - Lab3 Balanced Trees
+EECS 2510 - 4/7/2015
+
+RbList.cpp
+This class implements the WordList using a Red-Black balanced tree. */
+
 #include "RbList.h"
-#include <iostream>
 
 using namespace std;
 
+/*
+Root starts off as black NIL, a node that points to itself as parent/children.
+*/
 RbList::RbList()
 {
 	nil = new RbNode("", true);
 	nil->parent = nil->left = nil->right = nil;
 	root = nil;
-}
-
-
-RbList::~RbList()
-{
 }
 
 void RbList::Insert(string key)
@@ -26,6 +29,7 @@ void RbList::Insert(string key)
 	{
 		// compare added word and current node
 		int comparison = key.compare(x->key);
+		++numComparisonsMade;
 
 		if (comparison == 0)
 		{
@@ -43,6 +47,7 @@ void RbList::Insert(string key)
 	// second phase: add the word to the tree in a new node
 	RbNode* newNode = new RbNode(key, false);
 	newNode->parent = y;
+	++numPointerChangesMade;
 
 	// if parent reference is still nil, the tree is empty
 	if (y == nil)
@@ -52,6 +57,7 @@ void RbList::Insert(string key)
 	else
 	{
 		// put new node to left/right child of the 'y' node
+		++numComparisonsMade;
 		if (key < y->key)
 		{
 			y->left = newNode;
@@ -62,8 +68,12 @@ void RbList::Insert(string key)
 		}
 	}
 
+	// root reassign is also a pointer change
+	++numPointerChangesMade;
+
 	// node is at the bottom, so leaf children
 	newNode->left = newNode->right = nil;
+	numPointerChangesMade += 2;
 
 	// fix what we broke
 	fixup(newNode);
@@ -84,6 +94,7 @@ void RbList::fixup(RbNode* z)
 				z->parent->isBlack = true;
 				y->isBlack = true;
 				z->parent->parent->isBlack = false;
+				numRecoloringsMade += 3;
 				z = z->parent->parent;
 			}
 			else
@@ -98,6 +109,7 @@ void RbList::fixup(RbNode* z)
 				// case 3
 				z->parent->isBlack = true;
 				z->parent->parent->isBlack = false;
+				numRecoloringsMade += 2;
 				rightRotate(z->parent->parent);
 			}
 
@@ -112,6 +124,7 @@ void RbList::fixup(RbNode* z)
 				z->parent->isBlack = true;
 				y->isBlack = true;
 				z->parent->parent->isBlack = false;
+				numRecoloringsMade += 3;
 				z = z->parent->parent;
 			}
 			else
@@ -126,12 +139,14 @@ void RbList::fixup(RbNode* z)
 				// case 3
 				z->parent->isBlack = true;
 				z->parent->parent->isBlack = false;
+				numRecoloringsMade += 2;
 				leftRotate(z->parent->parent);
 			}
 		}
 	}
 
 	root->isBlack = true;
+	++numRecoloringsMade;
 }
 
 void RbList::leftRotate(RbNode* x)
@@ -141,15 +156,18 @@ void RbList::leftRotate(RbNode* x)
 
 	// move y's left subtree (beta) to x's right subtree
 	x->right = y->left;
+	++numPointerChangesMade;
 
 	// if (beta) is not nil, it needs its parent changed
 	if (y->left != nil)
 	{
 		y->left->parent = x;
+		++numPointerChangesMade;
 	}
 
 	// y's parent is now x's old parent
 	y->parent = x->parent;
+	++numPointerChangesMade;
 
 	// if x was the root, y is the new root
 	if (x->parent == nil)
@@ -172,9 +190,13 @@ void RbList::leftRotate(RbNode* x)
 		}
 	}
 
+	// root reassign is also a pointer change
+	++numPointerChangesMade;
+
 	// x is now left of y
 	y->left = x;
 	x->parent = y;
+	numPointerChangesMade += 2;
 }
 
 void RbList::rightRotate(RbNode* x)
@@ -184,11 +206,13 @@ void RbList::rightRotate(RbNode* x)
 
 	// move y's right subtree (beta) to x's left subtree
 	x->left = y->right;
+	++numPointerChangesMade;
 
 	// if (Beta) is not nil, it needs its parent changed
 	if (y->right != nil)
 	{
 		y->right->parent = x;
+		++numPointerChangesMade;
 	}
 
 	// y's parent is now x's old parent
@@ -215,7 +239,11 @@ void RbList::rightRotate(RbNode* x)
 		}
 	}
 
+	// root reassign is also a pointer change
+	++numPointerChangesMade;
+
 	// x is now right of y
 	y->right = x;
 	x->parent = y;
+	numPointerChangesMade += 2;
 }
