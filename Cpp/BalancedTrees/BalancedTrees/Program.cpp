@@ -19,6 +19,9 @@ using namespace std;
 // max width of an output string (see Disp())
 const int DISP_WIDTH = 19;
 
+// max width of an input word (See ReadText())
+const int MAX_INPUT_WIDTH = 200;
+
 // prototypes
 void Disp(string message, long value);
 long ReadText(string&, WordList&);
@@ -29,6 +32,8 @@ void TestNumbers(WordList&);
 int main()
 {
 	string src = "Shakespeare.txt";
+	//string src = "Hamlet.txt";
+	//string src = "Dictionary.txt";
 
 	// dry run
 	cout << "Dry run...\n";
@@ -91,10 +96,10 @@ Returns the time (in ms) taken.
 long ReadText(string& file, WordList& wordList)
 {
 	char c;
-	char chari[50];
+	char chari[MAX_INPUT_WIDTH];
 	int iPtr;
 	bool isDelimiter = false, wasDelimiter = false;
-	for (int i = 0; i < 50; i++) chari[i] = '\0';
+	for (int i = 0; i < MAX_INPUT_WIDTH; i++) chari[i] = '\0';
 
 	// open stream
 	ifstream inFile(file, ios::binary);
@@ -121,7 +126,7 @@ long ReadText(string& file, WordList& wordList)
 			wasDelimiter = true;
 			wordList.Insert(chari);
 
-			for (int i = 0; i < 50; i++) chari[i] = '\0';
+			for (int i = 0; i < MAX_INPUT_WIDTH; i++) chari[i] = '\0';
 			iPtr = 0;
 		}
 		else if (!isDelimiter)
@@ -153,10 +158,10 @@ Returns the time (in ms) taken.
 long ReadText(string& file)
 {
 	char c;
-	char chari[50];
+	char chari[MAX_INPUT_WIDTH];
 	int iPtr;
 	bool isDelimiter = false, wasDelimiter = false;
-	for (int i = 0; i < 50; i++) chari[i] = '\0';
+	for (int i = 0; i < MAX_INPUT_WIDTH; i++) chari[i] = '\0';
 
 	// open stream
 	ifstream inFile(file, ios::binary);
@@ -183,7 +188,7 @@ long ReadText(string& file)
 			wasDelimiter = true;
 			// NO LIST INSERT
 
-			for (int i = 0; i < 50; i++) chari[i] = '\0';
+			for (int i = 0; i < MAX_INPUT_WIDTH; i++) chari[i] = '\0';
 			iPtr = 0;
 		}
 		else if (!isDelimiter)

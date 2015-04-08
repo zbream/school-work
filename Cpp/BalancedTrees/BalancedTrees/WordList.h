@@ -24,7 +24,6 @@ public:
 
 	/*
 	Return the height of the internal binary tree (max path from root to leaf).
-	A root-only tree is height 0.
 	*/
 	virtual int GetHeight() = 0;
 

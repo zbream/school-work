@@ -70,5 +70,11 @@
     <Text Include="Shakespeare.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="Dictionary.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="Hamlet.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

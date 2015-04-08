@@ -15,8 +15,7 @@ public:
 
 	int GetHeight()
 	{
-		// since the height of a one-node tree is 0, height is one less than total levels
-		return getLevelCount(root) - 1;
+		return getLevelCount(root);
 	}
 
 	int GetWordCount()

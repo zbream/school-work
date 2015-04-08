@@ -18,7 +18,6 @@ public:
 	int GetHeight()
 	{
 		// traverse to NIL leaf
-		// height includes a level of NIL at the bottom, so no (-1)
 		return getLevelCount(root, nil);
 	}
 

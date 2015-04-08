@@ -99,6 +99,8 @@
     <ClInclude Include="WordList.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Dictionary.txt" />
+    <Text Include="Hamlet.txt" />
     <Text Include="Shakespeare.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
