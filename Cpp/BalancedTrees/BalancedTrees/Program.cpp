@@ -73,7 +73,7 @@ int main()
 	Disp("Tree Height", rbList.GetHeight());
 	Disp("Comparisons Made", rbList.GetComparisonsMade());
 	Disp("Pointers Changed", rbList.GetPointerChangesMade());
-	Disp("Recolourings", rbList.GetRecoloringsMade()); // God save the Queen
+	Disp("Recolorings", rbList.GetRecoloringsMade());
 	
 	// finished
 	cout << "\ndone";
