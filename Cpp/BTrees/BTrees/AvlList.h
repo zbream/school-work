@@ -1,18 +1,42 @@
 #include "WordList.h"
-#include "AvlNode.h"
+#include "AvlIOFolder.h"
 
 class AvlList :
 	public WordList
 {
 public:
+	AvlList() : io("D:\\Zack\\Desktop\\Files\\") {}
+
 	void Insert(std::string);
 
-	int GetHeight();
+	int GetHeight()
+	{
+		return getLevelCount(root);
+	}
 
-	int GetWordCount();
+	int GetWordCount()
+	{
+		return getWordCount(root);
+	}
 
-	int GetDistinctWordCount();
+	int GetDistinctWordCount()
+	{
+		return getDistinctWordCount(root);
+	}
 
-	void PrintList();
+	void PrintList()
+	{
+		printNode(root);
+	}
+
+private:
+	int root = 0;
+		
+	AvlIOFolder io;
+
+	int getLevelCount(int);
+	int getWordCount(int);
+	int getDistinctWordCount(int);
+	void printNode(int);
 };
 

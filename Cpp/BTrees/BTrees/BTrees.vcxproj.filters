@@ -13,36 +13,74 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Nodes">
-      <UniqueIdentifier>{310721e6-cc63-4916-8212-289c8d6580a7}</UniqueIdentifier>
+    <Filter Include="Header Files\B">
+      <UniqueIdentifier>{d2885ee8-a868-4f1d-885d-2e23992f68ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Trees">
-      <UniqueIdentifier>{99759c59-c330-4e49-a203-53677ce08d05}</UniqueIdentifier>
+    <Filter Include="Header Files\Avl">
+      <UniqueIdentifier>{4b67f192-99b2-4d5b-98e2-1a7800da3391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Avl">
+      <UniqueIdentifier>{ba23460f-fde4-4ef9-994a-dc3724507c18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\B">
+      <UniqueIdentifier>{92b3cf6a-0b85-4d97-8c7c-1139c6f7d32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Words">
+      <UniqueIdentifier>{83ba6375-14f6-484e-91cf-6354861e0b26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AvlIOFolder.cpp">
+      <Filter>Source Files\Avl</Filter>
+    </ClCompile>
     <ClCompile Include="AvlList.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Avl</Filter>
+    </ClCompile>
+    <ClCompile Include="BIOFolder.cpp">
+      <Filter>Source Files\B</Filter>
+    </ClCompile>
+    <ClCompile Include="BList.cpp">
+      <Filter>Source Files\B</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AvlNode.h">
-      <Filter>Header Files\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="BNode.h">
-      <Filter>Header Files\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="Data.h">
-      <Filter>Header Files\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="WordList.h">
-      <Filter>Header Files\Trees</Filter>
+      <Filter>Header Files\Avl</Filter>
     </ClInclude>
     <ClInclude Include="AvlList.h">
-      <Filter>Header Files\Trees</Filter>
+      <Filter>Header Files\Avl</Filter>
     </ClInclude>
+    <ClInclude Include="BNode.h">
+      <Filter>Header Files\B</Filter>
+    </ClInclude>
+    <ClInclude Include="Data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WordList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AvlIOFolder.h">
+      <Filter>Header Files\Avl</Filter>
+    </ClInclude>
+    <ClInclude Include="BIOFolder.h">
+      <Filter>Header Files\B</Filter>
+    </ClInclude>
+    <ClInclude Include="BList.h">
+      <Filter>Header Files\B</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dictionary.txt">
+      <Filter>Source Files\Words</Filter>
+    </Text>
+    <Text Include="Hamlet.txt">
+      <Filter>Source Files\Words</Filter>
+    </Text>
+    <Text Include="Shakespeare.txt">
+      <Filter>Source Files\Words</Filter>
+    </Text>
   </ItemGroup>
 </Project>

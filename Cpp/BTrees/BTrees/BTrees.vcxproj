@@ -82,15 +82,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AvlIOFolder.cpp" />
     <ClCompile Include="AvlList.cpp" />
+    <ClCompile Include="BIOFolder.cpp" />
+    <ClCompile Include="BList.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AvlIOFolder.h" />
     <ClInclude Include="AvlList.h" />
     <ClInclude Include="AvlNode.h" />
+    <ClInclude Include="BIOFolder.h" />
+    <ClInclude Include="BList.h" />
     <ClInclude Include="BNode.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="WordList.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dictionary.txt" />
+    <Text Include="Hamlet.txt" />
+    <Text Include="Shakespeare.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

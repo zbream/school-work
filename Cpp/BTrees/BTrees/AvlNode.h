@@ -2,8 +2,12 @@
 
 struct AvlNode
 {
+	// record on drive
+	int id;
+
+	// payload
 	std::string key;
-	int count;
+	long count;
 
 	int left;
 	int right;
