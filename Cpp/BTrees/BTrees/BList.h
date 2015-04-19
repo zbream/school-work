@@ -5,7 +5,7 @@ class BList :
 	public WordList
 {
 public:
-	BList() : io("D:\\Zack\\Desktop\\Files\\") {}
+	BList();
 
 	void Insert(std::string);
 
@@ -33,6 +33,11 @@ private:
 	int root = 0;
 
 	BIOFolder io;
+	
+	bool addIfExists(BNode, std::string&);
+	void insertNonFull(BNode&, std::string&);
+	void splitChild(BNode&, int, BNode&);
+	
 
 	int getLevelCount(int);
 	int getWordCount(int);

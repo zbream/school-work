@@ -4,7 +4,7 @@
 #include <string>
 #include <time.h>
 #include "AvlList.h"
-#include "BIOFolder.h"
+#include "BList.h"
 
 using namespace std;
 
@@ -34,6 +34,34 @@ int main()
 	//Disp("Disk Allocations", avlList.GetDiskAlloc());
 	//Disp("Disk Reads", avlList.GetDiskReads());
 	//Disp("Disk Writes", avlList.GetDiskWrites());
+
+	BList list = BList();
+
+	list.Insert("F");
+	list.Insert("S");
+	list.Insert("Q");
+	list.Insert("K");
+	list.Insert("C");
+	list.Insert("L");
+	list.Insert("H");
+	list.Insert("T");
+	list.Insert("V");
+	list.Insert("W");
+	list.Insert("M");
+	list.Insert("R");
+	list.Insert("N");
+	list.Insert("P");
+	list.Insert("A");
+	list.Insert("B");
+	list.Insert("X");
+	list.Insert("Y");
+	list.Insert("D");
+	list.Insert("Z");
+	list.Insert("E");
+	list.Insert("E");
+
+	cout << list.GetWordCount() << endl;
+	cout << list.GetDistinctWordCount();
 
 	cin.get();
 }
