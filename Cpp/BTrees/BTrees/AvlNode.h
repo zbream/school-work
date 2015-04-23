@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 
 struct AvlNode
@@ -7,7 +8,7 @@ struct AvlNode
 
 	// payload
 	std::string key;
-	long count;
+	int count;
 
 	int left;
 	int right;

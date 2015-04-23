@@ -1,5 +1,5 @@
 #include "WordList.h"
-#include "AvlIOFolder.h"
+#include "AvlIOFile.h"
 
 class AvlList :
 	public WordList
@@ -32,7 +32,7 @@ public:
 private:
 	int root = 0;
 		
-	AvlIOFolder io;
+	AvlIOFile io;
 
 	int getLevelCount(int);
 	int getWordCount(int);

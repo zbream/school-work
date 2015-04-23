@@ -82,6 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AvlIOFile.cpp" />
     <ClCompile Include="AvlIOFolder.cpp" />
     <ClCompile Include="AvlList.cpp" />
     <ClCompile Include="BIOFolder.cpp" />
@@ -89,6 +90,7 @@
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AvlIOFile.h" />
     <ClInclude Include="AvlIOFolder.h" />
     <ClInclude Include="AvlList.h" />
     <ClInclude Include="AvlNode.h" />

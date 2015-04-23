@@ -45,6 +45,9 @@
     <ClCompile Include="BList.cpp">
       <Filter>Source Files\B</Filter>
     </ClCompile>
+    <ClCompile Include="AvlIOFile.cpp">
+      <Filter>Source Files\Avl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AvlNode.h">
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="BList.h">
       <Filter>Header Files\B</Filter>
+    </ClInclude>
+    <ClInclude Include="AvlIOFile.h">
+      <Filter>Header Files\Avl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

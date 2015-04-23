@@ -5,6 +5,7 @@
 #include <time.h>
 #include "AvlList.h"
 #include "BList.h"
+#include "AvlIOFile.h"
 
 using namespace std;
 
@@ -22,20 +23,23 @@ long ReadText(string&, WordList&);
 // Main entry point of the program.
 int main()
 {
-	string avlIOFolder = "D:\\Zack\\Desktop\\Files\\AVL\\";
-	string bIOFolder = "D:\\Zack\\Desktop\\Files\\B\\";
+	//string avlIOFolder = "D:\\Zack\\Desktop\\Files\\AVL\\";
+	//string bIOFolder = "D:\\Zack\\Desktop\\Files\\B\\";
 
-	string src = "Hamlet.txt";
+	string avlIOFile = "D:\\Zack\\Desktop\\Files\\avl.txt";
+	string bIOFile = "D:\\Zack\\Desktop\\Files\\b.txt";
+
+	string src = "Shakespeare.txt";
 	
 	// AVL
 	cout << "\nAVL...\n";
-	AvlList avlList = AvlList(avlIOFolder);
-	//StandardTest(avlList, src);
+	AvlList avlList(avlIOFile);
+	StandardTest(avlList, src);
 
 	// B
-	cout << "\nB...\n";
-	BList bList = BList(bIOFolder);
-	StandardTest(bList, src);
+	//cout << "\nB...\n";
+	//BList bList = BList(bIOFolder);
+	//StandardTest(bList, src);
 
 	cin.get();
 }
