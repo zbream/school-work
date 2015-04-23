@@ -22,17 +22,11 @@ void AvlIOFolder::AllocateNode(AvlNode& node)
 
 const char SEP = '\t';
 
-void AvlIOFolder::WriteNode(AvlNode& node, int i)
+void AvlIOFolder::WriteNode(AvlNode& node)
 {
-	// check if node has been allocated
-	if (i > latestFile)
-	{
-		exit(1);
-	}
-
 	// open the file
 	fstream f;
-	f.open(directory + to_string(i), ios::out | ios::trunc);
+	f.open(directory + to_string(node.id), ios::out | ios::trunc);
 
 	// write contents of node
 	f << node.key << SEP;

@@ -19,7 +19,7 @@ void AvlList::Insert(string X)
 
 		// save it
 		root = node.id;
-		io.WriteNode(node, root);
+		io.WriteNode(node);
 		++numDiskWrites;
 
 		return;
@@ -51,7 +51,7 @@ void AvlList::Insert(string X)
 		if (comparison == 0)
 		{
 			++(P.count);
-			io.WriteNode(P, P.id);
+			io.WriteNode(P);
 			++numDiskWrites;
 			return;
 		}
@@ -77,7 +77,7 @@ void AvlList::Insert(string X)
 	Y.count = 1;
 	Y.left = Y.right = 0;
 	Y.BF = 0;
-	io.WriteNode(Y, Y.id);
+	io.WriteNode(Y);
 	++numDiskWrites;
 
 	// set Y as Q's child
@@ -92,7 +92,7 @@ void AvlList::Insert(string X)
 	{
 		Q.right = Y.id;
 	}
-	io.WriteNode(Q, Q.id);
+	io.WriteNode(Q);
 	++numDiskWrites;
 
 	// now we adjust and fix imbalance
@@ -134,7 +134,7 @@ void AvlList::Insert(string X)
 		{
 			// new node is in right subtree, BF of -1
 			P.BF = -1;
-			io.WriteNode(P, P.id);
+			io.WriteNode(P);
 
 			io.ReadNode(P.right, P);
 		}
@@ -142,7 +142,7 @@ void AvlList::Insert(string X)
 		{
 			// new node is in left subtree, BF of +1
 			P.BF = 1;
-			io.WriteNode(P, P.id);
+			io.WriteNode(P);
 
 			io.ReadNode(P.left, P);
 		}
@@ -155,7 +155,7 @@ void AvlList::Insert(string X)
 	{
 		// tree was balanced, and is now acceptably imbalanced
 		A.BF = d;
-		io.WriteNode(A, A.id);
+		io.WriteNode(A);
 		++numDiskWrites;
 		return;
 	}
@@ -163,7 +163,7 @@ void AvlList::Insert(string X)
 	if (A.BF == -d)
 	{
 		A.BF = 0;
-		io.WriteNode(A, A.id);
+		io.WriteNode(A);
 		++numDiskWrites;
 		return;
 	}
@@ -187,8 +187,8 @@ void AvlList::Insert(string X)
 
 			A.BF = B.BF = 0;
 
-			io.WriteNode(A, A.id);
-			io.WriteNode(B, B.id);
+			io.WriteNode(A);
+			io.WriteNode(B);
 			numDiskWrites += 2;
 		}
 		else
@@ -223,9 +223,9 @@ void AvlList::Insert(string X)
 				break;
 			}
 			C.BF = 0;
-			io.WriteNode(A, A.id);
-			io.WriteNode(B, B.id);
-			io.WriteNode(C, C.id);
+			io.WriteNode(A);
+			io.WriteNode(B);
+			io.WriteNode(C);
 			numDiskWrites += 3;
 
 			B = C;
@@ -243,8 +243,8 @@ void AvlList::Insert(string X)
 
 			A.BF = B.BF = 0;
 
-			io.WriteNode(A, A.id);
-			io.WriteNode(B, B.id);
+			io.WriteNode(A);
+			io.WriteNode(B);
 			numDiskWrites += 2;
 		}
 		else
@@ -279,9 +279,9 @@ void AvlList::Insert(string X)
 				break;
 			}
 			C.BF = 0;
-			io.WriteNode(A, A.id);
-			io.WriteNode(B, B.id);
-			io.WriteNode(C, C.id);
+			io.WriteNode(A);
+			io.WriteNode(B);
+			io.WriteNode(C);
 			numDiskWrites += 3;
 
 			B = C;
@@ -305,7 +305,7 @@ void AvlList::Insert(string X)
 	{
 		// F's left child
 		F.left = B.id;
-		io.WriteNode(F, F.id);
+		io.WriteNode(F);
 		++numDiskWrites;
 		return;
 	}
@@ -313,7 +313,7 @@ void AvlList::Insert(string X)
 	{
 		// F's right child
 		F.right = B.id;
-		io.WriteNode(F, F.id);
+		io.WriteNode(F);
 		++numDiskWrites;
 		return;
 	}

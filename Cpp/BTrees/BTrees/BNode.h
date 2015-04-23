@@ -3,7 +3,7 @@
 
 struct BNode
 {
-	const static int T = 2;
+	const static int T = 1000;
 
 	// record on drive
 	int id;

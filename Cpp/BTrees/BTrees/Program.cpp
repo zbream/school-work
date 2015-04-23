@@ -15,55 +15,41 @@ const int DISP_WIDTH = 19;
 const int MAX_INPUT_WIDTH = 200;
 
 // prototypes
+void StandardTest(WordList&, string&);
 void Disp(string message, long value);
 long ReadText(string&, WordList&);
 
 // Main entry point of the program.
 int main()
 {
+	string avlIOFolder = "D:\\Zack\\Desktop\\Files\\AVL\\";
+	string bIOFolder = "D:\\Zack\\Desktop\\Files\\B\\";
+
 	string src = "Hamlet.txt";
 	
 	// AVL
-	//cout << "\nAVL...\n";
-	//AvlList avlList = AvlList();
-	//long avlTime = ReadText(src, avlList);
-	//Disp("RunTime (ms)", avlTime);
-	//Disp("Total Word Count", avlList.GetWordCount());
-	//Disp("Distinct Word Count", avlList.GetDistinctWordCount());
-	//Disp("Tree Height", avlList.GetHeight());
-	//Disp("Disk Allocations", avlList.GetDiskAlloc());
-	//Disp("Disk Reads", avlList.GetDiskReads());
-	//Disp("Disk Writes", avlList.GetDiskWrites());
+	cout << "\nAVL...\n";
+	AvlList avlList = AvlList(avlIOFolder);
+	//StandardTest(avlList, src);
 
-	BList list = BList();
-
-	list.Insert("F");
-	list.Insert("S");
-	list.Insert("Q");
-	list.Insert("K");
-	list.Insert("C");
-	list.Insert("L");
-	list.Insert("H");
-	list.Insert("T");
-	list.Insert("V");
-	list.Insert("W");
-	list.Insert("M");
-	list.Insert("R");
-	list.Insert("N");
-	list.Insert("P");
-	list.Insert("A");
-	list.Insert("B");
-	list.Insert("X");
-	list.Insert("Y");
-	list.Insert("D");
-	list.Insert("Z");
-	list.Insert("E");
-	list.Insert("E");
-
-	cout << list.GetWordCount() << endl;
-	cout << list.GetDistinctWordCount();
+	// B
+	cout << "\nB...\n";
+	BList bList = BList(bIOFolder);
+	StandardTest(bList, src);
 
 	cin.get();
+}
+
+void StandardTest(WordList& list, string& inputfile)
+{
+	long time = ReadText(inputfile, list);
+	Disp("RunTime (ms)", time);
+	Disp("Total Word Count", list.GetWordCount());
+	Disp("Distinct Word Count", list.GetDistinctWordCount());
+	Disp("Tree Height", list.GetHeight());
+	Disp("Disk Allocations", list.GetDiskAlloc());
+	Disp("Disk Reads", list.GetDiskReads());
+	Disp("Disk Writes", list.GetDiskWrites());
 }
 
 /*

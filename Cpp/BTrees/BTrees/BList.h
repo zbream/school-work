@@ -5,7 +5,7 @@ class BList :
 	public WordList
 {
 public:
-	BList();
+	BList(std::string datapath);
 
 	void Insert(std::string);
 
@@ -34,11 +34,9 @@ private:
 
 	BIOFolder io;
 	
-	bool addIfExists(BNode, std::string&);
 	void insertNonFull(BNode&, std::string&);
 	void splitChild(BNode&, int, BNode&);
 	
-
 	int getLevelCount(int);
 	int getWordCount(int);
 	int getDistinctWordCount(int);

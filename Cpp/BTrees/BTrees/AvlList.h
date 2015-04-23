@@ -5,7 +5,7 @@ class AvlList :
 	public WordList
 {
 public:
-	AvlList() : io("D:\\Zack\\Desktop\\Files\\") {}
+	AvlList(std::string datapath) : io(datapath) {}
 
 	void Insert(std::string);
 

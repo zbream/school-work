@@ -18,17 +18,11 @@ void BIOFolder::AllocateNode(BNode& node)
 
 const char SEP = '\t';
 
-void BIOFolder::WriteNode(BNode& node, int i)
+void BIOFolder::WriteNode(BNode& node)
 {
-	// check if node has been allocated
-	if (i > latestFile)
-	{
-		exit(1);
-	}
-
 	// open the file
 	fstream f;
-	f.open(directory + to_string(i), ios::out | ios::trunc);
+	f.open(directory + to_string(node.id), ios::out | ios::trunc);
 
 	// write contents of node
 	f << node.isLeaf << SEP;

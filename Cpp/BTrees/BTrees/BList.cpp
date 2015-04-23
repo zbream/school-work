@@ -3,15 +3,20 @@
 
 using namespace std;
 
-BList::BList() : io("D:\\Zack\\Desktop\\Files\\")
+BList::BList(string datapath) : io(datapath)
 {
-	BNode x;
-	io.AllocateNode(x);
-	x.isLeaf = true;
-	x.n = 0;
+	// create empty root node
+	BNode r;
+	io.AllocateNode(r);
+	r.isLeaf = true;
+	r.n = 0;
+	io.WriteNode(r);
+	
+	root = r.id;
 
-	io.WriteNode(x, x.id);
-	root = x.id;
+	// metrics
+	++numDiskAlloc;
+	++numDiskWrites;
 }
 
 void BList::Insert(string k)
@@ -19,27 +24,24 @@ void BList::Insert(string k)
 	// get the node
 	BNode r;
 	io.ReadNode(root, r);
-
-	// increment a key's count, if the key exists
-	if (addIfExists(r, k))
-	{
-		return;
-	}
-	// otherwise, insert the new key
+	++numDiskReads;
 
 	// check if the root node is full
 	if (r.n == (2 * r.T - 1))
 	{
 		// root is full, split it
+
+		// create new root, old root is its child0
 		BNode s;
 		io.AllocateNode(s);
-
+		++numDiskAlloc;
 		root = s.id;
 		s.isLeaf = false;
 		s.n = 0;
 		s.children[0] = r.id;
-
 		splitChild(s, 0, r);
+
+		// insert using new root
 		insertNonFull(s, k);
 	}
 	else
@@ -48,99 +50,95 @@ void BList::Insert(string k)
 	}
 }
 
-bool BList::addIfExists(BNode x, std::string& k)
-{
-	while (true)
-	{
-		int i = 0;
-
-		while (i < x.n && k > x.keys[i].key)
-		{
-			++i;
-		}
-
-		if (i < x.n && k == x.keys[i].key)
-		{
-			++(x.keys[i].count);
-			io.WriteNode(x, x.id);
-			return true;
-		}
-
-		if (x.isLeaf)
-		{
-			return false;
-		}
-
-		io.ReadNode(x.children[i], x);
-
-	}
-
-
-}
-
-
-
 void BList::insertNonFull(BNode& x, std::string& k)
 {
+	// find position where the key ought to be
 	int i = x.n - 1;
+	while (i >= 0 && k < x.keys[i].key)
+	{
+		--i;
+	}
+	
+	// check if we found the key
+	if (i >= 0 && k == x.keys[i].key)
+	{
+		// just increment the key's count'
+		++(x.keys[i].count);
+		io.WriteNode(x);
+		++numDiskWrites;
+		return;
+	}
+	// the key was not found, insert as new
+	++i;
+		
 	if (x.isLeaf)
 	{
-		while (i >= 0 && k < x.keys[i].key)
+		// leaf, so add key to this node
+
+		// make space for the key
+		for (int j = x.n - 1; j >= i; j--)
 		{
-			x.keys[i + 1] = x.keys[i];
-			--i;
+			x.keys[j + 1] = x.keys[j];
 		}
-		x.keys[i + 1].key = k;
-		x.keys[i + 1].count = 1;
+
+		// insert the new key
+		x.keys[i].key = k;
+		x.keys[i].count = 1;
 		++(x.n);
-		io.WriteNode(x, x.id);
+		io.WriteNode(x);
+		++numDiskWrites;
 	}
 	else
 	{
-		while (i >= 0 && k < x.keys[i].key)
-		{
-			--i;
-		}
-
-		//if (i >= 0 && k == x.keys[i].key)
-		//{
-		//	// found the key already
-		//	++(x.keys[i].count);
-		//	io.WriteNode(x, x.id);
-		//	return;
-		//}
-
-		++i;
-
+		// not a leaf, so key goes further down the tree
+		
+		// check the child node
 		BNode xi;
 		io.ReadNode(x.children[i], xi);
-
+		++numDiskReads;
+		
+		// if child is full, go ahead and preemptively split it
 		if (xi.n == (2 * xi.T - 1))
 		{
 			splitChild(x, i, xi);
+
+			// there is a chance that this split pulled our k up as the median value
+			if (k == x.keys[i].key)
+			{
+				// just increment the key's count'
+				++(x.keys[i].count);
+				io.WriteNode(x);
+				++numDiskWrites;
+				return;
+			}
+
+			// split may have changed which child we follow
 			if (k > x.keys[i].key)
 			{
 				io.ReadNode(x.children[i + 1], xi);
+				++numDiskReads;
 			}
 		}
 
+		// move execution down to child node
 		insertNonFull(xi, k);
 	}
 }
 
 void BList::splitChild(BNode& x, int i, BNode& y)
 {
+	// create new child of x (sibling of y)
 	BNode z;
 	io.AllocateNode(z);
-
+	++numDiskAlloc;
 	z.isLeaf = y.isLeaf;
-	z.n = z.T - 1;
 
+	// z gets the right "section" of keys/children from y
+	z.n = z.T - 1;
 	for (int j = 0; j < z.T - 1; j++)
 	{
 		z.keys[j] = y.keys[j + z.T];
 	}
-
 	if (!y.isLeaf)
 	{
 		for (int j = 0; j < z.T; j++)
@@ -148,28 +146,28 @@ void BList::splitChild(BNode& x, int i, BNode& y)
 			z.children[j] = y.children[j + z.T];
 		}
 	}
-
 	y.n = z.T - 1;
 
-	// make z a child of x
+	// make room in x's children for z
 	for (int j = x.n; j > i; j--)
 	{
 		x.children[j + 1] = x.children[j];
 	}
-
 	x.children[i + 1] = z.id;
 
+	// make room in x for the median value
 	for (int j = x.n - 1; j >= i; j--)
 	{
 		x.keys[j + 1] = x.keys[j];
 	}
-
 	x.keys[i] = y.keys[z.T - 1];
 	++(x.n);
 
-	io.WriteNode(y, y.id);
-	io.WriteNode(z, z.id);
-	io.WriteNode(x, x.id);
+	// save the nodes to disk
+	io.WriteNode(y);
+	io.WriteNode(z);
+	io.WriteNode(x);
+	numDiskWrites += 3;
 }
 
 int BList::getLevelCount(int id)
@@ -219,7 +217,7 @@ int BList::getDistinctWordCount(int id)
 
 	if (!node.isLeaf)
 	{
-		for (int j = 0; j <= node.n; ++j)
+		for (int j = 0; j < node.n + 1; ++j)
 		{
 			count += getDistinctWordCount(node.children[j]);
 		}
@@ -230,5 +228,27 @@ int BList::getDistinctWordCount(int id)
 
 void BList::printNode(int id)
 {
+	BNode node;
+	io.ReadNode(id, node);
 
+	if (node.isLeaf)
+	{
+		// only print the keys in this node
+		for (int i = 0; i < node.n; ++i)
+		{
+			cout << node.keys[i].key << ", " << node.keys[i].count << endl;
+		}
+	}
+	else
+	{
+		// always print the first child
+		printNode(node.children[0]);
+
+		// go through and print each key and the child after it
+		for (int i = 0; i < node.n; ++i)
+		{
+			cout << node.keys[i].key << ", " << node.keys[i].count << endl;
+			printNode(node.children[i + 1]);
+		}
+	}
 }

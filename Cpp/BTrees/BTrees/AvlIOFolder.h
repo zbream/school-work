@@ -7,7 +7,7 @@ public:
 	AvlIOFolder(std::string directory) : directory(directory) {}
 
 	void AllocateNode(AvlNode&);
-	void WriteNode(AvlNode& node, int);
+	void WriteNode(AvlNode&);
 	void ReadNode(int, AvlNode&);
 
 private:

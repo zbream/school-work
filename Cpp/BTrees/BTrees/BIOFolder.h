@@ -7,7 +7,7 @@ public:
 	BIOFolder(std::string directory) : directory(directory) {}
 
 	void AllocateNode(BNode&);
-	void WriteNode(BNode&, int);
+	void WriteNode(BNode&);
 	void ReadNode(int, BNode&);
 
 private:
