@@ -1,3 +1,10 @@
+/* Ream, Zack - Lab4 BTrees
+EECS 2510 - 4/25/2015
+
+AvlIOFolder.cpp
+This class reads/writes AVL-tree nodes on the disk.
+This version stores each node as a separate file on the disk. */
+
 #include <fstream>
 #include "AvlIOFolder.h"
 
@@ -7,11 +14,6 @@ void AvlIOFolder::AllocateNode(AvlNode& node)
 {
 	// create new node
 	node.id = ++latestFile;
-	node.key = "";
-	node.count = 0;
-	node.left = 0;
-	node.right = 0;
-	node.BF = 0;
 
 	// create space for node
 	fstream o;
@@ -20,6 +22,7 @@ void AvlIOFolder::AllocateNode(AvlNode& node)
 	o.close();
 }
 
+// the separator between records in each file
 const char SEP = '\t';
 
 void AvlIOFolder::WriteNode(AvlNode& node)
@@ -40,14 +43,14 @@ void AvlIOFolder::WriteNode(AvlNode& node)
 	f.close();
 }
 
-void AvlIOFolder::ReadNode(int i, AvlNode& node)
+void AvlIOFolder::ReadNode(int id, AvlNode& node)
 {
 	// open the file
 	fstream f;
-	f.open(directory + to_string(i), ios::in);
+	f.open(directory + to_string(id), ios::in);
 
 	// read contents of node
-	node.id = i;
+	node.id = id;
 	f >> node.key;
 	f >> node.count;
 	f >> node.left;

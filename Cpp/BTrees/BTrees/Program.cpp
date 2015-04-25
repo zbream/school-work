@@ -1,3 +1,10 @@
+/* Ream, Zack - Lab4 BTrees
+EECS 2510 - 4/25/2015
+
+Program.cpp
+This program compares the efficiency of disk-based search trees.
+Trees considered include the AVL-tree and the B-tree. */
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -5,7 +12,6 @@
 #include <time.h>
 #include "AvlList.h"
 #include "BList.h"
-#include "AvlIOFile.h"
 
 using namespace std;
 
@@ -29,7 +35,7 @@ int main()
 	string avlIOFile = "D:\\Zack\\Desktop\\Files\\avl.txt";
 	string bIOFile = "D:\\Zack\\Desktop\\Files\\b.txt";
 
-	string src = "Shakespeare.txt";
+	string src = "Hamlet.txt";
 	
 	// AVL
 	cout << "\nAVL...\n";
@@ -37,9 +43,9 @@ int main()
 	StandardTest(avlList, src);
 
 	// B
-	//cout << "\nB...\n";
-	//BList bList = BList(bIOFolder);
-	//StandardTest(bList, src);
+	cout << "\nB...\n";
+	BList bList(bIOFile);
+	StandardTest(bList, src);
 
 	cin.get();
 }
@@ -75,7 +81,7 @@ long ReadText(string& file, WordList& wordList)
 	char chari[MAX_INPUT_WIDTH];
 	int iPtr;
 	bool isDelimiter = false, wasDelimiter = false;
-	for (int i = 0; i < MAX_INPUT_WIDTH; i++) chari[i] = '\0';
+	for (int i = 0; i < MAX_INPUT_WIDTH; ++i) chari[i] = '\0';
 
 	// open stream
 	ifstream inFile(file, ios::binary);

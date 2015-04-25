@@ -1,83 +1,92 @@
+/* Ream, Zack - Lab4 BTrees
+EECS 2510 - 4/25/2015
+
+AvlIOFile.cpp
+This class reads/writes AVL-tree nodes on the disk.
+This version stores all nodes in a single, contiguous file. */
+
 #include "AvlIOFile.h"
 
 using namespace std;
 
-AvlIOFile::AvlIOFile(string file) : fs(file, std::ios::in | std::ios::out | std::ios::trunc | std::ios::binary) {}
+AvlIOFile::AvlIOFile(string file) : stream(file, std::ios::in | std::ios::out | std::ios::trunc | std::ios::binary) {}
 
 void AvlIOFile::AllocateNode(AvlNode& node)
 {
 	// get offset
 	node.id = ++latestNode;
-	node.key = "";
-	node.count = 0;
-	node.left = 0;
-	node.right = 0;
-	node.BF = 0;
 
-	fs.seekp(getOffset(node.id));
-	for (int j = 0; j < NODE_WIDTH; j++)
+	// create space for node
+	stream.seekp(getOffset(node.id));
+	for (int j = 0; j < NODE_WIDTH; ++j)
 	{
-		fs.put('\0');
+		stream.put('\0');
 	}
 }
 
 void AvlIOFile::WriteNode(AvlNode& node)
 {
 	// move to record
-	fs.seekp(getOffset(node.id));
+	stream.seekp(getOffset(node.id));
 
 	// write KEY_WIDTH characters + \0 terminator
-	strncpy_s(buffer, node.key.c_str(), KEY_LENGTH);
-	fs.write(buffer, KEY_LENGTH + 1);
+	strncpy_s(buffer, node.key.c_str(), KEY_WIDTH);
+	stream.write(buffer, KEY_WIDTH + 1);
 
 	// write rest of data
-	writeInt(fs, node.count);
-	writeInt(fs, node.left);
-	writeInt(fs, node.right);
-	writeInt(fs, node.BF);
+	writeInt(stream, node.count);
+	writeInt(stream, node.left);
+	writeInt(stream, node.right);
+	writeInt(stream, node.BF);
 }
 
-void AvlIOFile::ReadNode(int i, AvlNode& node)
+void AvlIOFile::ReadNode(int id, AvlNode& node)
 {
 	// move to record
-	fs.seekg(getOffset(i));
-	node.id = i;
+	stream.seekg(getOffset(id));
+	node.id = id;
 
 	// read key
-	fs.read(buffer, KEY_LENGTH + 1);
+	stream.read(buffer, KEY_WIDTH + 1);
 	node.key = string(buffer);
 
 	// read rest of data
-	node.count = readInt(fs);
-	node.left = readInt(fs);
-	node.right = readInt(fs);
-	node.BF = readInt(fs);
+	node.count = readInt(stream);
+	node.left = readInt(stream);
+	node.right = readInt(stream);
+	node.BF = readInt(stream);
 
 }
 
-int AvlIOFile::getOffset(int i)
+void AvlIOFile::writeInt(fstream& stream, int i)
 {
-	return (i-1) * 49;
-}
-
-void AvlIOFile::writeInt(fstream& fs, unsigned int i)
-{
-	fs.put((i & 0xFF000000) >> 24);
-	fs.put((i & 0xFF0000) >> 16);
-	fs.put((i & 0xFF00) >> 8);
-	fs.put((i & 0xFF));
-}
-
-int AvlIOFile::readInt(fstream& fs)
-{
-	int out = 0;
-	char c;
-	for (int j = 0; j < 4; j++)
+	// we want to write the int big-endian, for easier reading
+	int k = 0;
+	for (int j = 0; j < sizeof(int); ++j)
 	{
-		fs.get(c);
-		out <<= 8;
-		out |= (c & 0xFF);
+		k <<= 8;
+		k |= (i & 0xFF);
+		i >>= 8;
 	}
 
-	return out;
+	// write int to stream
+	for (int j = 0; j < sizeof(int); ++j)
+	{
+		stream.put(k & 0xFF);
+		k >>= 8;
+	}
+}
+
+int AvlIOFile::readInt(fstream& stream)
+{
+	int o = 0;
+
+	// build int from stream
+	for (int j = 0; j < sizeof(int); ++j)
+	{
+		o <<= 8;
+		o |= (stream.get());
+	}
+
+	return o;
 }

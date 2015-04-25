@@ -1,40 +1,40 @@
 /* Ream, Zack - Lab4 BTrees
 EECS 2510 - 4/25/2015
 
-AvlIOFile.h
-This class reads/writes AVL-tree nodes on the disk.
+BIOFile.h
+This class reads/writes B-tree nodes on the disk.
 This version stores all nodes in a single, contiguous file. */
 
 #include <fstream>
-#include "AvlNode.h"
+#include "BNode.h"
 
-class AvlIOFile
+class BIOFile
 {
 public:
-	AvlIOFile(std::string);
+	BIOFile(std::string);
 
 	/*
 	Allocate a new node on the hard disk, populate the given node with its ID.
 	*/
-	void AllocateNode(AvlNode&);
+	void AllocateNode(BNode&);
 
 	/*
 	Write the given node on the hard disk, using its internal ID.
 	*/
-	void WriteNode(AvlNode&);
+	void WriteNode(BNode&);
 
 	/*
 	Read the specified node ID from the hard disk into the given node.
 	*/
-	void ReadNode(int, AvlNode&);
+	void ReadNode(int, BNode&);
 
 private:
 	// max width, in bytes, of a single key
-	const static int KEY_WIDTH = 32;
+	static const int KEY_WIDTH = 32;
 
 	// width, in bytes, of a node in the data file
-	const static int NODE_WIDTH = KEY_WIDTH + 1 + 4 * sizeof(int);
-	// key, terminating char, 4 ints (count, 2 children, BF)
+	static const int NODE_WIDTH = 1 + sizeof(int) + ((KEY_WIDTH + 1 + sizeof(int)) * (2 * BNode::T - 1)) + (sizeof(int) * (2 * BNode::T));
+	// leaf bit, n int, (2t-1) keys+terminator and count ints, (2t) children ints
 
 	// io stream
 	std::fstream stream;

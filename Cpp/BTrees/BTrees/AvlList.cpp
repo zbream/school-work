@@ -1,3 +1,9 @@
+/* Ream, Zack - Lab4 BTrees
+EECS 2510 - 4/25/2015
+
+AvlList.cpp
+This class implements the WordList using an AVL balanced tree. */
+
 #include <iostream>
 #include "AvlList.h"
 

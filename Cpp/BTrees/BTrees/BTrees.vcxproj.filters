@@ -48,6 +48,9 @@
     <ClCompile Include="AvlIOFile.cpp">
       <Filter>Source Files\Avl</Filter>
     </ClCompile>
+    <ClCompile Include="BIOFile.cpp">
+      <Filter>Source Files\B</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AvlNode.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="AvlIOFile.h">
       <Filter>Header Files\Avl</Filter>
+    </ClInclude>
+    <ClInclude Include="BIOFile.h">
+      <Filter>Header Files\B</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

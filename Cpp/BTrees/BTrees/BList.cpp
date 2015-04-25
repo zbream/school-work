@@ -1,3 +1,9 @@
+/* Ream, Zack - Lab4 BTrees
+EECS 2510 - 4/25/2015
+
+BList.cpp
+This class implements the WordList using a B-tree. */
+
 #include <iostream>
 #include "BList.h"
 
@@ -27,7 +33,7 @@ void BList::Insert(string k)
 	++numDiskReads;
 
 	// check if the root node is full
-	if (r.n == (2 * r.T - 1))
+	if (r.n == (2 * BNode::T - 1))
 	{
 		// root is full, split it
 
@@ -76,7 +82,7 @@ void BList::insertNonFull(BNode& x, std::string& k)
 		// leaf, so add key to this node
 
 		// make space for the key
-		for (int j = x.n - 1; j >= i; j--)
+		for (int j = x.n - 1; j >= i; --j)
 		{
 			x.keys[j + 1] = x.keys[j];
 		}
@@ -98,7 +104,7 @@ void BList::insertNonFull(BNode& x, std::string& k)
 		++numDiskReads;
 		
 		// if child is full, go ahead and preemptively split it
-		if (xi.n == (2 * xi.T - 1))
+		if (xi.n == (2 * BNode::T - 1))
 		{
 			splitChild(x, i, xi);
 
@@ -134,33 +140,33 @@ void BList::splitChild(BNode& x, int i, BNode& y)
 	z.isLeaf = y.isLeaf;
 
 	// z gets the right "section" of keys/children from y
-	z.n = z.T - 1;
-	for (int j = 0; j < z.T - 1; j++)
+	z.n = BNode::T - 1;
+	for (int j = 0; j < BNode::T - 1; ++j)
 	{
-		z.keys[j] = y.keys[j + z.T];
+		z.keys[j] = y.keys[j + BNode::T];
 	}
 	if (!y.isLeaf)
 	{
-		for (int j = 0; j < z.T; j++)
+		for (int j = 0; j < BNode::T; ++j)
 		{
-			z.children[j] = y.children[j + z.T];
+			z.children[j] = y.children[j + BNode::T];
 		}
 	}
-	y.n = z.T - 1;
+	y.n = BNode::T - 1;
 
 	// make room in x's children for z
-	for (int j = x.n; j > i; j--)
+	for (int j = x.n; j > i; --j)
 	{
 		x.children[j + 1] = x.children[j];
 	}
 	x.children[i + 1] = z.id;
 
 	// make room in x for the median value
-	for (int j = x.n - 1; j >= i; j--)
+	for (int j = x.n - 1; j >= i; --j)
 	{
 		x.keys[j + 1] = x.keys[j];
 	}
-	x.keys[i] = y.keys[z.T - 1];
+	x.keys[i] = y.keys[BNode::T - 1];
 	++(x.n);
 
 	// save the nodes to disk

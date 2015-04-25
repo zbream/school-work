@@ -85,6 +85,7 @@
     <ClCompile Include="AvlIOFile.cpp" />
     <ClCompile Include="AvlIOFolder.cpp" />
     <ClCompile Include="AvlList.cpp" />
+    <ClCompile Include="BIOFile.cpp" />
     <ClCompile Include="BIOFolder.cpp" />
     <ClCompile Include="BList.cpp" />
     <ClCompile Include="Program.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="AvlIOFolder.h" />
     <ClInclude Include="AvlList.h" />
     <ClInclude Include="AvlNode.h" />
+    <ClInclude Include="BIOFile.h" />
     <ClInclude Include="BIOFolder.h" />
     <ClInclude Include="BList.h" />
     <ClInclude Include="BNode.h" />
