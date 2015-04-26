@@ -30,7 +30,7 @@ public:
 
 private:
 	// max width, in bytes, of a single key
-	const static int KEY_WIDTH = 32;
+	const static int KEY_WIDTH = 27;
 
 	// width, in bytes, of a node in the data file
 	const static int NODE_WIDTH = KEY_WIDTH + 1 + 4 * sizeof(int);

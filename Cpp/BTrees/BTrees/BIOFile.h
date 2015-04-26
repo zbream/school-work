@@ -19,7 +19,8 @@ public:
 	void AllocateNode(BNode&);
 
 	/*
-	Write the given node on the hard disk, using its internal ID.
+	Write the given node on the hard disk, using its interna
+	l ID.
 	*/
 	void WriteNode(BNode&);
 
@@ -30,7 +31,7 @@ public:
 
 private:
 	// max width, in bytes, of a single key
-	static const int KEY_WIDTH = 32;
+	static const int KEY_WIDTH = 27;
 
 	// width, in bytes, of a node in the data file
 	static const int NODE_WIDTH = 1 + sizeof(int) + ((KEY_WIDTH + 1 + sizeof(int)) * (2 * BNode::T - 1)) + (sizeof(int) * (2 * BNode::T));

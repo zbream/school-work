@@ -178,9 +178,12 @@ void BList::splitChild(BNode& x, int i, BNode& y)
 
 int BList::getLevelCount(int id)
 {
+	// the tree is perfectly balanced, so any path down is sufficient.
+
 	BNode node;
 	io.ReadNode(id, node);
 
+	// continue if there are children
 	if (node.isLeaf)
 	{
 		return 1;
@@ -193,16 +196,19 @@ int BList::getLevelCount(int id)
 
 int BList::getWordCount(int id)
 {
+	// go through and add the counts of each key
+
 	BNode node;
 	io.ReadNode(id, node);
 
+	// count the total words
 	int count = 0;
 	for (int j = 0; j < node.n; ++j)
 	{
 		count += node.keys[j].count;
 	}
 
-	// continue down if there are children
+	// continue if there are children
 	if (!node.isLeaf)
 	{
 		for (int j = 0; j <= node.n; ++j)
@@ -216,11 +222,15 @@ int BList::getWordCount(int id)
 
 int BList::getDistinctWordCount(int id)
 {
+	// add the n's (number of keys) of each node
+
 	BNode node;
 	io.ReadNode(id, node);
 
+	// n is the total number of distinct words
 	int count = node.n;
 
+	// continue if there are children
 	if (!node.isLeaf)
 	{
 		for (int j = 0; j < node.n + 1; ++j)
@@ -240,9 +250,9 @@ void BList::printNode(int id)
 	if (node.isLeaf)
 	{
 		// only print the keys in this node
-		for (int i = 0; i < node.n; ++i)
+		for (int j = 0; j < node.n; ++j)
 		{
-			cout << node.keys[i].key << ", " << node.keys[i].count << endl;
+			cout << node.keys[j].key << ", " << node.keys[j].count << endl;
 		}
 	}
 	else
@@ -251,10 +261,10 @@ void BList::printNode(int id)
 		printNode(node.children[0]);
 
 		// go through and print each key and the child after it
-		for (int i = 0; i < node.n; ++i)
+		for (int j = 0; j < node.n; ++j)
 		{
-			cout << node.keys[i].key << ", " << node.keys[i].count << endl;
-			printNode(node.children[i + 1]);
+			cout << node.keys[j].key << ", " << node.keys[j].count << endl;
+			printNode(node.children[j + 1]);
 		}
 	}
 }

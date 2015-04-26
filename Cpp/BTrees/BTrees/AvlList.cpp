@@ -329,6 +329,7 @@ void AvlList::Insert(string X)
 
 int AvlList::getLevelCount(int id)
 {
+	// get the node if not NIL
 	if (id == 0)
 	{
 		return 0;
@@ -347,6 +348,7 @@ int AvlList::getLevelCount(int id)
 
 int AvlList::getWordCount(int id)
 {
+	// get the node if not NIL
 	if (id == 0)
 	{
 		return 0;
@@ -359,6 +361,7 @@ int AvlList::getWordCount(int id)
 
 int AvlList::getDistinctWordCount(int id)
 {
+	// get the node if not NIL
 	if (id == 0)
 	{
 		return 0;
@@ -371,6 +374,7 @@ int AvlList::getDistinctWordCount(int id)
 
 void AvlList::printNode(int id)
 {
+	// get the node if not NIL
 	if (id == 0)
 	{
 		return;

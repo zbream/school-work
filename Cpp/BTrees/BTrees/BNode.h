@@ -11,8 +11,8 @@ We do not initialize anything, because they will immediately be changed regardle
 
 struct BNode
 {
-	// T of the tree, the median key of the keys.
-	static const int T = 20;
+	// T of the tree, the median key of the keys (1-based, so t>=2)
+	const static int T = 2;
 
 	// record on drive
 	int id;

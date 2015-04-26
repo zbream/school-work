@@ -94,8 +94,5 @@
     <Text Include="Shakespeare.txt">
       <Filter>Source Files\Words</Filter>
     </Text>
-    <Text Include="in.txt">
-      <Filter>Source Files\Words</Filter>
-    </Text>
   </ItemGroup>
 </Project>
