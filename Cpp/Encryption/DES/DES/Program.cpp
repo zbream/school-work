@@ -1,23 +1,46 @@
-#define ull unsigned long long
+#include "Common.h"
+#include "KeyGenerator.h"
+#include "RoundEngine.h"
 
 // function declarations
+ull EncodeBlock(ull key, ull in);
 ull pInitial(ull n);
 ull pFinal(ull n);
 
 int main()
 {
-	//ull test = (1 << 63);
+	// DES Algorithm Illustrated
+	ull key = 0xAABB09182736CCDDULL;
+	ull block = 0x123456ABCD132536ULL;
+	
+	// Forouzan text
+	//ull key = 0x133457799BBCDFF1ULL;
+	//ull block = 0x0123456789ABCDEFULL;
 
-	ull test = 0xFFFFFFFFFFFFFFFFULL;
-
-	ull out = pFinal(test);
+	ull result = EncodeBlock(key, block);
 
 	return 0;
 }
 
-#define bitset(n, b) (n & (1ULL << (64 - b)))
-#define setbit(n, b) (1ULL << (64 - b))
+ull EncodeBlock(ull key, ull block)
+{
+	// generate round keys (48-bit)
+	ull keys[16];
+	kg_generate(key, keys);
 
+	// initial permutation
+	block = pInitial(block);
+
+	// rounds
+	block = r_runRounds(block, keys);
+
+	// final permutation
+	block = pFinal(block);
+
+	return block;
+}
+
+#pragma region P-Boxes
 ull pInitial(ull in)
 {
 	ull out = 0;
@@ -161,3 +184,4 @@ ull pFinal(ull in)
 
 	return out;
 }
+#pragma endregion
