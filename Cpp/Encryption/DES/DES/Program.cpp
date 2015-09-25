@@ -19,6 +19,14 @@ int main()
 
 	ull result = DESBlock(key, block);
 
+	//ull p = block;
+	//ull c;
+	//for (int i = 0; i < 1000000; i++)
+	//{
+	//	c = DESBlock(key, p);
+	//	p = DESBlock(key, c, true);
+	//}
+
 	return 0;
 }
 
