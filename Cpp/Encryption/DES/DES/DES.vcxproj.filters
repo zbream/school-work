@@ -18,21 +18,21 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RoundEngine.cpp">
+    <ClCompile Include="DESKeyGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KeyGenerator.cpp">
+    <ClCompile Include="DESRoundEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KeyGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RoundEngine.h">
+    <ClInclude Include="DESKeyGen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DESRoundEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

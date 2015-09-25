@@ -1,4 +1,4 @@
-#include "KeyGenerator.h"
+#include "DESKeyGen.h"
 
 void kg_generate(ull key64, ull keys48[16], bool reverse)
 {

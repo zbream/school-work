@@ -1,6 +1,6 @@
 #include "Common.h"
-#include "KeyGenerator.h"
-#include "RoundEngine.h"
+#include "DESKeyGen.h"
+#include "DESRoundEngine.h"
 
 // function declarations
 ull EncodeBlock(ull key, ull in);
@@ -26,7 +26,7 @@ int main()
 	return 0;
 }
 
-ull DESBlock(ull key, ull block)
+ull EncodeBlock(ull key, ull block)
 {
 	// generate round keys (48-bit)
 	ull keys[16];
