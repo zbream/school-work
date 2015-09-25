@@ -1,13 +1,13 @@
 #include "KeyGenerator.h"
 
-void kg_generate(ull key64, ull keys48[16])
+void kg_generate(ull key64, ull keys48[16], bool reverse)
 {
 	ull key56 = kg_pCompression64to56(key64);
 
-	for (int i = 0; i < 16; i++)
+	for (ush i = 1; i <= 16; i++)
 	{
 		// 1,2,9,16 rotates 1 bits, else rotates 2 bits
-		switch (i + 1)
+		switch (i)
 		{
 			case 1:
 			case 2:
@@ -20,8 +20,10 @@ void kg_generate(ull key64, ull keys48[16])
 				break;
 		}
 
+		ush index = reverse ? (16 - i) : (i - 1);
+
 		// generate permuted round key
-		keys48[i] = kg_pCompression56to48(key56);
+		keys48[index] = kg_pCompression56to48(key56);
 	}
 }
 

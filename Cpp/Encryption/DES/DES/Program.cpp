@@ -9,24 +9,28 @@ ull pFinal(ull n);
 
 int main()
 {
-	// DES Algorithm Illustrated
+	// Forouzan text
 	ull key = 0xAABB09182736CCDDULL;
 	ull block = 0x123456ABCD132536ULL;
-	
-	// Forouzan text
+		
+	// DES Algorithm Illustrated
 	//ull key = 0x133457799BBCDFF1ULL;
 	//ull block = 0x0123456789ABCDEFULL;
+
+	// Reverse - Forouzan
+	//ull key = 0xAABB09182736CCDDULL;
+	//ull block = 0xc0b7a8d05f3a829cULL;
 
 	ull result = EncodeBlock(key, block);
 
 	return 0;
 }
 
-ull EncodeBlock(ull key, ull block)
+ull DESBlock(ull key, ull block)
 {
 	// generate round keys (48-bit)
 	ull keys[16];
-	kg_generate(key, keys);
+	kg_generate(key, keys, false);
 
 	// initial permutation
 	block = pInitial(block);
