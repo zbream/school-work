@@ -22,7 +22,7 @@ ull rng_padBlockWithGarbageR(ull block, ush nBytes)
 {
 	// generate nBytes random bytes
 	ull random = 0;
-	for (int i = 0; i < nBytes; i++)
+	for (ush i = 0; i < nBytes; i++)
 	{
 		random <<= 8;
 		random |= (rand() % 0x100);

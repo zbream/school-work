@@ -1,16 +1,20 @@
 #include "DESRoundEngine.h"
 
+// used for s-boxes
+#define uch unsigned char
+
 // function declarations
 ull r_pExpansion(ull);
-ush r_sBox(ush, ush);
+uch r_sBox(uch, uch);
 ull r_pStraight(ull);
 
 ull r_runRounds(ull in, ull keys[16])
 {
-	// rounds
-	ull l = (in & 0xFFFFFFFF00000000ULL);
-	ull r = (in & 0x00000000FFFFFFFFULL) << 32;
-	for (int round = 1; round <= 16; round++)
+	// initial split
+	ull l = (in & 0xffffffff00000000ULL);
+	ull r = (in & 0x00000000ffffffffULL) << 32;
+
+	for (ush round = 1; round <= 16; round++)
 	{
 		ull rOld = r;
 
@@ -21,14 +25,14 @@ ull r_runRounds(ull in, ull keys[16])
 		r ^= keys[round - 1];
 
 		// split into s-box blocks
-		ush b1 = (r & 0xfc00000000000000ULL) >> (42 + 16);
-		ush b2 = (r & 0x03f0000000000000ULL) >> (36 + 16);
-		ush b3 = (r & 0x000fc00000000000ULL) >> (30 + 16);
-		ush b4 = (r & 0x00003f0000000000ULL) >> (24 + 16);
-		ush b5 = (r & 0x000000fc00000000ULL) >> (18 + 16);
-		ush b6 = (r & 0x00000003f0000000ULL) >> (12 + 16);
-		ush b7 = (r & 0x000000000fc00000ULL) >> (6 + 16);
-		ush b8 = (r & 0x00000000003f0000ULL) >> (0 + 16);
+		uch b1 = (r & 0xfc00000000000000ULL) >> (42 + 16);
+		uch b2 = (r & 0x03f0000000000000ULL) >> (36 + 16);
+		uch b3 = (r & 0x000fc00000000000ULL) >> (30 + 16);
+		uch b4 = (r & 0x00003f0000000000ULL) >> (24 + 16);
+		uch b5 = (r & 0x000000fc00000000ULL) >> (18 + 16);
+		uch b6 = (r & 0x00000003f0000000ULL) >> (12 + 16);
+		uch b7 = (r & 0x000000000fc00000ULL) >> (6 + 16);
+		uch b8 = (r & 0x00000000003f0000ULL) >> (0 + 16);
 		r = 0;
 		r = (r | r_sBox(b1, 0)) << 4;
 		r = (r | r_sBox(b2, 1)) << 4;
@@ -50,7 +54,9 @@ ull r_runRounds(ull in, ull keys[16])
 		l = rOld;
 	}
 
-	return (r | (l >> 32));
+	// final split
+	ull out = (r | (l >> 32));
+	return out;
 }
 
 ull r_pExpansion(ull in)
@@ -93,7 +99,7 @@ ull r_pExpansion(ull in)
 	return out;
 }
 
-ush r_sBoxes[8][64] = {
+uch r_sBoxes[8][64] = {
 	// S1
 	{ 
 		14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7,
@@ -152,16 +158,16 @@ ush r_sBoxes[8][64] = {
 	}
 };
 
-ush r_sBox(ush in, ush box)
+uch r_sBox(uch in, uch box)
 {
-	ush b1 = (in & 0x20) >> 5;
-	ush b6 = (in & 0x1);
-	ush b16 = (b1 << 1) | b6;
-	ush b2345 = (in >> 1) & 0xf;
+	// move bits to proper positions
+	uch b2345 = (in >> 1) & 0xF;
+	uch b16 = (in & 0x20) | (in & 0x1 << 4);
 
-	ush b = (b16 << 4) | b2345;
+	uch b = b16 | b2345;
 
-	return r_sBoxes[box][b];
+	uch out = r_sBoxes[box][b];
+	return out;
 }
 
 ull r_pStraight(ull in)
