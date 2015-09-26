@@ -1,16 +1,19 @@
 #include "DESMain.h"
 #include "DESKeyGen.h"
 #include "DESRoundEngine.h"
+#include "RNG.h"
 #include <stdio.h>
 
 // function declarations
 ull pInitial(ull);
 ull pFinal(ull);
 ull readBlock(FILE*, ush);
-void writeBlock(FILE*, ull);
+void writeBlock(FILE*, ull, ush);
 
 void DESFileEncrypt(ull key, char inPath[], char outPath[])
 {
+	rng_seed();
+
 	// open input file
 	FILE *in;
 	int r = fopen_s(&in, inPath, "rb");
@@ -29,30 +32,36 @@ void DESFileEncrypt(ull key, char inPath[], char outPath[])
 	fseek(in, 0, SEEK_SET);
 
 	// write file length block
-	writeBlock(out, DESBlock(keys, inSize));
+	{
+		ull block = inSize;
+		block = rng_padBlockWithGarbageL(block, 4);
+		block = DESBlock(keys, block);
 
-	// write the complete blocks
-	long numBlocks = inSize / 8;
-	for (int i = 0; i < numBlocks; i++)
+		writeBlock(out, block, 8);
+	}
+
+	// write complete blocks
+	long numCompleteBlocks = inSize / 8;
+	for (int i = 0; i < numCompleteBlocks; i++)
 	{
 		// read block and encrypt
 		ull block = readBlock(in, 8);
 		block = DESBlock(keys, block);
 
-		// write to output
-		writeBlock(out, block);
+		writeBlock(out, block, 8);
 	}
 
 	// write incomplete block
-	long numBitsRemaining = inSize % 8;
-	if (numBitsRemaining > 0)
+	long numBytesRemaining = inSize % 8;
+	if (numBytesRemaining > 0)
 	{
-		// read to left-most bytes
-		ull block = readBlock(in, numBitsRemaining);
-		block <<= (8 * (8 - numBitsRemaining));
+		// read remaining, align left, pad with garbage, encrypt
+		ull block = readBlock(in, numBytesRemaining);
+		block <<= (8 * (8 - numBytesRemaining));
+		block = rng_padBlockWithGarbageR(block, 8 - numBytesRemaining);
 		block = DESBlock(keys, block);
 
-		writeBlock(out, block);
+		writeBlock(out, block, 8);
 	}
 
 	fclose(in);
@@ -78,49 +87,38 @@ void DESFileDecrypt(ull key, char inPath[], char outPath[])
 	fileLengthBlock = DESBlock(keys, fileLengthBlock);
 	long inSize = fileLengthBlock & 0xFFFFFFFF;
 
-	// read the complete blocks
-	long numBlocks = inSize / 8;
-	for (int i = 0; i < numBlocks; i++)
+	// read complete blocks
+	long numCompleteBlocks = inSize / 8;
+	for (int i = 0; i < numCompleteBlocks; i++)
 	{
 		// read block and decrypt
 		ull block = readBlock(in, 8);
 		block = DESBlock(keys, block);
 
 		// write to output
-		writeBlock(out, block);
+		writeBlock(out, block, 8);
 	}
 
-	// read the incomplete blocks
+	// read incomplete block
 	long numBytesRemaining = inSize % 8;
 	if (numBytesRemaining > 0)
 	{
+		// read block, decrypt, shift back to right
 		ull block = readBlock(in, 8);
 		block = DESBlock(keys, block);
 		block >>= (8 * (8 - numBytesRemaining));
 
-		ull reverse = 0;
-		for (ush i = 0; i < numBytesRemaining; i++)
-		{
-			reverse <<= 8;
-			reverse |= (block & 0xFF);
-			block >>= 8;
-		}
-
-		for (ush i = 0; i < numBytesRemaining; i++)
-		{
-			fputc(reverse & 0xFF, out);
-			reverse >>= 8;
-		}
+		writeBlock(out, block, numBytesRemaining);
 	}
 
 	fclose(in);
 	fclose(out);
 }
 
-ull readBlock(FILE* input, ush bytes)
+ull readBlock(FILE* input, ush nBytes)
 {
 	ull out = 0;
-	for (ush i = 0; i < bytes; i++)
+	for (ush i = 0; i < nBytes; i++)
 	{
 		out <<= 8;
 		out |= fgetc(input);
@@ -129,24 +127,25 @@ ull readBlock(FILE* input, ush bytes)
 	return out;
 }
 
-void writeBlock(FILE* output, ull block)
+void writeBlock(FILE* output, ull block, ush nBytes)
 {
 	ull reverse = 0;
 
-	for (ush i = 0; i < 8; i++)
+	for (ush i = 0; i < nBytes; i++)
 	{
 		reverse <<= 8;
 		reverse |= (block & 0xFF);
 		block >>= 8;
 	}
 
-	for (ush i = 0; i < 8; i++)
+	for (ush i = 0; i < nBytes; i++)
 	{
 		fputc(reverse & 0xFF, output);
 		reverse >>= 8;
 	}
 }
 
+#pragma region DES
 ull DESBlock(ull keys[16], ull block)
 {
 	// initial permutation
@@ -305,4 +304,5 @@ ull pFinal(ull in)
 
 	return out;
 }
+#pragma endregion
 #pragma endregion

@@ -1,0 +1,32 @@
+#include "RNG.h"
+#include <stdlib.h>
+#include <time.h>
+
+void rng_seed()
+{
+	srand(time(NULL));
+}
+
+ull rng_padBlockWithGarbageL(ull block, ush nBytes)
+{
+	// get nBytes random bytes
+	ull random = rng_padBlockWithGarbageR(0, nBytes);
+
+	// now shift these random bytes to align left
+	random <<= (8 * (8 - nBytes));
+
+	return (block | random);
+}
+
+ull rng_padBlockWithGarbageR(ull block, ush nBytes)
+{
+	// generate nBytes random bytes
+	ull random = 0;
+	for (int i = 0; i < nBytes; i++)
+	{
+		random <<= 8;
+		random |= (rand() % 0x100);
+	}
+
+	return (block | random);
+}

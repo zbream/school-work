@@ -86,12 +86,14 @@
     <ClCompile Include="DESMain.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="DESRoundEngine.cpp" />
+    <ClCompile Include="RNG.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="DESKeyGen.h" />
     <ClInclude Include="DESMain.h" />
     <ClInclude Include="DESRoundEngine.h" />
+    <ClInclude Include="RNG.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

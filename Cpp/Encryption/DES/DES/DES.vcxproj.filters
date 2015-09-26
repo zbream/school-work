@@ -27,6 +27,9 @@
     <ClCompile Include="DESMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RNG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -39,6 +42,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DESMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RNG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
