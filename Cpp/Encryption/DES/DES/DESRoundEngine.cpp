@@ -1,5 +1,10 @@
 #include "DESRoundEngine.h"
 
+// function declarations
+ull r_pExpansion(ull);
+ush r_sBox(ush, ush);
+ull r_pStraight(ull);
+
 ull r_runRounds(ull in, ull keys[16])
 {
 	// rounds

@@ -1,5 +1,11 @@
 #include "DESKeyGen.h"
 
+// function declarations
+ull kg_pCompression64to56(ull);
+ull kg_rotate1bits(ull);
+ull kg_rotate2bits(ull);
+ull kg_pCompression56to48(ull);
+
 void kg_generate(ull key64, ull keys48[16], bool reverse)
 {
 	ull key56 = kg_pCompression64to56(key64);
