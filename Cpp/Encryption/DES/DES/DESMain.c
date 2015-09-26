@@ -2,7 +2,6 @@
 #include "DESKeyGen.h"
 #include "DESRoundEngine.h"
 #include "RNG.h"
-#include <stdio.h>
 
 // function declarations
 ull pInitial(ull);
@@ -10,17 +9,9 @@ ull pFinal(ull);
 ull readBlock(FILE*, ush);
 void writeBlock(FILE*, ull, ush);
 
-void DESFileEncrypt(ull key, char inPath[], char outPath[])
+void DESFileEncrypt(ull key, FILE* in, FILE* out)
 {
 	rng_seed();
-
-	// open input file
-	FILE *in;
-	int r = fopen_s(&in, inPath, "rb");
-
-	// create output file
-	FILE *out;
-	fopen_s(&out, outPath, "wb");
 
 	// generate keys
 	ull keys[16];
@@ -63,21 +54,10 @@ void DESFileEncrypt(ull key, char inPath[], char outPath[])
 
 		writeBlock(out, block, 8);
 	}
-
-	fclose(in);
-	fclose(out);
 }
 
-void DESFileDecrypt(ull key, char inPath[], char outPath[])
+void DESFileDecrypt(ull key, FILE* in, FILE* out)
 {
-	// open input file
-	FILE *in;
-	int inResult = fopen_s(&in, inPath, "rb");
-
-	// create output file
-	FILE *out;
-	int outResult = fopen_s(&out, outPath, "wb");
-
 	// generate keys
 	ull keys[16];
 	kg_generate(key, keys, true);
@@ -110,9 +90,6 @@ void DESFileDecrypt(ull key, char inPath[], char outPath[])
 
 		writeBlock(out, block, numBytesRemaining);
 	}
-
-	fclose(in);
-	fclose(out);
 }
 
 ull readBlock(FILE* input, ush nBytes)

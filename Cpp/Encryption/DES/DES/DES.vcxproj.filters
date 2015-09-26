@@ -15,19 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Program.cpp">
+    <ClCompile Include="DESKeyGen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DESKeyGen.cpp">
+    <ClCompile Include="DESMain.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DESRoundEngine.cpp">
+    <ClCompile Include="DESRoundEngine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DESMain.cpp">
+    <ClCompile Include="Program.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RNG.cpp">
+    <ClCompile Include="RNG.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

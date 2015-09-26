@@ -1,5 +1,7 @@
 #pragma once
 
+typedef enum { false, true } bool;
+
 // the 64-bit block type
 #define ull unsigned long long
 #define ush unsigned short

@@ -82,11 +82,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DESKeyGen.cpp" />
-    <ClCompile Include="DESMain.cpp" />
-    <ClCompile Include="Program.cpp" />
-    <ClCompile Include="DESRoundEngine.cpp" />
-    <ClCompile Include="RNG.cpp" />
+    <ClCompile Include="DESKeyGen.c" />
+    <ClCompile Include="DESMain.c" />
+    <ClCompile Include="Program.c" />
+    <ClCompile Include="DESRoundEngine.c" />
+    <ClCompile Include="RNG.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
