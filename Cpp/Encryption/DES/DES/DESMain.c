@@ -65,7 +65,7 @@ void DESFileDecrypt(ull key, FILE* in, FILE* out)
 	// read file length, in bytes
 	ull fileLengthBlock = readBlock(in, 8);
 	fileLengthBlock = DESBlock(keys, fileLengthBlock);
-	long inSize = fileLengthBlock & 0xFFFFFFFF;
+	long inSize = fileLengthBlock & 0x7FFFFFFF;
 
 	// read complete blocks
 	long numCompleteBlocks = inSize / 8;
