@@ -2,6 +2,7 @@
 #include "DESMain.h"
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 // case insensitive check for equality
 #define streq(s1, s2) !_stricmp(s1, s2)
@@ -100,6 +101,9 @@ int main(int argc, char *argv[])
 
 			if (validFiles)
 			{
+				// start time
+				clock_t timeBegin = clock();
+
 				switch (cAction)
 				{
 				case ACTION_ENCRYPT:
@@ -109,6 +113,10 @@ int main(int argc, char *argv[])
 					DESFileDecrypt(cKey, iFile, oFile);
 					break;
 				}
+
+				// end time
+				clock_t timeEnd = clock();
+				printf("Time elapsed: %ims", timeEnd - timeBegin);
 			}
 			else
 			{
