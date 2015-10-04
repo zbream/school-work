@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DC.Server", "DC.Server\DC.Server.vcxproj", "{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DC.Client", "DC.Client\DC.Client.vcxproj", "{A31A9E74-FBA5-4644-8308-F8A0ABD51611}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DC.Common", "DC.Common\DC.Common.vcxproj", "{90BF9E13-A15D-4516-979E-436D63DBE3B2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}.Debug|x64.ActiveCfg = Debug|x64
+		{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}.Debug|x64.Build.0 = Debug|x64
+		{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}.Debug|x86.ActiveCfg = Debug|Win32
+		{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}.Debug|x86.Build.0 = Debug|Win32
+		{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}.Release|x64.ActiveCfg = Release|x64
+		{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}.Release|x64.Build.0 = Release|x64
+		{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}.Release|x86.ActiveCfg = Release|Win32
+		{12933647-2DB9-4F19-B93B-2A13F1ED1C2F}.Release|x86.Build.0 = Release|Win32
+		{A31A9E74-FBA5-4644-8308-F8A0ABD51611}.Debug|x64.ActiveCfg = Debug|x64
+		{A31A9E74-FBA5-4644-8308-F8A0ABD51611}.Debug|x64.Build.0 = Debug|x64
+		{A31A9E74-FBA5-4644-8308-F8A0ABD51611}.Debug|x86.ActiveCfg = Debug|Win32
+		{A31A9E74-FBA5-4644-8308-F8A0ABD51611}.Debug|x86.Build.0 = Debug|Win32
+		{A31A9E74-FBA5-4644-8308-F8A0ABD51611}.Release|x64.ActiveCfg = Release|x64
+		{A31A9E74-FBA5-4644-8308-F8A0ABD51611}.Release|x64.Build.0 = Release|x64
+		{A31A9E74-FBA5-4644-8308-F8A0ABD51611}.Release|x86.ActiveCfg = Release|Win32
+		{A31A9E74-FBA5-4644-8308-F8A0ABD51611}.Release|x86.Build.0 = Release|Win32
+		{90BF9E13-A15D-4516-979E-436D63DBE3B2}.Debug|x64.ActiveCfg = Debug|x64
+		{90BF9E13-A15D-4516-979E-436D63DBE3B2}.Debug|x64.Build.0 = Debug|x64
+		{90BF9E13-A15D-4516-979E-436D63DBE3B2}.Debug|x86.ActiveCfg = Debug|Win32
+		{90BF9E13-A15D-4516-979E-436D63DBE3B2}.Debug|x86.Build.0 = Debug|Win32
+		{90BF9E13-A15D-4516-979E-436D63DBE3B2}.Release|x64.ActiveCfg = Release|x64
+		{90BF9E13-A15D-4516-979E-436D63DBE3B2}.Release|x64.Build.0 = Release|x64
+		{90BF9E13-A15D-4516-979E-436D63DBE3B2}.Release|x86.ActiveCfg = Release|Win32
+		{90BF9E13-A15D-4516-979E-436D63DBE3B2}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://zbream.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DC.Server\\DC.Server.vcxproj
+		SccProjectName1 = DC.Server
+		SccLocalPath1 = DC.Server
+		SccProjectUniqueName2 = DC.Client\\DC.Client.vcxproj
+		SccProjectName2 = DC.Client
+		SccLocalPath2 = DC.Client
+		SccProjectUniqueName3 = DC.Common\\DC.Common.vcxproj
+		SccProjectName3 = DC.Common
+		SccLocalPath3 = DC.Common
+	EndGlobalSection
+EndGlobal
