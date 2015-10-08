@@ -1,38 +1,40 @@
 #include "PhysicalLayer.h"
 
+#define USE_EVEN_PARITY false
+
 uch p_addParity(uch byte)
 {
 	uch out = byte;
 
 	// calculate parity
-	bool odd = false;
+	bool parity = USE_EVEN_PARITY;
 	for (int i = 0; i < 8; i++)
 	{
 		if (byte & 0x1)
 		{
-			odd = !odd;
+			parity = !parity;
 		}
 		byte >>= 1;
 	}
-
-	if (!odd) out |= 0x80;
+	if (!parity) out |= 0x80;
 
 	return out;
 }
 
 bool p_checkParity(uch byte)
 {
-	bool odd = false;
+	// calculate parity
+	bool parity = USE_EVEN_PARITY;
 	for (int i = 0; i < 8; i++)
 	{
 		if (byte & 0x1)
 		{
-			odd = !odd;
+			parity = !parity;
 		}
 		byte >>= 1;
 	}
 
-	return odd;
+	return parity;
 }
 
 uch p_stripParity(uch byte)
