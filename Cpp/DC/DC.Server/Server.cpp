@@ -131,15 +131,15 @@ int main(int argc, char *argv[])
 			else
 			{
 				// create notifier
-				memcpy(charBuffer, "[PARITY]", 8);
-				charN = 8;
+				memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", 64);
+				charN = 64;
 			}
 
 			// write to file
 			a_writeBuffer(output, charBuffer, charN);
 
 			// and output to the user
-			//std::cout.write((char*)charBuffer, charN);
+			std::cout.write((char*)charBuffer, charN);
 		}
 	}
 	
