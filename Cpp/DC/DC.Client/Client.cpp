@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
 	// create frame buffer (to transmit)
 	uch frameBuffer[3 + 8 * CHAR_LIMIT];
 	uch frameN;
+	uch sentN;
 
 	// begin reading and sending
 	while (true)
@@ -93,11 +94,16 @@ int main(int argc, char *argv[])
 			frameN = l_prepareFrame(charBuffer, charN, frameBuffer);
 
 			// transmit
-			uch sendN = send(sockTransmit, (char*)frameBuffer, frameN, 0);
-			if (sendN == SOCKET_ERROR)
+			sentN = send(sockTransmit, (char*)frameBuffer, frameN, 0);
+			if (sentN == SOCKET_ERROR)
 			{
 				int errorNo = WSAGetLastError();
 				std::cerr << "ERROR sending: " << errorNo << std::endl;
+				break;
+			}
+			else if (sentN != frameN)
+			{
+				std::cerr << "ERROR, entire buffer was not sent for some reason." << std::endl;
 				break;
 			}
 		}
