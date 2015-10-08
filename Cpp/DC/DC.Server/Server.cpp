@@ -79,8 +79,8 @@ int main(int argc, char *argv[])
 	}
 
 	// open output file
-	FILE *output;
-	if (fopen_s(&output, OUTPATH, "wb"))
+	FILE *output = fopen(OUTPATH, "wb");
+	if(output == NULL)
 	{
 		// error opening output
 		std::cerr << "ERROR opening file for writing" << OUTPATH << std::endl;

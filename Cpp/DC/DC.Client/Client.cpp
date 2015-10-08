@@ -65,8 +65,8 @@ int main(int argc, char *argv[])
 	}
 
 	// open input file
-	FILE *input;
-	if (fopen_s(&input, INPATH, "rb"))
+	FILE *input = fopen(INPATH, "rb");
+	if(input == NULL)
 	{
 		// error opening input
 		std::cerr << "ERROR opening file for reading: " << INPATH << std::endl;
