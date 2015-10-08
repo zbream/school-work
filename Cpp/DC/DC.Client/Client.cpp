@@ -93,7 +93,13 @@ int main(int argc, char *argv[])
 			frameN = l_prepareFrame(charBuffer, charN, frameBuffer);
 
 			// transmit
-			send(sockTransmit, (char*)frameBuffer, frameN, 0);
+			uch sendN = send(sockTransmit, (char*)frameBuffer, frameN, 0);
+			if (sendN == SOCKET_ERROR)
+			{
+				int errorNo = WSAGetLastError();
+				std::cerr << "ERROR sending: " << errorNo << std::endl;
+				break;
+			}
 		}
 		else
 		{
