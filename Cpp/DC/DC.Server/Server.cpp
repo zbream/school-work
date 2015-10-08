@@ -114,9 +114,19 @@ int main(int argc, char *argv[])
 		else if (frameN > 0)
 		{
 			// received a transmission, read it
-			
-			// parse frame
-			charN = l_parseFrame(frameBuffer, frameN, charBuffer);
+
+			// check parity
+			if (l_validateFrame(frameBuffer, frameN))
+			{
+				// parse frame
+				charN = l_parseFrame(frameBuffer, frameN, charBuffer);
+			}
+			else
+			{
+				// create notifier
+				memcpy(charBuffer, "[PARITY]", 8);
+				charN = 8;
+			}
 
 			// write to file
 			a_writeBuffer(output, charBuffer, charN);
