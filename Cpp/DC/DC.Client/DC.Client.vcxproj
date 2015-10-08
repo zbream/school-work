@@ -155,6 +155,14 @@
       <Project>{90bf9e13-a15d-4516-979e-436d63dbe3b2}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="input.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+    <Text Include="shakespeare.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

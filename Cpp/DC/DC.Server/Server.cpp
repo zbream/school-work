@@ -87,33 +87,40 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	// create transmit buffer
+	uch transmitBuffer[(CHAR_LIMIT + 3) * 8];
+	uint transmitN;
+
 	// create frame buffer (to receive)
-	uch frameBuffer[3 + 8 * CHAR_LIMIT];
-	uch frameN;
+	uch frameBuffer[CHAR_LIMIT + 3];
+	uint frameN;
 
 	// create char buffer (to output file)
 	uch charBuffer[CHAR_LIMIT];
-	uch charN;
+	uint charN;
 
 	while (true)
 	{
 		// receive transmission
-		frameN = recv(sockTransmit, (char*)frameBuffer, 3 + 8 * CHAR_LIMIT, 0);
+		transmitN = recv(sockTransmit, (char*)transmitBuffer, (CHAR_LIMIT + 3) * 8, 0);
 
-		if (frameN == 0)
+		if (transmitN == 0)
 		{
 			// connection closed gracefully
 			break;
 		}
-		else if (frameN == 0xFF)//SOCKET_ERROR)
+		else if (transmitN == 0xFF)//SOCKET_ERROR)
 		{
 			int errorNo = WSAGetLastError();
 			std::cerr << "ERROR receiving: " << errorNo << std::endl;
 			return 1;
 		}
-		else if (frameN > 0)
+		else if (transmitN > 0)
 		{
 			// received a transmission, read it
+
+			// parse transmission
+			frameN = l_parseTransmission(transmitBuffer, transmitN, frameBuffer);
 
 			// check parity
 			if (l_validateFrame(frameBuffer, frameN))
@@ -132,7 +139,7 @@ int main(int argc, char *argv[])
 			a_writeBuffer(output, charBuffer, charN);
 
 			// and output to the user
-			std::cout.write((char*)charBuffer, charN);
+			//std::cout.write((char*)charBuffer, charN);
 		}
 	}
 	

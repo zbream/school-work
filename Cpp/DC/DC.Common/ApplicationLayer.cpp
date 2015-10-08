@@ -1,9 +1,9 @@
 #include "ApplicationLayer.h"
 
-uch a_readBuffer(FILE* file, uch charBuffer[CHAR_LIMIT])
+uint a_readBuffer(FILE* file, uch charBuffer[CHAR_LIMIT])
 {
 	char c;
-	for (uch i = 0; i < CHAR_LIMIT; i++)
+	for (uint i = 0; i < CHAR_LIMIT; i++)
 	{
 		c = fgetc(file);
 		if (c != EOF)
@@ -19,9 +19,9 @@ uch a_readBuffer(FILE* file, uch charBuffer[CHAR_LIMIT])
 	return CHAR_LIMIT;
 }
 
-void a_writeBuffer(FILE* file, uch charBuffer[CHAR_LIMIT], uch charN)
+void a_writeBuffer(FILE* file, uch charBuffer[CHAR_LIMIT], uint charN)
 {
-	for (uch i = 0; i < charN; i++)
+	for (uint i = 0; i < charN; i++)
 	{
 		fputc(charBuffer[i], file);
 	}
