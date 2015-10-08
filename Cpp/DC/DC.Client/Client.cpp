@@ -73,20 +73,22 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	// create char buffer (from input file)
+	// char buffer (data stream)
 	uch charBuffer[CHAR_LIMIT];
 	uint charN;
 
-	// create frame buffer (to transmit)
+	// frame buffer (3 chars + data stream)
 	uch frameBuffer[CHAR_LIMIT + 3];
 	uint frameN;
 
-	// create transmit buffer
+	// raw transmission buffer (0/1 chars)
 	uch transmitBuffer[(CHAR_LIMIT + 3) * 8];
 	uint transmitN;
-	uint sentN;
+	
+	// initialization for sending a frame
+	int sentBytes;
 
-	// begin reading and sending
+	// loop for entire transmission
 	while (true)
 	{
 		charN = a_readBuffer(input, charBuffer);
@@ -98,20 +100,20 @@ int main(int argc, char *argv[])
 			frameN = l_prepareFrame(charBuffer, charN, frameBuffer);
 
 			// prepare transmission
-			transmitN = l_prepareTransmission(frameBuffer, frameN, transmitBuffer);
+			transmitN = l_prepareTransmit(frameBuffer, frameN, transmitBuffer);
 
 			// transmit
-			sentN = send(sockTransmit, (char*)transmitBuffer, transmitN, 0);
-			if (sentN == 0xFF)//SOCKET_ERROR)
+			sentBytes = send(sockTransmit, (char*)transmitBuffer, transmitN, 0);
+			if (sentBytes == SOCKET_ERROR)
 			{
 				int errorNo = WSAGetLastError();
 				std::cerr << "ERROR sending: " << errorNo << std::endl;
-				break;
+				return 1;
 			}
-			else if (sentN != transmitN)
+			else if (sentBytes != transmitN)
 			{
 				std::cerr << "ERROR, entire buffer was not sent for some reason." << std::endl;
-				break;
+				return 1;
 			}
 		}
 		else

@@ -87,40 +87,71 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	// create transmit buffer
+	// raw transmission buffer (0/1 chars)
 	uch transmitBuffer[(CHAR_LIMIT + 3) * 8];
 	uint transmitN;
-
-	// create frame buffer (to receive)
+	
+	// frame buffer (3 chars + data stream)
 	uch frameBuffer[CHAR_LIMIT + 3];
 	uint frameN;
 
-	// create char buffer (to output file)
+	// char buffer (data stream)
 	uch charBuffer[CHAR_LIMIT];
 	uint charN;
 
+	// initialization for reading an entire frame
+	FD_SET readSet;
+	int readBytes;
+
+	// loop for entire transmission
 	while (true)
 	{
-		// receive transmission
-		transmitN = recv(sockTransmit, (char*)transmitBuffer, (CHAR_LIMIT + 3) * 8, 0);
+		// begin reading a new frame
+		readBytes = 0;
+		transmitN = 0;
+		while (true)
+		{
+			// wait for data at the socket
+			FD_ZERO(&readSet);
+			FD_SET(sockTransmit, &readSet);
+			select(sockTransmit, &readSet, NULL, NULL, NULL);
+
+			// receive data at socket
+			readBytes = recv(sockTransmit, (char*)&transmitBuffer[transmitN], ((CHAR_LIMIT + 3) * 8) - transmitN, 0);
+			if (readBytes == 0)
+			{
+				// nothing to receive
+				break;
+			}
+			else if (readBytes == SOCKET_ERROR)
+			{
+				int errorNo = WSAGetLastError();
+				std::cerr << "ERROR receiving: " << errorNo << std::endl;
+				return 1;
+			}
+			else
+			{
+				// received a [partial] frame
+				transmitN += readBytes;
+				if (transmitN == (CHAR_LIMIT + 3) * 8)
+				{
+					// received a complete frame
+					break;
+				}
+			}
+		}
 
 		if (transmitN == 0)
 		{
 			// connection closed gracefully
 			break;
 		}
-		else if (transmitN == 0xFF)//SOCKET_ERROR)
-		{
-			int errorNo = WSAGetLastError();
-			std::cerr << "ERROR receiving: " << errorNo << std::endl;
-			return 1;
-		}
-		else if (transmitN > 0)
+		else
 		{
 			// received a transmission, read it
 
-			// parse transmission
-			frameN = l_parseTransmission(transmitBuffer, transmitN, frameBuffer);
+			// parse transmission (0/1 -> raw frame)
+			frameN = l_parseTransmit(transmitBuffer, transmitN, frameBuffer);
 
 			// check parity
 			if (l_validateFrame(frameBuffer, frameN))
@@ -138,7 +169,7 @@ int main(int argc, char *argv[])
 			// write to file
 			a_writeBuffer(output, charBuffer, charN);
 
-			// and output to the user
+			// and output to the console
 			std::cout.write((char*)charBuffer, charN);
 		}
 	}
