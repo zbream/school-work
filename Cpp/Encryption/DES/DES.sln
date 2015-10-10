@@ -5,33 +5,54 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DES", "DES\DES.vcxproj", "{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DES.Analysis", "DES.Analysis\DES.Analysis.csproj", "{92E1EA0D-E7B7-4883-8694-A2039BEED297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
 		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Debug|Win32.ActiveCfg = Debug|Win32
 		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Debug|Win32.Build.0 = Debug|Win32
 		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Debug|x64.ActiveCfg = Debug|x64
 		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Debug|x64.Build.0 = Debug|x64
+		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Release|Any CPU.ActiveCfg = Release|Win32
 		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Release|Win32.ActiveCfg = Release|Win32
 		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Release|Win32.Build.0 = Release|Win32
 		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Release|x64.ActiveCfg = Release|x64
 		{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}.Release|x64.Build.0 = Release|x64
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Debug|Win32.Build.0 = Debug|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Debug|x64.Build.0 = Debug|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|Win32.ActiveCfg = Release|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|Win32.Build.0 = Release|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|x64.ActiveCfg = Release|Any CPU
+		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
+		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://zbream.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = DES\\DES.vcxproj
 		SccProjectName1 = DES
 		SccLocalPath1 = DES
+		SccProjectUniqueName2 = DES.Analysis\\DES.Analysis.csproj
+		SccProjectName2 = DES.Analysis
+		SccLocalPath2 = DES.Analysis
 	EndGlobalSection
 EndGlobal
