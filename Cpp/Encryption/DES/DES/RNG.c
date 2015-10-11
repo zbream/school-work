@@ -20,6 +20,9 @@ ull rng_padBlockWithGarbageL(ull block, ush nBytes)
 
 ull rng_padBlockWithGarbageR(ull block, ush nBytes)
 {
+	// NOTE: these randon bytes are not truly randomly distributed, 
+	// but are good enough to do what we need.
+
 	// generate nBytes random bytes
 	ull random = 0;
 	for (ush i = 0; i < nBytes; i++)

@@ -1,6 +1,6 @@
 #include "DESKeyGen.h"
 
-// function declarations
+// function declarations 
 ull kg_pCompression64to56(ull);
 ull kg_rotate1bits(ull);
 ull kg_rotate2bits(ull);
@@ -12,18 +12,18 @@ void kg_generate(ull key64, ull keys48[16], bool reverse)
 
 	for (ush i = 1; i <= 16; i++)
 	{
-		// 1,2,9,16 rotates 1 bits, else rotates 2 bits
+		// 1,2,9,16 rotates 1 bits, otherwise rotates 2 bits
 		switch (i)
 		{
-			case 1:
-			case 2:
-			case 9:
-			case 16:
-				key56 = kg_rotate1bits(key56);
-				break;
-			default:
-				key56 = kg_rotate2bits(key56);
-				break;
+		case 1:
+		case 2:
+		case 9:
+		case 16:
+			key56 = kg_rotate1bits(key56);
+			break;
+		default:
+			key56 = kg_rotate2bits(key56);
+			break;
 		}
 
 		ush index = reverse ? (16 - i) : (i - 1);
@@ -33,6 +33,8 @@ void kg_generate(ull key64, ull keys48[16], bool reverse)
 	}
 }
 
+// Performs the DES Key's initial 64to56-bit compression p-box.
+// Returns the 56-bit key, left-aligned, used in further key generation.
 ull kg_pCompression64to56(ull in)
 {
 	ull out = 0;
@@ -105,27 +107,31 @@ ull kg_pCompression64to56(ull in)
 	return out;
 }
 
-// rotate 56-bit key
+// Performs the DES Key's 56-bit L/R circular shift, of one bit position.
+// Returns the result of the rotation.
 ull kg_rotate1bits(ull key)
 {
-	// rotate L
+	// rotate L-half
 	ull L = (key & 0xFFFFFFF000000000ULL);
 	L = (L << 1) | ((L & 0x8000000000000000ULL) >> (28 - 1));
 
-	// rotate R
+	// rotate R-half
 	ull R = (key & 0x0000000FFFFFFF00ULL);
 	R = (R << 1) | ((R & 0x0000000800000000ULL) >> (28 - 1));
 	R &= 0x0000000FFFFFFF00ULL;
 
 	return (L | R);
 }
+
+// Performs the DES Key's 56-bit L/R circular shift, of two bit positions.
+// Returns the result of the rotation.
 ull kg_rotate2bits(ull key)
 {
-	// rotate L
+	// rotate L-half
 	ull L = (key & 0xFFFFFFF000000000ULL);
 	L = (L << 2) | ((L & 0xc000000000000000ULL) >> (28 - 2));
 
-	// rotate R
+	// rotate R-half
 	ull R = (key & 0x0000000FFFFFFF00ULL);
 	R = (R << 2) | ((R & 0x0000000c00000000ULL) >> (28 - 2));
 	R &= 0x0000000FFFFFFF00ULL;
@@ -133,6 +139,8 @@ ull kg_rotate2bits(ull key)
 	return (L | R);
 }
 
+// Performs the DES key's final 56to48-bit compression p-box.
+// Returns the 48-bit round key, left-aligned.
 ull kg_pCompression56to48(ull in)
 {
 	ull out = 0;

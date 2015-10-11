@@ -8,16 +8,17 @@
 #define streq(s1, s2) !_stricmp(s1, s2)
 
 // enum declarations
-typedef enum { ACTION_INVALID, ACTION_ENCRYPT, ACTION_DECRYPT } action;
-typedef enum { MODE_INVALID, MODE_ECB } mode;
+typedef enum { ACTION_INVALID, ACTION_ENCRYPT, ACTION_DECRYPT } ACTION;
+typedef enum { MODE_INVALID, MODE_ECB } MODE;
 
 // function declarations
-action getAction(char arg[]);
-bool getKey(char arg[], ull *key);
-bool getKeyString(char arg[], ull *key);
-bool getKeyChar(char arg[], ull *key);
-mode getMode(char arg[]);
+ACTION getAction(char[]);
+bool getKey(char[], ull*);
+bool getKeyString(char[], ull*);
+bool getKeyChar(char[], ull*);
+MODE getMode(char[]);
 
+// Outputs the command-line usage to the console.
 void printUsage()
 {
 	printf(
@@ -39,6 +40,7 @@ void printUsage()
 		);
 }
 
+// The main entry-point to the program.
 int main(int argc, char *argv[])
 {
 	int rVal = 0;
@@ -48,7 +50,7 @@ int main(int argc, char *argv[])
 		bool validConfiguration = true;
 
 		// read action
-		action cAction = getAction(argv[1]);
+		ACTION cAction = getAction(argv[1]);
 		if (cAction == ACTION_INVALID)
 		{
 			// invalid action
@@ -68,7 +70,7 @@ int main(int argc, char *argv[])
 		}
 
 		// read mode
-		mode cMode = getMode(argv[3]);
+		MODE cMode = getMode(argv[3]);
 		if (cMode == MODE_INVALID)
 		{
 			// invalid mode
@@ -142,9 +144,11 @@ int main(int argc, char *argv[])
 	return rVal;
 }
 
-action getAction(char arg[])
+// Parse the encrypt/decrypt action from a command-line parameter.
+// Returns the ACTION parsed.
+ACTION getAction(char arg[])
 {
-	action output = ACTION_INVALID;
+	ACTION output = ACTION_INVALID;
 
 	if (streq(arg, "-e"))
 	{
@@ -158,6 +162,8 @@ action getAction(char arg[])
 	return output;
 }
 
+// Parse the 64-bit key from a command-line parameter.
+// If valid input, places the key in *key and returns true.
 bool getKey(char arg[], ull *key)
 {
 	int inLength = strlen(arg);
@@ -172,6 +178,8 @@ bool getKey(char arg[], ull *key)
 	}
 }
 
+// Parse the 64-bit key from a command-line parameter, as an 8-character string.
+// If valid input, places the key in *key and returns true.
 bool getKeyString(char arg[], ull *key)
 {
 	// key is presumably a character string
@@ -196,6 +204,8 @@ bool getKeyString(char arg[], ull *key)
 	}
 }
 
+// Parse the 64-bit key from a command-line parameter, as a 16-digit hex string.
+// If valid input, places the key in *key and returns true.
 bool getKeyHex(char arg[], ull *key)
 {
 	// key is presumably a hex string
@@ -229,9 +239,11 @@ bool getKeyHex(char arg[], ull *key)
 	return true;
 }
 
-mode getMode(char arg[])
+// Parse the DES mode from a command-line parameter.
+// Returns the MODE parsed.
+MODE getMode(char arg[])
 {
-	mode output = MODE_INVALID;
+	MODE output = MODE_INVALID;
 
 	if (streq(arg, "ecb"))
 	{

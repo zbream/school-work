@@ -4,10 +4,11 @@
 #include "RNG.h"
 
 // function declarations
-ull pInitial(ull);
-ull pFinal(ull);
 ull readBlock(FILE*, ush);
 void writeBlock(FILE*, ull, ush);
+ull DESBlock(ull[16], ull);
+ull pInitial(ull);
+ull pFinal(ull);
 
 void DESFileEncrypt(ull key, FILE* in, FILE* out)
 {
@@ -92,22 +93,30 @@ void DESFileDecrypt(ull key, FILE* in, FILE* out)
 	}
 }
 
-ull readBlock(FILE* input, ush nBytes)
+// Read the next nBytes from the in file, as a block.
+// Returns the block with the read bytes in LtoR order, aligned right.
+ull readBlock(FILE* in, ush nBytes)
 {
+	// read those bytes
 	ull out = 0;
 	for (ush i = 0; i < nBytes; i++)
 	{
 		out <<= 8;
-		out |= fgetc(input);
+		out |= fgetc(in);
 	}
 
 	return out;
 }
 
-void writeBlock(FILE* output, ull block, ush nBytes)
+// Write nBytes of the block to the out file.
+// Writes the right-most bytes of the block, LtoR order.
+void writeBlock(FILE* out, ull block, ush nBytes)
 {
-	ull reverse = 0;
+	// [0][0][0][0][0][1][2][3], nBytes=3
+	// We want to write the right-most 3 bytes, LtoR
 
+	// create a "stack" of the bytes we wish to write
+	ull reverse = 0;
 	for (ush i = 0; i < nBytes; i++)
 	{
 		reverse <<= 8;
@@ -115,14 +124,17 @@ void writeBlock(FILE* output, ull block, ush nBytes)
 		block >>= 8;
 	}
 
+	// write those bytes
 	for (ush i = 0; i < nBytes; i++)
 	{
-		fputc(reverse & 0xFF, output);
+		fputc(reverse & 0xFF, out);
 		reverse >>= 8;
 	}
 }
 
 #pragma region DES
+// Perform DES on an 8-byte block, using the specified 16 round-keys in order 0-15.
+// Returns the resulting block of the DES algorithm.
 ull DESBlock(ull keys[16], ull block)
 {
 	// initial permutation
@@ -137,7 +149,8 @@ ull DESBlock(ull keys[16], ull block)
 	return block;
 }
 
-#pragma region P-Boxes
+// Performs the initial straight p-box of the DES algorithm on a block.
+// Returns the resulting block.
 ull pInitial(ull in)
 {
 	ull out = 0;
@@ -210,6 +223,8 @@ ull pInitial(ull in)
 	return out;
 }
 
+// Performs the final straight p-box of the DES algorithm on a block.
+// Returns the resulting block.
 ull pFinal(ull in)
 {
 	ull out = 0;
@@ -281,5 +296,4 @@ ull pFinal(ull in)
 
 	return out;
 }
-#pragma endregion
 #pragma endregion

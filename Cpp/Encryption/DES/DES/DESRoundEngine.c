@@ -59,6 +59,8 @@ ull r_runRounds(ull in, ull keys[16])
 	return out;
 }
 
+// Performs the DES Round's initial 32to48-bit expansion p-box.
+// Returns the result of this expansion.
 ull r_pExpansion(ull in)
 {
 	ull out = 0;
@@ -158,6 +160,8 @@ uch r_sBoxes[8][64] = {
 	}
 };
 
+// Performs the DES Round's 6x4-bit s-box, where box specifies 1-8.
+// Returns the 4-bit result.
 uch r_sBox(uch in, uch box)
 {
 	// move bits to proper positions
@@ -170,6 +174,8 @@ uch r_sBox(uch in, uch box)
 	return out;
 }
 
+// Performs the DES Round's final 32-bit straight p-box.
+// Returns this result of this permutation.
 ull r_pStraight(ull in)
 {
 	ull out = 0;
