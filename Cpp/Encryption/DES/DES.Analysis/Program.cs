@@ -23,8 +23,14 @@ namespace DES.Analysis
                 // get output directory
                 DirectoryInfo outDir = Directory.CreateDirectory(Path.Combine(inFile.DirectoryName, "output", inFile.Name));
 
+                // bit frequency (0/1)
+                using (FileStream outStream = File.Create(Path.Combine(outDir.FullName, "bit.csv")))
+                {
+                    BitAnalysis(inStream, outStream);
+                }
+
                 // letter frequency (1gram), digram through 8-gram analysis
-                for(int i = 1; i <= 8; i++)
+                for (int i = 1; i <= 8; i++)
                 {
                     using (FileStream outStream = File.Create(Path.Combine(outDir.FullName, i + "grams.csv")))
                     {
@@ -49,14 +55,14 @@ namespace DES.Analysis
         {
             input.Position = 0;
 
-            Dictionary<long, int> ngrams = new Dictionary<long, int>();
+            Dictionary<ulong, int> ngrams = new Dictionary<ulong, int>();
             byte[] ngram = new byte[n];
             int read;
 
             // initialize the ngram for the loop
             for (int i = 1; i < n; i++)
             {
-                if((read = input.ReadByte()) == -1)
+                if ((read = input.ReadByte()) == -1)
                 {
                     // not enough characters to fill the ngram, return
                     return;
@@ -65,18 +71,18 @@ namespace DES.Analysis
             }
 
             // slide through every ngram from the file
-            while((read = input.ReadByte()) != -1)
+            while ((read = input.ReadByte()) != -1)
             {
                 // shift all elements up one
-                for(int i = 0; i < n - 1; i++)
+                for (int i = 0; i < n - 1; i++)
                 {
                     ngram[i] = ngram[i + 1];
                 }
                 ngram[n - 1] = (byte)read;
 
                 // increment the count for that ngram
-                long index = N2I(ngram);
-                if(!ngrams.ContainsKey(index))
+                ulong index = N2I(ngram);
+                if (!ngrams.ContainsKey(index))
                 {
                     ngrams.Add(index, 1);
                 }
@@ -89,14 +95,14 @@ namespace DES.Analysis
             // output the table
             using (StreamWriter outStream = new StreamWriter(output, System.Text.Encoding.ASCII))
             {
-                // this will go through every possible ngram
-                //for (long i = 0; i < ((long)1 << (8 * n)); i++)
+                //// this will go through every possible ngram
+                //for (ulong i = 0; i < ((ulong)1 << (8 * n)); i++)
                 //{
                 //    // get the count for that ngram
                 //    I2N(i, ngram);
-                //    if (!isValidAscii(ngram)) continue;
+                //    //if (!isValidAscii(ngram)) continue;
                 //    int ngramCount = ngrams.ContainsKey(i) ? ngrams[i] : 0;
-                //    if (ngramCount == 0) continue;
+                //    //if (ngramCount == 0) continue;
                 //    string ngramString = string.Concat(ngram.Select(escapeChar));
                 //    outStream.WriteLine("{0}{2}{0}{1}{0}{3}{0}", QUALIFIER, DELIMITER, ngramString, ngramCount);
                 //}
@@ -117,16 +123,16 @@ namespace DES.Analysis
         {
             input.Position = 0;
 
-            Dictionary<long, int> ngrams = new Dictionary<long, int>();
+            Dictionary<ulong, int> ngrams = new Dictionary<ulong, int>();
             byte[] ngram = new byte[8];
             int read;
 
             bool hasMore = true;
-            while(true)
+            while (true)
             {
-                for(int i = 0; i < 8; i++)
+                for (int i = 0; i < 8; i++)
                 {
-                    if((read = input.ReadByte()) == -1)
+                    if ((read = input.ReadByte()) == -1)
                     {
                         // not enough characters to fill the block, continue
                         hasMore = false;
@@ -135,13 +141,13 @@ namespace DES.Analysis
                     ngram[i] = (byte)read;
                 }
 
-                if(!hasMore)
+                if (!hasMore)
                 {
                     break;
                 }
 
                 // increment the count for that ngram
-                long index = N2I(ngram);
+                ulong index = N2I(ngram);
                 if (!ngrams.ContainsKey(index))
                 {
                     ngrams.Add(index, 1);
@@ -155,8 +161,8 @@ namespace DES.Analysis
             // output the table
             using (StreamWriter outStream = new StreamWriter(output, System.Text.Encoding.ASCII))
             {
-                // this will go through every possible ngram
-                //for (long i = 0; i < ((long)1 << (8 * 8)); i++)
+                //// this will go through every possible ngram
+                //for (ulong i = 0; i < ((ulong)1 << (8 * 8)); i++)
                 //{
                 //    // get the count for that ngram
                 //    I2N(i, ngram);
@@ -179,11 +185,39 @@ namespace DES.Analysis
             }
         }
 
+        static void BitAnalysis(FileStream input, FileStream output)
+        {
+            input.Position = 0;
+
+            int[] bits = new int[2];
+            int read;
+
+            // go through every byte of the file
+            while ((read = input.ReadByte()) != -1)
+            {
+                // go through every bit of the byte
+                for (int i = 0; i < 8; i++)
+                {
+                    bits[read & 0x1]++;
+                    read >>= 1;
+                }
+            }
+
+            // output the table
+            using (StreamWriter outStream = new StreamWriter(output, System.Text.Encoding.ASCII))
+            {
+                for (int i = 0; i <= 1; i++)
+                {
+                    outStream.WriteLine("{0}{2}{0}{1}{0}{3}{0}", QUALIFIER, DELIMITER, i, bits[i]);
+                }
+            }
+        }
+
         static string escapeChar(byte ascii)
         {
             string output;
 
-            if(ascii >= 0x20 && ascii <= 0x7e)
+            if (ascii >= 0x20 && ascii <= 0x7e)
             {
                 // printable char
                 if (ascii == QUALIFIER)
@@ -194,7 +228,7 @@ namespace DES.Analysis
                 else
                 {
                     output = new string((char)ascii, 1);
-                }                
+                }
             }
             else
             {
@@ -205,11 +239,11 @@ namespace DES.Analysis
             return output;
         }
 
-        static long N2I(byte[] ngram)
+        static ulong N2I(byte[] ngram)
         {
-            long output = 0;
+            ulong output = 0;
 
-            for(int i = 0; i < ngram.Length; i++)
+            for (int i = 0; i < ngram.Length; i++)
             {
                 output <<= 8;
                 output |= ngram[i];
@@ -218,9 +252,9 @@ namespace DES.Analysis
             return output;
         }
 
-        static void I2N(long index, byte[] ngram)
+        static void I2N(ulong index, byte[] ngram)
         {
-            for(int i = ngram.Length - 1; i >= 0; i--)
+            for (int i = ngram.Length - 1; i >= 0; i--)
             {
                 ngram[i] = (byte)(index & 0xFF);
                 index >>= 8;
@@ -229,9 +263,9 @@ namespace DES.Analysis
 
         static bool isValidAscii(byte[] ngram)
         {
-            for(int i = 0; i < ngram.Length; i++)
+            for (int i = 0; i < ngram.Length; i++)
             {
-                if(ngram[i] > 0x7F)
+                if (ngram[i] > 0x7F)
                 {
                     return false;
                 }
