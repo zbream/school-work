@@ -239,6 +239,7 @@ namespace DES.Analysis
             return output;
         }
 
+        // ngram to index
         static ulong N2I(byte[] ngram)
         {
             ulong output = 0;
@@ -252,6 +253,7 @@ namespace DES.Analysis
             return output;
         }
 
+        // index to ngram
         static void I2N(ulong index, byte[] ngram)
         {
             for (int i = ngram.Length - 1; i >= 0; i--)

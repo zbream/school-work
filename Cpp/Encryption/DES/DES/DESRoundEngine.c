@@ -166,7 +166,7 @@ uch r_sBox(uch in, uch box)
 {
 	// move bits to proper positions
 	uch b2345 = (in >> 1) & 0xF;
-	uch b16 = (in & 0x20) | (in & 0x1 << 4);
+	uch b16 = (in & 0x20) | ((in & 0x1) << 4);
 
 	uch b = b16 | b2345;
 
