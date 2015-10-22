@@ -47,12 +47,12 @@ Global
 		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://zbream.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = DES\\DES.vcxproj
-		SccProjectName1 = DES
-		SccLocalPath1 = DES
-		SccProjectUniqueName2 = DES.Analysis\\DES.Analysis.csproj
-		SccProjectName2 = DES.Analysis
-		SccLocalPath2 = DES.Analysis
+		SccProjectUniqueName0 = DES\\DES.vcxproj
+		SccProjectName0 = DES
+		SccLocalPath0 = DES
+		SccProjectUniqueName1 = DES.Analysis\\DES.Analysis.csproj
+		SccProjectName1 = DES.Analysis
+		SccLocalPath1 = DES.Analysis
+		SccLocalPath2 = .
 	EndGlobalSection
 EndGlobal
