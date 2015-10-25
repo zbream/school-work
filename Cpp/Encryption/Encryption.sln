@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DES", "DES\DES.vcxproj", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DES.Analysis", "DES.Analysis\DES.Analysis.csproj", "{92E1EA0D-E7B7-4883-8694-A2039BEED297}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AES", "AES\AES.vcxproj", "{4F8B6377-BA2D-4095-969D-3807F3F14425}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,20 +41,33 @@ Global
 		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|Win32.Build.0 = Release|Any CPU
 		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|x64.ActiveCfg = Release|Any CPU
 		{92E1EA0D-E7B7-4883-8694-A2039BEED297}.Release|x64.Build.0 = Release|Any CPU
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Debug|Win32.Build.0 = Debug|Win32
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Debug|x64.ActiveCfg = Debug|x64
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Debug|x64.Build.0 = Debug|x64
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Release|Any CPU.ActiveCfg = Release|Win32
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Release|Win32.ActiveCfg = Release|Win32
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Release|Win32.Build.0 = Release|Win32
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Release|x64.ActiveCfg = Release|x64
+		{4F8B6377-BA2D-4095-969D-3807F3F14425}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://zbream.visualstudio.com/defaultcollection
-		SccProjectUniqueName0 = DES\\DES.vcxproj
-		SccProjectName0 = DES
-		SccLocalPath0 = DES
-		SccProjectUniqueName1 = DES.Analysis\\DES.Analysis.csproj
-		SccProjectName1 = DES.Analysis
-		SccLocalPath1 = DES.Analysis
-		SccLocalPath2 = .
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DES\\DES.vcxproj
+		SccProjectName1 = DES
+		SccLocalPath1 = DES
+		SccProjectUniqueName2 = DES.Analysis\\DES.Analysis.csproj
+		SccProjectName2 = DES.Analysis
+		SccLocalPath2 = DES.Analysis
+		SccProjectUniqueName3 = AES\\AES.vcxproj
+		SccProjectName3 = AES
+		SccLocalPath3 = AES
 	EndGlobalSection
 EndGlobal
