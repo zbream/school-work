@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DES", "DES\DES.vcxproj", "{0C49F0D3-64F7-42ED-AD10-F9AFC4CC25E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DES.Analysis", "DES.Analysis\DES.Analysis.csproj", "{92E1EA0D-E7B7-4883-8694-A2039BEED297}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis", "Analysis\Analysis.csproj", "{92E1EA0D-E7B7-4883-8694-A2039BEED297}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AES", "AES\AES.vcxproj", "{4F8B6377-BA2D-4095-969D-3807F3F14425}"
 EndProject
@@ -63,11 +63,11 @@ Global
 		SccProjectUniqueName1 = DES\\DES.vcxproj
 		SccProjectName1 = DES
 		SccLocalPath1 = DES
-		SccProjectUniqueName2 = DES.Analysis\\DES.Analysis.csproj
-		SccProjectName2 = DES.Analysis
-		SccLocalPath2 = DES.Analysis
-		SccProjectUniqueName3 = AES\\AES.vcxproj
-		SccProjectName3 = AES
-		SccLocalPath3 = AES
+		SccProjectUniqueName2 = AES\\AES.vcxproj
+		SccProjectName2 = AES
+		SccLocalPath2 = AES
+		SccProjectUniqueName3 = Analysis\\Analysis.csproj
+		SccProjectName3 = Analysis
+		SccLocalPath3 = Analysis
 	EndGlobalSection
 EndGlobal
