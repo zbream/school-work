@@ -4,8 +4,10 @@
 #include "RNG.h"
 
 // function declarations
-void readBlock(FILE* in, uch block[16], uch nBytes);
-void writeBlock(FILE* out, uch block[16], uch nBytes);
+void readBlock(FILE*, uch, uch[16]);
+void writeBlock(FILE*, uch, uch[16]);
+void AESBlockEncrypt(uch[11][4][4], uch[4][4]);
+void AESBlockDecrypt(uch[11][4][4], uch[4][4]);
 
 void AESFileEncrypt(uch key[16], FILE* in, FILE* out)
 {
@@ -37,7 +39,7 @@ void AESFileEncrypt(uch key[16], FILE* in, FILE* out)
 
 		// encrypt and write
 		AESBlockEncrypt(keys, block);
-		writeBlock(out, block, 16);
+		writeBlock(out, 16, block);
 	}
 
 	// write complete blocks
@@ -45,11 +47,11 @@ void AESFileEncrypt(uch key[16], FILE* in, FILE* out)
 	for (int i = 0; i < numCompleteBlocks; i++)
 	{
 		// read block
-		readBlock(in, block, 16);
+		readBlock(in, 16, block);
 		
 		// encrypt and write
 		AESBlockEncrypt(keys, block);
-		writeBlock(out, block, 16);
+		writeBlock(out, 16, block);
 	}
 
 	// write incomplete block
@@ -57,14 +59,14 @@ void AESFileEncrypt(uch key[16], FILE* in, FILE* out)
 	if (numBytesRemaining > 0)
 	{
 		// read remaining
-		readBlock(in, block, numBytesRemaining);
+		readBlock(in, numBytesRemaining, block);
 
 		// pad with garbage
 		rng_padBlockWithGarbageR(block, 16 - numBytesRemaining);
 
 		// encrypt and write
 		AESBlockEncrypt(keys, block);
-		writeBlock(out, block, 16);
+		writeBlock(out, 16, block);
 	}
 }
 
@@ -80,7 +82,7 @@ void AESFileDecrypt(uch key[16], FILE* in, FILE* out)
 	long inSize = 0;
 	{
 		// read and decrypt
-		readBlock(in, block, 16);
+		readBlock(in, 16, block);
 		AESBlockDecrypt(keys, block);
 
 		// copy size from last word of block
@@ -96,11 +98,11 @@ void AESFileDecrypt(uch key[16], FILE* in, FILE* out)
 	for (int i = 0; i < numCompleteBlocks; i++)
 	{
 		// read block
-		readBlock(in, block, 16);
+		readBlock(in, 16, block);
 
 		// decrypt and write
 		AESBlockDecrypt(keys, block);
-		writeBlock(out, block, 16);
+		writeBlock(out, 16, block);
 	}
 
 	// read incomplete block
@@ -108,15 +110,17 @@ void AESFileDecrypt(uch key[16], FILE* in, FILE* out)
 	if (numBytesRemaining > 0)
 	{
 		// read block
-		readBlock(in, block, 16);
+		readBlock(in, 16, block);
 
 		// decrypt and write
 		AESBlockDecrypt(keys, block);
-		writeBlock(out, block, numBytesRemaining);
+		writeBlock(out, numBytesRemaining, block);
 	}
 }
 
-void readBlock(FILE* in, uch block[16], uch nBytes)
+// Read the next nBytes from the in file, into the given block.
+// Does not modify the last (16-nBytes) bytes of the given block.
+void readBlock(FILE* in, uch nBytes, uch block[16])
 {	
 	for (int i = 0; i < nBytes; i++)
 	{
@@ -124,7 +128,8 @@ void readBlock(FILE* in, uch block[16], uch nBytes)
 	}
 }
 
-void writeBlock(FILE* out, uch block[16], uch nBytes)
+// Write the first nBytes of the given block to the out file.
+void writeBlock(FILE* out, uch nBytes, uch block[16])
 {
 	for (int i = 0; i < nBytes; i++)
 	{
@@ -132,6 +137,7 @@ void writeBlock(FILE* out, uch block[16], uch nBytes)
 	}
 }
 
+// Perform AES Encryption on the specified 16-byte block, using the specified round-keys.
 void AESBlockEncrypt(uch keys[11][4][4], uch state[4][4])
 {
 	t_AddRoundKey(state, keys[0]);
@@ -145,6 +151,7 @@ void AESBlockEncrypt(uch keys[11][4][4], uch state[4][4])
 	}
 }
 
+// Perform AES Decryption on the specified 16-byte block, using the specified round-keys.
 void AESBlockDecrypt(uch keys[11][4][4], uch state[4][4])
 {
 	t_AddRoundKey(state, keys[10]);

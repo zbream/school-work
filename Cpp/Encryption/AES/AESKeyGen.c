@@ -1,8 +1,9 @@
 #include "AESKeyGen.h"
 #include "AESTransformations.h"
 
+// Round Constants
 uch kg_rConstant[] = {
-	0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d
+	0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d
 };
 
 void kg_generate(uch userKey[16], uch keys[11][4][4])
@@ -34,7 +35,7 @@ void kg_generate(uch userKey[16], uch keys[11][4][4])
 		t[3] = t_SubBytesSubstitution(t[3]);
 		
 		// xor with constant
-		uch c = kg_rConstant[round - 1];
+		uch c = kg_rConstant[round];
 		t[0] ^= c;
 
 		// get rest of round key

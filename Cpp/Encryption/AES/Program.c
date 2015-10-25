@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 		}
 
 		// read key
-		ull cKey;
+		uch cKey[16];
 		if (!getKey(argv[2], &cKey))
 		{
 			// invalid key
@@ -171,13 +171,13 @@ ACTION getAction(char arg[])
 }
 
 // Parse the 16-byte key from a command-line parameter.
-// If valid input, places the key in *key and returns true.
+// If valid input, places the key in key[] and returns true.
 bool getKey(char arg[], uch key[16])
 {
 	int inLength = strlen(arg);
 	switch (inLength)
 	{
-	case 18:
+	case 18: // 16 chars + 2 quotes
 		return getKeyString(arg, key);
 	case 32:
 		return getKeyHex(arg, key);
@@ -215,8 +215,8 @@ bool getKeyHex(char arg[], uch key[16])
 
 	for (int i = 0; i < 16; i++)
 	{
+		// parse two digits as a single byte
 		uch output = 0;
-
 		for (int j = 0; j < 2; j++)
 		{
 			output <<= 4;
@@ -239,7 +239,6 @@ bool getKeyHex(char arg[], uch key[16])
 				return false;
 			}
 		}
-
 		key[i] = output;
 	}
 

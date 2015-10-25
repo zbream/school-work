@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 
+// NOTE: these random bytes are not truly randomly distributed,
+// but are good enough to do what we need.
+#define rngByte (rand() % 0x100)
+
 void rng_seed()
 {
 	srand(time(NULL));
 }
-
-#define rngByte (rand() % 0x100)
 
 void rng_padBlockWithGarbageL(uch block[16], uch nBytes)
 {
