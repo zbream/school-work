@@ -5,7 +5,7 @@
 // temporary contents of the 0/1 characters of a single byte
 uch byteBuffer[8];
 
-uint l_prepareFrame(uch charBuffer[CHAR_LIMIT], uint charN, uch frameBuffer[CHAR_LIMIT + 3])
+uint l_prepareFrame(uch charBuffer[CHAR_LIMIT], uint charN, uch frameBuffer[FRAME_LIMIT])
 {
 	// total bytes in frame
 	uint frameN = charN + 3;
@@ -25,7 +25,7 @@ uint l_prepareFrame(uch charBuffer[CHAR_LIMIT], uint charN, uch frameBuffer[CHAR
 	return frameN;
 }
 
-uint l_prepareTransmit(uch frameBuffer[CHAR_LIMIT + 3], uint frameN, uch transmitBuffer[(CHAR_LIMIT + 3) * 8])
+uint l_prepareTransmit(uch frameBuffer[FRAME_LIMIT], uint frameN, uch transmitBuffer[TRANSMIT_LIMIT])
 {
 	// total bytes in transmission
 	uint transmitN = frameN * 8;
@@ -40,7 +40,7 @@ uint l_prepareTransmit(uch frameBuffer[CHAR_LIMIT + 3], uint frameN, uch transmi
 	return transmitN;
 }
 
-uint l_parseTransmit(uch transmitBuffer[(CHAR_LIMIT + 3) * 8], uint transmitN, uch frameBuffer[CHAR_LIMIT + 3])
+uint l_parseTransmit(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, uch frameBuffer[FRAME_LIMIT])
 {
 	// total bytes in transmission
 	uint frameN = transmitN / 8;
@@ -54,7 +54,7 @@ uint l_parseTransmit(uch transmitBuffer[(CHAR_LIMIT + 3) * 8], uint transmitN, u
 	return frameN;
 }
 
-uint l_parseFrame(uch frameBuffer[CHAR_LIMIT + 3], uint frameN, uch charBuffer[CHAR_LIMIT])
+uint l_parseFrame(uch frameBuffer[FRAME_LIMIT], uint frameN, uch charBuffer[CHAR_LIMIT])
 {
 	// strip parity
 	for (uint i = 0; i < frameN; i++)
@@ -69,7 +69,7 @@ uint l_parseFrame(uch frameBuffer[CHAR_LIMIT + 3], uint frameN, uch charBuffer[C
 	return charN;
 }
 
-bool l_validateFrame(uch frameBuffer[CHAR_LIMIT + 3], uint frameN)
+bool l_validateFrame(uch frameBuffer[FRAME_LIMIT], uint frameN)
 {
 	for (uint i = 0; i < frameN; i++)
 	{

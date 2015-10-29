@@ -88,11 +88,11 @@ int main(int argc, char *argv[])
 	}
 
 	// raw transmission buffer (0/1 chars)
-	uch transmitBuffer[(CHAR_LIMIT + 3) * 8];
+	uch transmitBuffer[TRANSMIT_LIMIT];
 	uint transmitN;
 	
 	// frame buffer (3 chars + data stream)
-	uch frameBuffer[CHAR_LIMIT + 3];
+	uch frameBuffer[FRAME_LIMIT];
 	uint frameN;
 
 	// char buffer (data stream)
