@@ -2,15 +2,40 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
 namespace Analysis
 {
     class Program
     {
+        enum Algorithm { Invalid = 0, DES = 8, AES = 16 };
+
         static void Main(string[] args)
         {
+            // check command-line parameters
+            if (args.Length != 2)
+            {
+                Console.WriteLine("Incorrect input parameters.");
+                return;
+            }
+
+            // check for algorithm
+            Algorithm algorithm = Algorithm.Invalid;
+            switch (args[0].ToLower())
+            {
+                case "des":
+                    algorithm = Algorithm.DES;
+                    break;
+                case "aes":
+                    algorithm = Algorithm.AES;
+                    break;
+                default:
+                    Console.WriteLine("Incorrect encryption algorithm: {0}", args[0]);
+                    return;
+            }
+
             // check for input file
-            FileInfo inFile = new FileInfo(args[0]);
+            FileInfo inFile = new FileInfo(args[1]);
             if (!inFile.Exists)
             {
                 Console.WriteLine("Unable to find input file: {0}", args[0]);
@@ -30,7 +55,7 @@ namespace Analysis
                 }
 
                 // letter frequency (1gram), digram through 8-gram analysis
-                for (int i = 1; i <= 8; i++)
+                for (int i = 1; i <= 3; i++)
                 {
                     using (FileStream outStream = File.Create(Path.Combine(outDir.FullName, i + "grams.csv")))
                     {
@@ -38,24 +63,22 @@ namespace Analysis
                     }
                 }
 
-                // block (8-byte) analysis
+                // block (8-byte or 16-byte) analysis
                 using (FileStream outStream = File.Create(Path.Combine(outDir.FullName, "block.csv")))
                 {
-                    BlockAnalysis(inStream, outStream);
+                    BlockAnalysis(inStream, outStream, (int)algorithm);
                 }
             }
 
             return;
         }
 
-        const char DELIMITER = ',';
-        const char QUALIFIER = '"';
-
+        #region Analysis
         static void NgramAnalysis(FileStream input, FileStream output, int n)
         {
             input.Position = 0;
 
-            Dictionary<ulong, int> ngrams = new Dictionary<ulong, int>();
+            Dictionary<BigInteger, int> ngrams = new Dictionary<BigInteger, int>();
             byte[] ngram = new byte[n];
             int read;
 
@@ -81,7 +104,7 @@ namespace Analysis
                 ngram[n - 1] = (byte)read;
 
                 // increment the count for that ngram
-                ulong index = N2I(ngram);
+                BigInteger index = N2I(ngram);
                 if (!ngrams.ContainsKey(index))
                 {
                     ngrams.Add(index, 1);
@@ -96,15 +119,15 @@ namespace Analysis
             using (StreamWriter outStream = new StreamWriter(output, System.Text.Encoding.ASCII))
             {
                 //// this will go through every possible ngram
-                //for (ulong i = 0; i < ((ulong)1 << (8 * n)); i++)
+                //for (BigInteger i = 0; i < ((BigInteger)1 << (8 * n)); i++)
                 //{
                 //    // get the count for that ngram
                 //    I2N(i, ngram);
-                //    //if (!isValidAscii(ngram)) continue;
+                //    if (!isValidAscii(ngram)) continue;
                 //    int ngramCount = ngrams.ContainsKey(i) ? ngrams[i] : 0;
-                //    //if (ngramCount == 0) continue;
+                //    if (ngramCount == 0) continue;
                 //    string ngramString = string.Concat(ngram.Select(escapeChar));
-                //    outStream.WriteLine("{0}{2}{0}{1}{0}{3}{0}", QUALIFIER, DELIMITER, ngramString, ngramCount);
+                //    write(outStream, ngramString, ngramCount);
                 //}
 
                 // this will go through every FOUND ngram
@@ -114,23 +137,23 @@ namespace Analysis
                     I2N(item.Key, ngram);
                     int ngramCount = item.Value;
                     string ngramString = string.Concat(ngram.Select(escapeChar));
-                    outStream.WriteLine("{0}{2}{0}{1}{0}{3}{0}", QUALIFIER, DELIMITER, ngramString, ngramCount);
+                    write(outStream, ngramString, ngramCount);
                 }
             }
         }
 
-        static void BlockAnalysis(FileStream input, FileStream output)
+        static void BlockAnalysis(FileStream input, FileStream output, int blockSize)
         {
             input.Position = 0;
 
-            Dictionary<ulong, int> ngrams = new Dictionary<ulong, int>();
-            byte[] ngram = new byte[8];
+            Dictionary<BigInteger, int> ngrams = new Dictionary<BigInteger, int>();
+            byte[] ngram = new byte[blockSize];
             int read;
 
             bool hasMore = true;
             while (true)
             {
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < blockSize; i++)
                 {
                     if ((read = input.ReadByte()) == -1)
                     {
@@ -147,7 +170,7 @@ namespace Analysis
                 }
 
                 // increment the count for that ngram
-                ulong index = N2I(ngram);
+                BigInteger index = N2I(ngram);
                 if (!ngrams.ContainsKey(index))
                 {
                     ngrams.Add(index, 1);
@@ -161,18 +184,6 @@ namespace Analysis
             // output the table
             using (StreamWriter outStream = new StreamWriter(output, System.Text.Encoding.ASCII))
             {
-                //// this will go through every possible ngram
-                //for (ulong i = 0; i < ((ulong)1 << (8 * 8)); i++)
-                //{
-                //    // get the count for that ngram
-                //    I2N(i, ngram);
-                //    if (!isValidAscii(ngram)) continue;
-                //    int ngramCount = ngrams.ContainsKey(i) ? ngrams[i] : 0;
-                //    if (ngramCount == 0) continue;
-                //    string ngramString = string.Concat(ngram.Select(escapeChar));
-                //    outStream.WriteLine("{0}{2}{0}{1}{0}{3}{0}", QUALIFIER, DELIMITER, ngramString, ngramCount);
-                //}
-
                 // this will go through every FOUND ngram
                 foreach (var item in ngrams.OrderByDescending(kvp => kvp.Value))
                 {
@@ -180,7 +191,7 @@ namespace Analysis
                     I2N(item.Key, ngram);
                     int ngramCount = item.Value;
                     string ngramString = string.Concat(ngram.Select(escapeChar));
-                    outStream.WriteLine("{0}{2}{0}{1}{0}{3}{0}", QUALIFIER, DELIMITER, ngramString, ngramCount);
+                    write(outStream, ngramString, ngramCount);
                 }
             }
         }
@@ -208,9 +219,18 @@ namespace Analysis
             {
                 for (int i = 0; i <= 1; i++)
                 {
-                    outStream.WriteLine("{0}{2}{0}{1}{0}{3}{0}", QUALIFIER, DELIMITER, i, bits[i]);
+                    write(outStream, i, bits[i]);
                 }
             }
+        }
+        #endregion
+
+        #region Utils
+        const char DELIMITER = ',';
+        const char QUALIFIER = '"';
+        static void write(StreamWriter outStream, object left, object right)
+        {
+            outStream.WriteLine("{0}{2}{0}{1}{0}{3}{0}", QUALIFIER, DELIMITER, left.ToString(), right.ToString());
         }
 
         static string escapeChar(byte ascii)
@@ -240,9 +260,9 @@ namespace Analysis
         }
 
         // ngram to index
-        static ulong N2I(byte[] ngram)
+        static BigInteger N2I(byte[] ngram)
         {
-            ulong output = 0;
+            BigInteger output = new BigInteger();
 
             for (int i = 0; i < ngram.Length; i++)
             {
@@ -254,7 +274,7 @@ namespace Analysis
         }
 
         // index to ngram
-        static void I2N(ulong index, byte[] ngram)
+        static void I2N(BigInteger index, byte[] ngram)
         {
             for (int i = ngram.Length - 1; i >= 0; i--)
             {
@@ -274,5 +294,6 @@ namespace Analysis
             }
             return true;
         }
+        #endregion
     }
 }
