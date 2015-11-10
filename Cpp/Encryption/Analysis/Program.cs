@@ -12,9 +12,11 @@ namespace Analysis
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Usage: Analysis (des|aes) inputPath");
+
             // check command-line parameters
             if (args.Length != 2)
-            {
+            {                
                 Console.WriteLine("Incorrect input parameters.");
                 return;
             }
