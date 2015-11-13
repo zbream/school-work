@@ -139,11 +139,13 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="LinkLayer.h" />
     <ClInclude Include="PhysicalLayer.h" />
+    <ClInclude Include="RNG.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationLayer.cpp" />
     <ClCompile Include="LinkLayer.cpp" />
     <ClCompile Include="PhysicalLayer.cpp" />
+    <ClCompile Include="RNG.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

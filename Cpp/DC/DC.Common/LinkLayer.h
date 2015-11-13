@@ -1,29 +1,57 @@
 #include "Common.h"
 
 /*
-Prepare frameBuffer, from the first charN bytes of charBuffer.
-Adds the frame header, and adds parity bits to each char.
-Returns the number of bytes placed in frameBuffer. */
-uint l_prepareFrame(uch charBuffer[CHAR_LIMIT], uint charN, uch frameBuffer[CHAR_LIMIT + 3]);
+Add the ASCII parity bit of the first charN bytes of charBuffer. */
+void l_addCharParity(uch charBuffer[CHAR_LIMIT], uint charN);
 
 /*
-Prepare transmitBuffer, from the first frameN bytes of frameBuffer.
-Splits each char into 0/1 chars, little-endian.
-Returns the number of bytes placed in transmitBuffer. */
-uint l_prepareTransmit(uch frameBuffer[FRAME_LIMIT], uint frameN, uch transmitBuffer[TRANSMIT_LIMIT]);
+Validate the ASCII parity of the first charN bytes of charBuffer. 
+Returns true if all valid, false otherwise. */
+bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN);
 
 /*
-Parse frameBuffer, from the first transmitN bytes of transmitBuffer.
-Combines groups of 8 0/1 chars, little-endian, into chars.
-Returns the number of bytes placed in frameBuffer. */
-uint l_parseTransmit(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, uch frameBuffer[FRAME_LIMIT]);
+Remove the ASCII parity bit of the first charN bytes of charBuffer. */
+void l_stripCharParity(uch charBuffer[CHAR_LIMIT], uint charN);
 
 /*
-Parse charBuffer, from the first frameN bytes of frameBuffer.
-Strips parity, gets the data characters.
-Returns the number of bytes places in charBuffer (as read from the frame header). */
-uint l_parseFrame(uch frameBuffer[FRAME_LIMIT], uint frameN, uch charBuffer[CHAR_LIMIT]);
+Prepare dataBuffer, for no error detection or correction.
+Builds from the first charN bytes of charBuffer.
+Returns the number of bytes placed in dataBuffer. */
+uint l_prepareData(uch charBuffer[CHAR_LIMIT], uint charN, uch dataBuffer[DATA_LIMIT]);
 
 /*
-Validate the parity of the first frameN bytes of frameBuffer. */
-bool l_validateFrame(uch frameBuffer[FRAME_LIMIT], uint frameN);
+Parse charBuffer, for no error detection or correction.
+Builds from the first dataN bytes of dataBuffer.
+Returns the number of bytes placed in charBuffer. */
+uint l_parseData(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBuffer[CHAR_LIMIT]);
+
+/*
+Prepare dataBuffer, for CRC-ANSI error detection.
+Builds from the first charN bytes of charBuffer.
+Returns the number of bytes placed in dataBuffer. */
+uint l_prepareDataCrc(uch charBuffer[CHAR_LIMIT], uint charN, uch dataBuffer[DATA_LIMIT]);
+
+/*
+Validate the CRC-ANSI of the first dataN bytes of dataBuffer (including the CRC checksum).
+Returns true if valid, false otherwise. */
+bool l_validateDataCrc(uch dataBuffer[DATA_LIMIT], uint dataN);
+
+/*
+Parse charBuffer, for CRC-ANSI error detection. The CRC is assumed to be valid.
+Builds from the first dataN bytes of dataBuffer.
+Returns the number of bytes placed in charBuffer. */
+uint l_parseDataCrc(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBuffer[CHAR_LIMIT]);
+
+/*
+Prepare dataBuffer, for Hamming 8-4 error correction.
+Builds from the first charN bytes of charBuffer.
+Returns the number of bytes placed in dataBuffer. */
+uint l_prepareDataHamming(uch charBuffer[CHAR_LIMIT], uint charN, uch dataBuffer[DATA_LIMIT]);
+
+/*
+Parse charBuffer, for Hamming 8-4 error correction.
+Builds from the first dataN bytes of dataBuffer.
+Returns the number of bytes placed in charBuffer. */
+uint l_parseDataHamming(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBuffer[CHAR_LIMIT]);
+
+int l_introduceErrors(uch dataBuffer[DATA_LIMIT], uint dataN, int maxErrors, int errorPos[]);

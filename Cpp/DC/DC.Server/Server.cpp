@@ -6,14 +6,64 @@
 #include "ApplicationLayer.h"
 #include "LinkLayer.h"
 
+// defaults
 #define OUTPATH "output.txt"
+
+// function declarations
+void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output);
+void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output);
+void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output);
+
+int frameNum = 0;
 
 int main(int argc, char *argv[])
 {
 	// check arguments
+	char* paramPort;
+	EC paramEC;
+	char* paramOutput;
 	if (argc < 2)
 	{
-		std::cerr << "Usage: " << argv[0] << " port" << std::endl;
+		std::cerr << "Usage: " << argv[0] << " [crc|hamming] [outputPath]" << std::endl;
+		return 1;
+	}
+	else
+	{
+		paramPort = argv[1];
+		paramEC = EC_NONE;
+		paramOutput = OUTPATH;
+
+		if (argc == 2)
+		{
+			// no EC, no outPath
+		}
+		else if (argc == 3)
+		{
+			// no EC, outPath
+			paramOutput = argv[2];
+		}
+		else if (argc == 4)
+		{
+			// EC, outPath
+			if (streq(argv[2], "crc"))
+			{
+				paramEC = EC_CRC;
+			}
+			else if (streq(argv[2], "hamming"))
+			{
+				paramEC = EC_HAMMING;
+			}
+
+			paramOutput = argv[3];
+		}
+	}
+
+	// open output file
+	FILE *output = fopen(paramOutput, "wb");
+	if (output == NULL)
+	{
+		// error opening output
+		std::cerr << "ERROR opening file for writing" << paramOutput << std::endl;
 		return 1;
 	}
 
@@ -44,7 +94,7 @@ int main(int argc, char *argv[])
 	memset((char*)&addrServer, 0, sizeof(addrServer));
 	addrServer.sin_family = AF_INET;
 	addrServer.sin_addr.s_addr = INADDR_ANY;
-	addrServer.sin_port = htons(atoi(argv[1]));
+	addrServer.sin_port = htons(atoi(paramPort));
 
 	// bind socket to address
 	wsaResult = bind(sockListen, (sockaddr*)&addrServer, sizeof(addrServer));
@@ -77,27 +127,13 @@ int main(int argc, char *argv[])
 		std::cerr << "ERROR accepting: " << errorNo << std::endl;
 		return 1;
 	}
-
-	// open output file
-	FILE *output = fopen(OUTPATH, "wb");
-	if(output == NULL)
-	{
-		// error opening output
-		std::cerr << "ERROR opening file for writing" << OUTPATH << std::endl;
-		return 1;
-	}
-
-	// raw transmission buffer (0/1 chars)
+	
+	// transmit buffer (0/1 chars)
 	uch transmitBuffer[TRANSMIT_LIMIT];
 	uint transmitN;
-	
-	// frame buffer (3 chars + data stream)
-	uch frameBuffer[FRAME_LIMIT];
-	uint frameN;
 
-	// char buffer (data stream)
-	uch charBuffer[CHAR_LIMIT];
-	uint charN;
+	// data portion of transmission excludes first 3 bytes
+	uch* dataBuffer = &transmitBuffer[3];
 
 	// initialization for reading an entire frame
 	FD_SET readSet;
@@ -117,7 +153,7 @@ int main(int argc, char *argv[])
 			select(sockTransmit, &readSet, NULL, NULL, NULL);
 
 			// receive data at socket
-			readBytes = recv(sockTransmit, (char*)&transmitBuffer[transmitN], ((CHAR_LIMIT + 3) * 8) - transmitN, 0);
+			readBytes = recv(sockTransmit, (char*)&transmitBuffer[transmitN], TRANSMIT_LIMIT - transmitN, 0);
 			if (readBytes == 0)
 			{
 				// nothing to receive
@@ -133,7 +169,7 @@ int main(int argc, char *argv[])
 			{
 				// received a [partial] frame
 				transmitN += readBytes;
-				if (transmitN == (CHAR_LIMIT + 3) * 8)
+				if (transmitN == TRANSMIT_LIMIT)
 				{
 					// received a complete frame
 					break;
@@ -149,28 +185,20 @@ int main(int argc, char *argv[])
 		else
 		{
 			// received a transmission, read it
+			frameNum++;
 
-			// parse transmission (0/1 -> raw frame)
-			frameN = l_parseTransmit(transmitBuffer, transmitN, frameBuffer);
-
-			// check parity
-			if (l_validateFrame(frameBuffer, frameN))
+			switch (paramEC)
 			{
-				// parse frame
-				charN = l_parseFrame(frameBuffer, frameN, charBuffer);
+			case EC_CRC:
+				handleCrc(transmitBuffer, transmitN, output);
+				break;
+			case EC_HAMMING:
+				handleHamming(transmitBuffer, transmitN, output);
+				break;
+			default:
+				handleNone(transmitBuffer, transmitN, output);
+				break;
 			}
-			else
-			{
-				// create notifier
-				memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", 64);
-				charN = 64;
-			}
-
-			// write to file
-			a_writeBuffer(output, charBuffer, charN);
-
-			// and output to the console
-			std::cout.write((char*)charBuffer, charN);
 		}
 	}
 	
@@ -191,7 +219,111 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+uch charBuffer[CHAR_LIMIT];
 
+void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
+{
+	uch* dataBuffer = &transmitBuffer[3];
+	uint dataN = transmitN - 3;
 
+	uint charN;
+
+	// parse transmission (0/1 -> raw frame)
+	charN = l_parseData(dataBuffer, dataN, charBuffer);
+
+	// check parity
+	if (l_validateCharParity(charBuffer, charN))
+	{
+		// strip parity
+		l_stripCharParity(charBuffer, charN);
+	}
+	else
+	{
+		// create notifier
+		memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", 64);
+		charN = 64;
+
+		// write to console
+		std::cout << "ERROR found, ASCII parity... frame " << frameNum << std::endl;
+	}
+
+	// write to file
+	a_writeBuffer(output, charBuffer, charN);
+}
+
+void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
+{
+	uch* dataBuffer = &transmitBuffer[3];
+	uint dataN = transmitN - 3;
+
+	uint charN;
+
+	// check CRC
+	if (l_validateDataCrc(dataBuffer, dataN))
+	{
+		// valid crc, parse data
+		charN = l_parseDataCrc(dataBuffer, dataN, charBuffer);
+
+		// check parity
+		if (l_validateCharParity(charBuffer, charN))
+		{
+			// strip parity
+			l_stripCharParity(charBuffer, charN);
+		}
+		else
+		{
+			// create notifier
+			memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", 64);
+			charN = 64;
+
+			// write to console
+			std::cout << "ERROR found, ASCII parity... frame " << frameNum << std::endl;
+		}
+	}
+	else
+	{
+		// create notifier
+		memcpy(charBuffer, "[CRCINV_CRCINV_CRCINV_CRCINV_CRCINV_CRCINV_CRCINV_CRCINV_CRCINV]", 64);
+		charN = 64;
+
+		// write to console
+		std::cout << "ERROR found, CRC... frame " << frameNum << std::endl;
+	}
+
+	// write to file
+	a_writeBuffer(output, charBuffer, charN);
+}
+
+void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
+{
+	uch* dataBuffer = &transmitBuffer[3];
+	uint dataN = transmitN - 3;
+
+	uint charN;
+
+	// TODO: perform Hamming correction
+
+	// parse transmission (0/1 -> raw frame)
+	charN = l_parseDataHamming(dataBuffer, dataN, charBuffer);
+
+	// check parity
+	if (l_validateCharParity(charBuffer, charN))
+	{
+		// strip parity
+		l_stripCharParity(charBuffer, charN);
+	}
+	else
+	{
+		// create notifier
+		memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", 64);
+		charN = 64;
+
+		// write to console
+		std::cout << "ERROR found, ASCII parity... frame " << frameNum << std::endl;
+	}
+
+	// write to file
+	a_writeBuffer(output, charBuffer, charN);
+}
 
 
