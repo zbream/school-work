@@ -18,14 +18,13 @@ void l_addCharParity(uch charBuffer[CHAR_LIMIT], uint charN)
 	}
 }
 
-bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, bool charBufferErrors[CHAR_LIMIT])
+bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, bool charBufferParity[CHAR_LIMIT])
 {
 	bool valid = true;
 
 	for (uint i = 0; i < charN; i++)
 	{
-		charBufferErrors[i] = !p_checkParity(charBuffer[i]);
-		if (charBufferErrors[i])
+		if (!(charBufferParity[i] = p_checkParity(charBuffer[i])))
 		{
 			valid = false;
 		}

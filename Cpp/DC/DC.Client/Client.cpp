@@ -168,6 +168,7 @@ int main(int argc, char *argv[])
 
 	// data portion of transmission excludes first 3 bytes
 	uch* dataBuffer = &transmitBuffer[3];
+	uint dataN;
 
 	// initialization for sending a frame
 	int sentBytes;
@@ -189,22 +190,25 @@ int main(int argc, char *argv[])
 			switch (paramEC)
 			{
 			case EC_CRC:
-				transmitN = l_prepareDataCrc(charBuffer, charN, dataBuffer) + 3;
+				dataN = l_prepareDataCrc(charBuffer, charN, dataBuffer) - 16;
+				transmitN = dataN + 16 + 3;
 				bitsPerChar = 8;
 				break;
 			case EC_HAMMING:
-				transmitN = l_prepareDataHamming(charBuffer, charN, dataBuffer) + 3;
+				dataN = l_prepareDataHamming(charBuffer, charN, dataBuffer);
+				transmitN = dataN + 3;
 				bitsPerChar = 12;
 				break;
 			default:
-				transmitN = l_prepareData(charBuffer, charN, dataBuffer) + 3;
+				dataN = l_prepareData(charBuffer, charN, dataBuffer);
+				transmitN = dataN + 3;
 				bitsPerChar = 8;
 			}
 
 			// introduce errors
 			if (paramMaxErrorsPerFrame > 0)
 			{
-				uint introducedErrors = l_introduceErrors(dataBuffer, transmitN - 3, paramMaxErrorsPerFrame, introducedErrorPos);
+				uint introducedErrors = l_introduceErrors(dataBuffer, dataN, paramMaxErrorsPerFrame, introducedErrorPos);
 				for (uint i = 0; i < introducedErrors; i++)
 				{
 					std::cout << "Error introduced... frame " << (frameNum) << " character " << ((introducedErrorPos[i] / bitsPerChar) + 1) << std::endl;

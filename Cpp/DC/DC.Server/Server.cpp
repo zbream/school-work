@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
 }
 
 uch charBuffer[CHAR_LIMIT];
-bool charBufferErrors[CHAR_LIMIT];
+bool charBufferParity[CHAR_LIMIT];
 
 void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 {
@@ -279,7 +279,7 @@ void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output
 	charN = l_parseData(dataBuffer, dataN, charBuffer);
 
 	// check and strip parity
-	bool validParity = l_validateCharParity(charBuffer, charN, charBufferErrors);
+	bool validParity = l_validateCharParity(charBuffer, charN, charBufferParity);
 	l_stripCharParity(charBuffer, charN);
 
 	if (!validParity)
@@ -289,7 +289,7 @@ void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output
 		std::cout << "\n";
 		for (int i = 0; i < charN; i++)
 		{
-			std::cout.put(charBufferErrors[i] ? '^' : ' ');
+			std::cout.put(charBufferParity[i] ? ' ' : '^');
 		}
 		std::cout << "\n\n";
 	}
@@ -313,7 +313,7 @@ void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 	charN = l_parseDataCrc(dataBuffer, dataN, charBuffer);
 
 	// check and strip parity
-	bool validParity = l_validateCharParity(charBuffer, charN, charBufferErrors);
+	bool validParity = l_validateCharParity(charBuffer, charN, charBufferParity);
 	l_stripCharParity(charBuffer, charN);
 
 	if (!validCrc)
@@ -330,7 +330,7 @@ void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 		std::cout << "\n";
 		for (int i = 0; i < charN; i++)
 		{
-			std::cout.put(charBufferErrors[i] ? '^' : ' ');
+			std::cout.put(charBufferParity[i] ? ' ' : '^');
 		}
 		std::cout << "\n\n";
 	}
@@ -350,24 +350,24 @@ void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* out
 	l_decodeHdb3(dataBuffer, dataN);
 
 	// TODO: perform Hamming correction
-
+	
 	// parse transmission (0/1 -> raw frame)
 	charN = l_parseDataHamming(dataBuffer, dataN, charBuffer);
 
-	// check parity
-	if (l_validateCharParity(charBuffer, charN, charBufferErrors))
-	{
-		// strip parity
-		l_stripCharParity(charBuffer, charN);
-	}
-	else
-	{
-		// create notifier
-		memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", CHAR_LIMIT);
-		charN = CHAR_LIMIT;
+	// check and strip parity
+	bool validParity = l_validateCharParity(charBuffer, charN, charBufferParity);
+	l_stripCharParity(charBuffer, charN);
 
-		// write to console
-		std::cout << "ERROR found, ASCII parity... frame " << frameNum << std::endl;
+	if (!validParity)
+	{
+		std::cout << "ERROR, ASCII parity, frame " << frameNum << ":\n";
+		std::cout.write((char*)charBuffer, charN);
+		std::cout << "\n";
+		for (int i = 0; i < charN; i++)
+		{
+			std::cout.put(charBufferParity[i] ? ' ' : '^');
+		}
+		std::cout << "\n\n";
 	}
 
 	// write to file

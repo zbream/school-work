@@ -7,7 +7,7 @@ void l_addCharParity(uch charBuffer[CHAR_LIMIT], uint charN);
 /*
 Validate the ASCII parity of the first charN bytes of charBuffer. 
 Returns true if all valid, false otherwise. */
-bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, bool charBufferErrors[CHAR_LIMIT]);
+bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, bool charBufferParity[CHAR_LIMIT]);
 
 /*
 Remove the ASCII parity bit of the first charN bytes of charBuffer. */
