@@ -71,7 +71,7 @@ uch p_arrayToChar(uch arr[8])
 
 const uint ANSI = 0x8005;
 
-uint p_crcAnsi(uch dataBuffer[DATA_LIMIT], uch dataN)
+uint p_crcAnsi(uch dataBuffer[DATA_LIMIT], uint dataN)
 {
 	uint reg = 0;
 

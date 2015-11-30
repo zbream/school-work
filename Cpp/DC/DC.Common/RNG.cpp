@@ -13,5 +13,5 @@ bool rng_introduceError()
 {
 	// introduce an error at a 5% chance
 	// (rand() / RAND_MAX) < (5 / 100)
-	return (rand() < (RAND_MAX / 20));
+	return (rand() < (RAND_MAX / 100));
 }

@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationLayer.cpp" />
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="LinkLayer.cpp" />
     <ClCompile Include="PhysicalLayer.cpp" />
     <ClCompile Include="RNG.cpp" />

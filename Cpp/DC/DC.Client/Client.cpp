@@ -11,53 +11,93 @@
 // defaults
 #define INPATH "input.txt"
 
+char* sep = "\n==========\n";
+
+int getSwitch(int switchc, char** switchv, const std::string& option, int nOptionParameters)
+{
+	int pos = std::find(switchv, switchv + switchc, option) - switchv;
+	if (switchc - pos - 1 >= nOptionParameters)
+	{
+		return pos;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
 int frameNum = 0;
 
 int main(int argc, char *argv[])
 {	
-	// check arguments
+	std::cout << "Data Communications - Client (Transmitter)\n";
+		
 	char* paramHost;
 	char* paramPort;
 	int paramMaxErrorsPerFrame;
 	EC paramEC;
 	char* paramInput;
-	if (argc < 4)
+
+	// check arguments
+	if (argc < 3)
 	{
-		std::cerr << "Usage: " << argv[0] << " hostname port maxErrorsPerFrame [crc|hamming] [inputPath]" << std::endl;
+		std::cerr << "Usage: " << argv[0] << " hostname port [/ec (crc|hamming)] [/path <inputFile>] [/e <maxErrorsPerFrame>]" << std::endl;
 		return 1;
 	}
 	else
 	{
 		paramHost = argv[1];
 		paramPort = argv[2];
-		paramMaxErrorsPerFrame = std::stoi(argv[3]);
+		paramMaxErrorsPerFrame = 0;
 		paramEC = EC_NONE;
 		paramInput = INPATH;
 
-		if (argc == 4)
+		// check switches
+		int switchc = argc - 2;
+		char **switchv = argv + 2;
+
+		if (switchc >= 2)
 		{
-			// no EC, no inPath
-		}
-		else if (argc == 5)
-		{
-			// no EC, inPath
-			paramInput = argv[4];
-		}
-		else if (argc == 6)
-		{
-			// EC, inPath
-			if (streq(argv[4], "crc"))
+			int pos;
+
+			// check EC mode
+			pos = getSwitch(switchc, switchv, "/ec", 1);
+			if (pos > -1)
 			{
-				paramEC = EC_CRC;
-			}
-			else if (streq(argv[4], "hamming"))
-			{
-				paramEC = EC_HAMMING;
+				if (streq(switchv[pos + 1], "crc"))
+				{
+					paramEC = EC_CRC;
+				}
+				else if (streq(switchv[pos + 1], "hamming"))
+				{
+					paramEC = EC_HAMMING;
+				}
 			}
 
-			paramInput = argv[5];
+			// check path
+			pos = getSwitch(switchc, switchv, "/path", 1);
+			if (pos > -1)
+			{
+				paramInput = switchv[pos + 1];
+			}
+
+			// check errors per frame
+			pos = getSwitch(switchc, switchv, "/e", 1);
+			if (pos > -1)
+			{
+				paramMaxErrorsPerFrame = atoi(switchv[pos + 1]);
+			}
 		}
 	}
+
+	// confirm arguments
+	std::cout
+		<< "Transmit host: " << paramHost
+		<< "\nTransmit port: " << paramPort
+		<< "\nError Mode:    " << ECString(paramEC)
+		<< "\nMax Err/Frame: " << paramMaxErrorsPerFrame
+		<< "\nInput File:    " << paramInput
+		<< sep;
 
 	// open input file
 	FILE *input = fopen(paramInput, "rb");
@@ -132,6 +172,7 @@ int main(int argc, char *argv[])
 	// initialization for sending a frame
 	int sentBytes;
 	int* introducedErrorPos = new int[paramMaxErrorsPerFrame];
+	int bitsPerChar;
 
 	// loop for entire transmission
 	while (true)
@@ -143,17 +184,21 @@ int main(int argc, char *argv[])
 			frameNum++;
 
 			// prepare transmission
+			l_prepareFrameHeader(transmitBuffer, charN);
 			l_addCharParity(charBuffer, charN);
 			switch (paramEC)
 			{
 			case EC_CRC:
 				transmitN = l_prepareDataCrc(charBuffer, charN, dataBuffer) + 3;
+				bitsPerChar = 8;
 				break;
 			case EC_HAMMING:
 				transmitN = l_prepareDataHamming(charBuffer, charN, dataBuffer) + 3;
+				bitsPerChar = 12;
 				break;
 			default:
 				transmitN = l_prepareData(charBuffer, charN, dataBuffer) + 3;
+				bitsPerChar = 8;
 			}
 
 			// introduce errors
@@ -162,9 +207,12 @@ int main(int argc, char *argv[])
 				uint introducedErrors = l_introduceErrors(dataBuffer, transmitN - 3, paramMaxErrorsPerFrame, introducedErrorPos);
 				for (uint i = 0; i < introducedErrors; i++)
 				{
-					std::cout << "Error introduced... frame " << (frameNum) << " rawDataBit " << (introducedErrorPos[i]) << std::endl;
+					std::cout << "Error introduced... frame " << (frameNum) << " character " << ((introducedErrorPos[i] / bitsPerChar) + 1) << std::endl;
 				}
-			}			
+			}
+
+			// encode using HDB3
+			l_encodeHdb3(dataBuffer, transmitN - 3);
 
 			// transmit
 			sentBytes = send(sockTransmit, (char*)transmitBuffer, transmitN, 0);

@@ -25,7 +25,7 @@ uch p_arrayToChar(uch arr[8]);
 /*
 Calculates the CRC-ANSI remainder from the first dataN bytes of dataBuffer.
 Returns the 2-byte remainder. */
-uint p_crcAnsi(uch dataBuffer[DATA_LIMIT], uch dataN);
+uint p_crcAnsi(uch dataBuffer[DATA_LIMIT], uint dataN);
 
 /*
 Convert the specified char to a 12-bit hamming code.

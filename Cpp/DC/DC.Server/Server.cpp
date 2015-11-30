@@ -14,17 +14,35 @@ void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output
 void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output);
 void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output);
 
+char* sep = "\n==========\n";
+
+int getSwitch(int switchc, char** switchv, const std::string& option, int nOptionParameters)
+{
+	int pos = std::find(switchv, switchv + switchc, option) - switchv;
+	if (switchc - pos - 1 >= nOptionParameters)
+	{
+		return pos;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
 int frameNum = 0;
 
 int main(int argc, char *argv[])
 {
-	// check arguments
+	std::cout << "Data Communications - Server (Receiver)\n";
+	
 	char* paramPort;
 	EC paramEC;
 	char* paramOutput;
+
+	// check arguments
 	if (argc < 2)
 	{
-		std::cerr << "Usage: " << argv[0] << " [crc|hamming] [outputPath]" << std::endl;
+		std::cerr << "Usage: " << argv[0] << " port [/ec (crc|hamming)] [/path <outputFile>]" << sep;
 		return 1;
 	}
 	else
@@ -33,30 +51,43 @@ int main(int argc, char *argv[])
 		paramEC = EC_NONE;
 		paramOutput = OUTPATH;
 
-		if (argc == 2)
+		// check switches
+		int switchc = argc - 2;
+		char **switchv = argv + 2;
+
+		if (switchc >= 2)
 		{
-			// no EC, no outPath
-		}
-		else if (argc == 3)
-		{
-			// no EC, outPath
-			paramOutput = argv[2];
-		}
-		else if (argc == 4)
-		{
-			// EC, outPath
-			if (streq(argv[2], "crc"))
+			int pos;
+
+			// check EC mode
+			pos = getSwitch(switchc, switchv, "/ec", 1);
+			if (pos > -1)
 			{
-				paramEC = EC_CRC;
-			}
-			else if (streq(argv[2], "hamming"))
-			{
-				paramEC = EC_HAMMING;
+				if (streq(switchv[pos + 1], "crc"))
+				{
+					paramEC = EC_CRC;
+				}
+				else if (streq(switchv[pos + 1], "hamming"))
+				{
+					paramEC = EC_HAMMING;
+				}
 			}
 
-			paramOutput = argv[3];
+			// check path
+			pos = getSwitch(switchc, switchv, "/path", 1);
+			if (pos > -1)
+			{
+				paramOutput = switchv[pos + 1];
+			}
 		}
 	}
+
+	// confirm arguments
+	std::cout
+		<< "Listen port: " << paramPort
+		<< "\nError Mode:  " << ECString(paramEC)
+		<< "\nOutput File: " << paramOutput
+		<< sep;
 
 	// open output file
 	FILE *output = fopen(paramOutput, "wb");
@@ -105,9 +136,6 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	// prompt for client
-	std::cout << "Run client by providing host and port." << std::endl;
-
 	// listen for connections (backlog of 5)
 	wsaResult = listen(sockListen, 5);
 	if (wsaResult == SOCKET_ERROR)
@@ -126,6 +154,21 @@ int main(int argc, char *argv[])
 		int errorNo = WSAGetLastError();
 		std::cerr << "ERROR accepting: " << errorNo << std::endl;
 		return 1;
+	}
+
+	// max frame size
+	uint frameN;
+	switch (paramEC)
+	{
+	case EC_CRC:
+		frameN = MAX_TRANSMIT_CRC;
+		break;
+	case EC_HAMMING:
+		frameN = MAX_TRANSMIT_HAMMING;
+		break;
+	default:
+		frameN = MAX_TRANSMIT_NONE;
+		break;
 	}
 	
 	// transmit buffer (0/1 chars)
@@ -153,7 +196,7 @@ int main(int argc, char *argv[])
 			select(sockTransmit, &readSet, NULL, NULL, NULL);
 
 			// receive data at socket
-			readBytes = recv(sockTransmit, (char*)&transmitBuffer[transmitN], TRANSMIT_LIMIT - transmitN, 0);
+			readBytes = recv(sockTransmit, (char*)&transmitBuffer[transmitN], frameN - transmitN, 0);
 			if (readBytes == 0)
 			{
 				// nothing to receive
@@ -169,7 +212,7 @@ int main(int argc, char *argv[])
 			{
 				// received a [partial] frame
 				transmitN += readBytes;
-				if (transmitN == TRANSMIT_LIMIT)
+				if (transmitN == frameN)
 				{
 					// received a complete frame
 					break;
@@ -220,6 +263,7 @@ int main(int argc, char *argv[])
 }
 
 uch charBuffer[CHAR_LIMIT];
+bool charBufferErrors[CHAR_LIMIT];
 
 void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 {
@@ -228,23 +272,26 @@ void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output
 
 	uint charN;
 
+	// decode using HDB3
+	l_decodeHdb3(dataBuffer, dataN);
+
 	// parse transmission (0/1 -> raw frame)
 	charN = l_parseData(dataBuffer, dataN, charBuffer);
 
-	// check parity
-	if (l_validateCharParity(charBuffer, charN))
-	{
-		// strip parity
-		l_stripCharParity(charBuffer, charN);
-	}
-	else
-	{
-		// create notifier
-		memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", 64);
-		charN = 64;
+	// check and strip parity
+	bool validParity = l_validateCharParity(charBuffer, charN, charBufferErrors);
+	l_stripCharParity(charBuffer, charN);
 
-		// write to console
-		std::cout << "ERROR found, ASCII parity... frame " << frameNum << std::endl;
+	if (!validParity)
+	{
+		std::cout << "ERROR, ASCII parity, frame " << frameNum << ":\n";
+		std::cout.write((char*)charBuffer, charN);
+		std::cout << "\n";
+		for (int i = 0; i < charN; i++)
+		{
+			std::cout.put(charBufferErrors[i] ? '^' : ' ');
+		}
+		std::cout << "\n\n";
 	}
 
 	// write to file
@@ -258,36 +305,34 @@ void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 
 	uint charN;
 
-	// check CRC
-	if (l_validateDataCrc(dataBuffer, dataN))
+	// decode using HDB3
+	l_decodeHdb3(dataBuffer, dataN);
+
+	// check CRC and parse data
+	bool validCrc = l_validateDataCrc(dataBuffer, dataN);
+	charN = l_parseDataCrc(dataBuffer, dataN, charBuffer);
+
+	// check and strip parity
+	bool validParity = l_validateCharParity(charBuffer, charN, charBufferErrors);
+	l_stripCharParity(charBuffer, charN);
+
+	if (!validCrc)
 	{
-		// valid crc, parse data
-		charN = l_parseDataCrc(dataBuffer, dataN, charBuffer);
-
-		// check parity
-		if (l_validateCharParity(charBuffer, charN))
-		{
-			// strip parity
-			l_stripCharParity(charBuffer, charN);
-		}
-		else
-		{
-			// create notifier
-			memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", 64);
-			charN = 64;
-
-			// write to console
-			std::cout << "ERROR found, ASCII parity... frame " << frameNum << std::endl;
-		}
+		std::cout << "ERROR, CRC check, frame " << frameNum << ":\n";
+		std::cout.write((char*)charBuffer, charN);
+		std::cout << "\n\n";
 	}
-	else
-	{
-		// create notifier
-		memcpy(charBuffer, "[CRCINV_CRCINV_CRCINV_CRCINV_CRCINV_CRCINV_CRCINV_CRCINV_CRCINV]", 64);
-		charN = 64;
 
-		// write to console
-		std::cout << "ERROR found, CRC... frame " << frameNum << std::endl;
+	if (!validParity)
+	{
+		std::cout << "ERROR, ASCII parity, frame " << frameNum << ":\n";
+		std::cout.write((char*)charBuffer, charN);
+		std::cout << "\n";
+		for (int i = 0; i < charN; i++)
+		{
+			std::cout.put(charBufferErrors[i] ? '^' : ' ');
+		}
+		std::cout << "\n\n";
 	}
 
 	// write to file
@@ -301,13 +346,16 @@ void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* out
 
 	uint charN;
 
+	// decode using HDB3
+	l_decodeHdb3(dataBuffer, dataN);
+
 	// TODO: perform Hamming correction
 
 	// parse transmission (0/1 -> raw frame)
 	charN = l_parseDataHamming(dataBuffer, dataN, charBuffer);
 
 	// check parity
-	if (l_validateCharParity(charBuffer, charN))
+	if (l_validateCharParity(charBuffer, charN, charBufferErrors))
 	{
 		// strip parity
 		l_stripCharParity(charBuffer, charN);
@@ -315,8 +363,8 @@ void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* out
 	else
 	{
 		// create notifier
-		memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", 64);
-		charN = 64;
+		memcpy(charBuffer, "[PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY_PARITY]", CHAR_LIMIT);
+		charN = CHAR_LIMIT;
 
 		// write to console
 		std::cout << "ERROR found, ASCII parity... frame " << frameNum << std::endl;

@@ -7,6 +7,9 @@
 uch byteBuffer[8];
 uch hammingBuffer[12];
 
+// temporary contents of 4 characters in HDB3
+uch hdb3Buffer[4];
+
 void l_addCharParity(uch charBuffer[CHAR_LIMIT], uint charN)
 {
 	for (uint i = 0; i < charN; i++)
@@ -15,17 +18,20 @@ void l_addCharParity(uch charBuffer[CHAR_LIMIT], uint charN)
 	}
 }
 
-bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN)
+bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, bool charBufferErrors[CHAR_LIMIT])
 {
+	bool valid = true;
+
 	for (uint i = 0; i < charN; i++)
 	{
-		if (!p_checkParity(charBuffer[i]))
+		charBufferErrors[i] = !p_checkParity(charBuffer[i]);
+		if (charBufferErrors[i])
 		{
-			return false;
+			valid = false;
 		}
 	}
 
-	return true;
+	return valid;
 }
 
 void l_stripCharParity(uch charBuffer[CHAR_LIMIT], uint charN)
@@ -34,6 +40,12 @@ void l_stripCharParity(uch charBuffer[CHAR_LIMIT], uint charN)
 	{
 		charBuffer[i] = p_stripParity(charBuffer[i]);
 	}
+}
+
+void l_prepareFrameHeader(uch transmitBuffer[TRANSMIT_LIMIT], uint charN)
+{
+	transmitBuffer[0] = transmitBuffer[1] = 0x22;
+	transmitBuffer[2] = charN;
 }
 
 uint l_prepareData(uch charBuffer[CHAR_LIMIT], uint charN, uch dataBuffer[DATA_LIMIT])
@@ -143,8 +155,6 @@ uint l_parseDataHamming(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBuffer[C
 	return charN;
 }
 
-#define flipChar(character) ((character) == '1' ? '0' : '1')
-
 int l_introduceErrors(uch dataBuffer[DATA_LIMIT], uint dataN, int maxErrors, int errorPos[])
 {
 	int errors = 0;
@@ -156,10 +166,137 @@ int l_introduceErrors(uch dataBuffer[DATA_LIMIT], uint dataN, int maxErrors, int
 		if (rng_introduceError())
 		{
 			// flip the bit, record which bit we flipped
-			dataBuffer[i] = flipChar(dataBuffer[i]);
+			dataBuffer[i] = (dataBuffer[i] == '1' ? '0' : '1');
 			errorPos[errors++] = i;
 		}
 	}
 
 	return errors;
+}
+
+void l_encodeHdb3(uch dataBuffer[DATA_LIMIT], uint dataN)
+{
+	bool evenParity = true;
+	bool previousPulseHI = false;
+
+	int i = 0;
+	while (i < dataN)
+	{
+		// get next 4 characters
+		int remaining = dataN - i;
+		if (remaining >= 4)
+		{
+			memcpy(hdb3Buffer, &dataBuffer[i], 4);
+		}
+		else
+		{
+			memcpy(hdb3Buffer, &dataBuffer[i], remaining);
+			memcpy(hdb3Buffer + remaining, "222", 4 - remaining);
+		}
+
+		// check for 0000
+		if (!strncmp((char*)hdb3Buffer, "0000", 4))
+		{
+			// 0000, encode
+
+			if (evenParity)
+			{
+				if (previousPulseHI)
+				{
+					// -00-
+					memcpy(&dataBuffer[i], "-00-", 4);
+				}
+				else
+				{
+					// +00+
+					memcpy(&dataBuffer[i], "+00+", 4);
+				}
+			}
+			else
+			{
+				if (previousPulseHI)
+				{
+					// 000+
+					memcpy(&dataBuffer[i], "000+", 4);
+				}
+				else
+				{
+					// 000-
+					memcpy(&dataBuffer[i], "000-", 4);
+				}
+			}
+
+			evenParity = true;
+			i += 4;
+		}
+		else
+		{
+			// not 0000, encode just the first bit
+			uch c = hdb3Buffer[0];
+
+			if (c == '0')
+			{
+				dataBuffer[i] = '0';
+			}
+			else
+			{
+				dataBuffer[i] = (previousPulseHI ? '-' : '+');
+				previousPulseHI = !previousPulseHI;
+				evenParity = !evenParity;
+			}
+
+			++i;
+		}
+	}
+}
+
+void l_decodeHdb3(uch dataBuffer[DATA_LIMIT], uint dataN)
+{
+	bool evenParity = true;
+	bool previousPulseHI = false;
+
+	int i = 0;
+	while (i < dataN)
+	{
+		// get next 4 characters
+		int remaining = dataN - i;
+		if (remaining >= 4)
+		{
+			memcpy(hdb3Buffer, &dataBuffer[i], 4);
+		}
+		else
+		{
+			memcpy(hdb3Buffer, &dataBuffer[i], remaining);
+			memcpy(hdb3Buffer + remaining, "222", 4 - remaining);
+		}
+
+		// check for 0000 pattern
+		if ((!strncmp((char*)hdb3Buffer, "000+", 4) && !evenParity && previousPulseHI)
+			|| (!strncmp((char*)hdb3Buffer, "000-", 4) && !evenParity && !previousPulseHI)
+			|| (!strncmp((char*)hdb3Buffer, "-00-", 4) && evenParity && previousPulseHI)
+			|| (!strncmp((char*)hdb3Buffer, "+00+", 4) && evenParity && !previousPulseHI))
+		{
+			// 0000, decode
+			memcpy(&dataBuffer[i], "0000", 4);
+
+			evenParity = true;
+			i += 4;
+		}
+		else
+		{
+			// not 0000, decode just the first bit
+			if (hdb3Buffer[0] == '0')
+			{
+				dataBuffer[i] = '0';
+			}
+			else
+			{
+				dataBuffer[i] = '1';
+				previousPulseHI = !previousPulseHI;
+				evenParity = !evenParity;
+			}
+
+			++i;
+		}
+	}
 }

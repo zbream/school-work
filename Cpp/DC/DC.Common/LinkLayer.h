@@ -7,11 +7,16 @@ void l_addCharParity(uch charBuffer[CHAR_LIMIT], uint charN);
 /*
 Validate the ASCII parity of the first charN bytes of charBuffer. 
 Returns true if all valid, false otherwise. */
-bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN);
+bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, bool charBufferErrors[CHAR_LIMIT]);
 
 /*
 Remove the ASCII parity bit of the first charN bytes of charBuffer. */
 void l_stripCharParity(uch charBuffer[CHAR_LIMIT], uint charN);
+
+/*
+Prepare the frame header.
+Adds two SYN (0x22) characters and the data length. */
+void l_prepareFrameHeader(uch transmitBuffer[TRANSMIT_LIMIT], uint charN);
 
 /*
 Prepare dataBuffer, for no error detection or correction.
@@ -55,3 +60,11 @@ Returns the number of bytes placed in charBuffer. */
 uint l_parseDataHamming(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBuffer[CHAR_LIMIT]);
 
 int l_introduceErrors(uch dataBuffer[DATA_LIMIT], uint dataN, int maxErrors, int errorPos[]);
+
+/*
+Encode the first dataN bytes of dataBuffer using HDB3. */
+void l_encodeHdb3(uch dataBuffer[DATA_LIMIT], uint dataN);
+
+/*
+Decode the first dataN bytes of dataBuffer using HDB3. */
+void l_decodeHdb3(uch dataBuffer[DATA_LIMIT], uint dataN);
