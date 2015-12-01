@@ -18,14 +18,15 @@ void l_addCharParity(uch charBuffer[CHAR_LIMIT], uint charN)
 	}
 }
 
-bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, bool charBufferParity[CHAR_LIMIT])
+bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, uch charBufferFlags[CHAR_LIMIT])
 {
 	bool valid = true;
 
 	for (uint i = 0; i < charN; i++)
 	{
-		if (!(charBufferParity[i] = p_checkParity(charBuffer[i])))
+		if (!p_checkParity(charBuffer[i]))
 		{
+			charBufferFlags[i] |= FLAG_ER_PARITY;
 			valid = false;
 		}
 	}
@@ -140,10 +141,43 @@ uint l_prepareDataHamming(uch charBuffer[CHAR_LIMIT], uint charN, uch dataBuffer
 	return dataN;
 }
 
+bool l_validateDataHamming(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBufferFlags[CHAR_LIMIT])
+{
+	bool valid = true;
+
+	// total bytes in data
+	uint charN = dataN / 12;
+
+	for (uint charI = 0; charI < charN; charI++)
+	{
+		uint dataI = charI * 12;
+
+		uint syndrome = p_hammingGetSyndrome(&dataBuffer[dataI]);
+		if (syndrome > 0)
+		{
+			valid = false;
+
+			// there is an error in parity
+			charBufferFlags[charI] |= FLAG_ER_HAMMING_DETECTED;
+
+			if (syndrome <= 12)
+			{
+				uint dataIOffset = dataI + (syndrome - 1);
+
+				// we can correct this error
+				charBufferFlags[charI] |= FLAG_ER_HAMMING_CORRECTED;
+				dataBuffer[dataIOffset] = (dataBuffer[dataIOffset] == '0' ? '1' : '0');
+			}
+		}
+	}
+
+	return valid;
+}
+
 uint l_parseDataHamming(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBuffer[CHAR_LIMIT])
 {
 	// total bytes in data
-	uch charN = dataN / 12;
+	uint charN = dataN / 12;
 
 	// read chars from data
 	for (uint i = 0; i < charN; i++)

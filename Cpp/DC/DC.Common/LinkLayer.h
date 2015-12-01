@@ -6,8 +6,9 @@ void l_addCharParity(uch charBuffer[CHAR_LIMIT], uint charN);
 
 /*
 Validate the ASCII parity of the first charN bytes of charBuffer. 
+Sets flag FLAG_ER_PARITY in charBufferFlags on each bad character.
 Returns true if all valid, false otherwise. */
-bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, bool charBufferParity[CHAR_LIMIT]);
+bool l_validateCharParity(uch charBuffer[CHAR_LIMIT], uint charN, uch charBufferFlags[CHAR_LIMIT]);
 
 /*
 Remove the ASCII parity bit of the first charN bytes of charBuffer. */
@@ -48,17 +49,29 @@ Returns the number of bytes placed in charBuffer. */
 uint l_parseDataCrc(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBuffer[CHAR_LIMIT]);
 
 /*
-Prepare dataBuffer, for Hamming 8-4 error correction.
+Prepare dataBuffer, for Hamming 12-8 error correction.
 Builds from the first charN bytes of charBuffer.
 Returns the number of bytes placed in dataBuffer. */
 uint l_prepareDataHamming(uch charBuffer[CHAR_LIMIT], uint charN, uch dataBuffer[DATA_LIMIT]);
 
 /*
-Parse charBuffer, for Hamming 8-4 error correction.
+Validate the Hamming 12-8 code on the first dataN bits of dataBuffer.
+If a character is identified bad, flag FLAG_ER_HAMMING_DETECTED is set in charBufferFlags.
+If a character is corrected, flag FLAG_ER_HAMMING_CORRECTED is set in charBufferFlags.
+Returns true if all valid (no detections or corrections), false otherwise. */
+bool l_validateDataHamming(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBufferFlags[CHAR_LIMIT]);
+
+/*
+Parse charBuffer, for Hamming 12-8 error correction.
 Builds from the first dataN bytes of dataBuffer.
 Returns the number of bytes placed in charBuffer. */
 uint l_parseDataHamming(uch dataBuffer[DATA_LIMIT], uint dataN, uch charBuffer[CHAR_LIMIT]);
 
+/*
+Randomly flip bits in the first dataN bits of dataBuffer.
+Each bit has a 5% chance of being flipped, up to maxErrors across all the bits.
+Each bit position flipped is added to the errorPos array.
+Returns the number of bits flipped (also the number of values placed in errorPos). */
 int l_introduceErrors(uch dataBuffer[DATA_LIMIT], uint dataN, int maxErrors, int errorPos[]);
 
 /*

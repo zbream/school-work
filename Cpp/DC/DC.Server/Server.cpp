@@ -14,20 +14,11 @@ void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output
 void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output);
 void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output);
 
+// separate sections of output
 char* sep = "\n==========\n";
 
-int getSwitch(int switchc, char** switchv, const std::string& option, int nOptionParameters)
-{
-	int pos = std::find(switchv, switchv + switchc, option) - switchv;
-	if (switchc - pos - 1 >= nOptionParameters)
-	{
-		return pos;
-	}
-	else
-	{
-		return -1;
-	}
-}
+uch charBuffer[CHAR_LIMIT];
+uch charBufferFlags[CHAR_LIMIT];
 
 int frameNum = 0;
 
@@ -60,7 +51,7 @@ int main(int argc, char *argv[])
 			int pos;
 
 			// check EC mode
-			pos = getSwitch(switchc, switchv, "/ec", 1);
+			pos = a_findCommandLineSwitch(switchc, switchv, "/ec", 1);
 			if (pos > -1)
 			{
 				if (streq(switchv[pos + 1], "crc"))
@@ -74,7 +65,7 @@ int main(int argc, char *argv[])
 			}
 
 			// check path
-			pos = getSwitch(switchc, switchv, "/path", 1);
+			pos = a_findCommandLineSwitch(switchc, switchv, "/path", 1);
 			if (pos > -1)
 			{
 				paramOutput = switchv[pos + 1];
@@ -262,15 +253,14 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-uch charBuffer[CHAR_LIMIT];
-bool charBufferParity[CHAR_LIMIT];
-
 void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
-{
+{	
 	uch* dataBuffer = &transmitBuffer[3];
 	uint dataN = transmitN - 3;
-
 	uint charN;
+
+	// clear flags
+	memset(charBufferFlags, 0, CHAR_LIMIT);
 
 	// decode using HDB3
 	l_decodeHdb3(dataBuffer, dataN);
@@ -279,7 +269,7 @@ void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output
 	charN = l_parseData(dataBuffer, dataN, charBuffer);
 
 	// check and strip parity
-	bool validParity = l_validateCharParity(charBuffer, charN, charBufferParity);
+	bool validParity = l_validateCharParity(charBuffer, charN, charBufferFlags);
 	l_stripCharParity(charBuffer, charN);
 
 	if (!validParity)
@@ -289,7 +279,7 @@ void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output
 		std::cout << "\n";
 		for (int i = 0; i < charN; i++)
 		{
-			std::cout.put(charBufferParity[i] ? ' ' : '^');
+			std::cout.put((charBufferFlags[i] & FLAG_ER_PARITY) ? '^' : ' ');
 		}
 		std::cout << "\n\n";
 	}
@@ -302,8 +292,10 @@ void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 {
 	uch* dataBuffer = &transmitBuffer[3];
 	uint dataN = transmitN - 3;
-
 	uint charN;
+
+	// clear flags
+	memset(charBufferFlags, 0, CHAR_LIMIT);
 
 	// decode using HDB3
 	l_decodeHdb3(dataBuffer, dataN);
@@ -313,7 +305,7 @@ void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 	charN = l_parseDataCrc(dataBuffer, dataN, charBuffer);
 
 	// check and strip parity
-	bool validParity = l_validateCharParity(charBuffer, charN, charBufferParity);
+	bool validParity = l_validateCharParity(charBuffer, charN, charBufferFlags);
 	l_stripCharParity(charBuffer, charN);
 
 	if (!validCrc)
@@ -330,7 +322,7 @@ void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 		std::cout << "\n";
 		for (int i = 0; i < charN; i++)
 		{
-			std::cout.put(charBufferParity[i] ? ' ' : '^');
+			std::cout.put((charBufferFlags[i] & FLAG_ER_PARITY) ? '^' : ' ');
 		}
 		std::cout << "\n\n";
 	}
@@ -343,29 +335,58 @@ void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* out
 {
 	uch* dataBuffer = &transmitBuffer[3];
 	uint dataN = transmitN - 3;
-
 	uint charN;
+
+	// clear flags
+	memset(charBufferFlags, 0, CHAR_LIMIT);
 
 	// decode using HDB3
 	l_decodeHdb3(dataBuffer, dataN);
 
-	// TODO: perform Hamming correction
+	// correct hamming if possible
+	bool validHamming = l_validateDataHamming(dataBuffer, dataN, charBufferFlags);
 	
 	// parse transmission (0/1 -> raw frame)
 	charN = l_parseDataHamming(dataBuffer, dataN, charBuffer);
 
 	// check and strip parity
-	bool validParity = l_validateCharParity(charBuffer, charN, charBufferParity);
+	bool validParity = l_validateCharParity(charBuffer, charN, charBufferFlags);
 	l_stripCharParity(charBuffer, charN);
+
+	if (!validHamming)
+	{
+		std::cout << "ERROR, Hamming, frame " << frameNum << " (!detected, ^corrected):\n";
+		std::cout.write((char*)charBuffer, charN);
+		std::cout << "\n";
+		for (uint i = 0; i < charN; i++)
+		{
+			uch flag = charBufferFlags[i];
+			char c;
+			if (flag & FLAG_ER_HAMMING_CORRECTED)
+			{
+				c = '^';
+			}
+			else if (flag & FLAG_ER_HAMMING_DETECTED) 
+			{
+				c = '!';
+			}
+			else
+			{
+				c = ' ';
+			}
+			std::cout.put(c);
+		}
+		std::cout << "\n\n";
+	}
 
 	if (!validParity)
 	{
 		std::cout << "ERROR, ASCII parity, frame " << frameNum << ":\n";
 		std::cout.write((char*)charBuffer, charN);
 		std::cout << "\n";
-		for (int i = 0; i < charN; i++)
+		for (uint i = 0; i < charN; i++)
 		{
-			std::cout.put(charBufferParity[i] ? ' ' : '^');
+			std::cout.put((charBufferFlags[i] & FLAG_ER_PARITY) ? '^' : ' ');
 		}
 		std::cout << "\n\n";
 	}

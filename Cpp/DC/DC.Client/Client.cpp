@@ -1,30 +1,19 @@
 #include <iostream>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <string>
 
 #include "Common.h"
 #include "ApplicationLayer.h"
 #include "LinkLayer.h"
 #include "RNG.h"
 
+#include "PhysicalLayer.h"
+
 // defaults
 #define INPATH "input.txt"
 
+// separate sections of output
 char* sep = "\n==========\n";
-
-int getSwitch(int switchc, char** switchv, const std::string& option, int nOptionParameters)
-{
-	int pos = std::find(switchv, switchv + switchc, option) - switchv;
-	if (switchc - pos - 1 >= nOptionParameters)
-	{
-		return pos;
-	}
-	else
-	{
-		return -1;
-	}
-}
 
 int frameNum = 0;
 
@@ -61,7 +50,7 @@ int main(int argc, char *argv[])
 			int pos;
 
 			// check EC mode
-			pos = getSwitch(switchc, switchv, "/ec", 1);
+			pos = a_findCommandLineSwitch(switchc, switchv, "/ec", 1);
 			if (pos > -1)
 			{
 				if (streq(switchv[pos + 1], "crc"))
@@ -75,14 +64,14 @@ int main(int argc, char *argv[])
 			}
 
 			// check path
-			pos = getSwitch(switchc, switchv, "/path", 1);
+			pos = a_findCommandLineSwitch(switchc, switchv, "/path", 1);
 			if (pos > -1)
 			{
 				paramInput = switchv[pos + 1];
 			}
 
 			// check errors per frame
-			pos = getSwitch(switchc, switchv, "/e", 1);
+			pos = a_findCommandLineSwitch(switchc, switchv, "/e", 1);
 			if (pos > -1)
 			{
 				paramMaxErrorsPerFrame = atoi(switchv[pos + 1]);
