@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	// check arguments
 	if (argc < 2)
 	{
-		std::cerr << "Usage: " << argv[0] << " port [/ec (crc|hamming)] [/path <outputFile>]" << sep;
+		std::cout << "Usage: " << argv[0] << " port [/ec (crc|hamming)] [/path <outputFile>]" << sep;
 		return 1;
 	}
 	else
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 	if (output == NULL)
 	{
 		// error opening output
-		std::cerr << "ERROR opening file for writing" << paramOutput << std::endl;
+		std::cout << "ERROR, unable to open file for writing: " << paramOutput << std::endl;
 		return 1;
 	}
 
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 	wsaResult = WSAStartup(wsaVersion, &wsaData);
 	if (wsaResult != NO_ERROR)
 	{
-		std::cerr << "ERROR, WSAStartup failed: " << wsaResult << std::endl;
+		std::cout << "ERROR, WSAStartup failed: " << wsaResult << std::endl;
 		return 1;
 	}
 
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 	if (sockListen == INVALID_SOCKET)
 	{
 		int errorNo = WSAGetLastError();
-		std::cerr << "ERROR opening socket: " << errorNo << std::endl;
+		std::cout << "ERROR, opening socket failed: " << errorNo << std::endl;
 		return 1;
 	}
 
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 	if (wsaResult == SOCKET_ERROR)
 	{
 		int errorNo = WSAGetLastError();
-		std::cerr << "ERROR binding socket: " << errorNo << std::endl;
+		std::cout << "ERROR, binding socket failed: " << errorNo << std::endl;
 		return 1;
 	}
 
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 	if (wsaResult == SOCKET_ERROR)
 	{
 		int errorNo = WSAGetLastError();
-		std::cerr << "ERROR listening: " << errorNo << std::endl;
+		std::cout << "ERROR, listening on socket failed: " << errorNo << std::endl;
 		return 1;
 	}
 
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 	if (sockTransmit == INVALID_SOCKET)
 	{
 		int errorNo = WSAGetLastError();
-		std::cerr << "ERROR accepting: " << errorNo << std::endl;
+		std::cout << "ERROR, accepting connection failed: " << errorNo << std::endl;
 		return 1;
 	}
 
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
 			else if (readBytes == SOCKET_ERROR)
 			{
 				int errorNo = WSAGetLastError();
-				std::cerr << "ERROR receiving: " << errorNo << std::endl;
+				std::cout << "ERROR, receiving failed: " << errorNo << std::endl;
 				return 1;
 			}
 			else
@@ -244,13 +244,59 @@ int main(int argc, char *argv[])
 	if (wsaResult == SOCKET_ERROR)
 	{
 		int errorNo = WSAGetLastError();
-		std::cerr << "ERROR, closesocket: " << errorNo << std::endl;
+		std::cout << "ERROR, closesocket failed: " << errorNo << std::endl;
 		WSACleanup();
 		return 1;
 	}
 
 	WSACleanup();
 	return 0;
+}
+
+void printFrameError(uint charN)
+{
+	std::cout << "ERROR found, in frame " << frameNum << ":\n     ";
+	std::cout.write((char*)charBuffer, charN);
+	std::cout << std::endl;
+}
+
+void printParityErrors(uint charN)
+{
+	std::cout << " PAR:";
+	for (uint i = 0; i < charN; i++)
+	{
+		std::cout.put((charBufferFlags[i] & FLAG_ER_PARITY) ? '^' : ' ');
+	}
+	std::cout << std::endl;
+}
+
+void printCrcError()
+{
+	std::cout << " CRC:invalid" << std::endl;
+}
+
+void printHammingErrors(uint charN)
+{
+	std::cout << " HAM:";
+	for (uint i = 0; i < charN; i++)
+	{
+		uch flag = charBufferFlags[i];
+		char c;
+		if (flag & FLAG_ER_HAMMING_CORRECTED)
+		{
+			c = '^';
+		}
+		else if (flag & FLAG_ER_HAMMING_DETECTED)
+		{
+			c = '!';
+		}
+		else
+		{
+			c = ' ';
+		}
+		std::cout.put(c);
+	}
+	std::cout << std::endl;
 }
 
 void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
@@ -274,14 +320,9 @@ void handleNone(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output
 
 	if (!validParity)
 	{
-		std::cout << "ERROR, ASCII parity, frame " << frameNum << ":\n";
-		std::cout.write((char*)charBuffer, charN);
-		std::cout << "\n";
-		for (int i = 0; i < charN; i++)
-		{
-			std::cout.put((charBufferFlags[i] & FLAG_ER_PARITY) ? '^' : ' ');
-		}
-		std::cout << "\n\n";
+		printFrameError(charN);
+		printParityErrors(charN);
+		std::cout << std::endl;
 	}
 
 	// write to file
@@ -308,23 +349,12 @@ void handleCrc(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* output)
 	bool validParity = l_validateCharParity(charBuffer, charN, charBufferFlags);
 	l_stripCharParity(charBuffer, charN);
 
-	if (!validCrc)
+	if (!validParity || !validCrc)
 	{
-		std::cout << "ERROR, CRC check, frame " << frameNum << ":\n";
-		std::cout.write((char*)charBuffer, charN);
-		std::cout << "\n\n";
-	}
-
-	if (!validParity)
-	{
-		std::cout << "ERROR, ASCII parity, frame " << frameNum << ":\n";
-		std::cout.write((char*)charBuffer, charN);
-		std::cout << "\n";
-		for (int i = 0; i < charN; i++)
-		{
-			std::cout.put((charBufferFlags[i] & FLAG_ER_PARITY) ? '^' : ' ');
-		}
-		std::cout << "\n\n";
+		printFrameError(charN);
+		if (!validParity) printParityErrors(charN);
+		if (!validCrc) printCrcError();
+		std::cout << std::endl;
 	}
 
 	// write to file
@@ -353,42 +383,12 @@ void handleHamming(uch transmitBuffer[TRANSMIT_LIMIT], uint transmitN, FILE* out
 	bool validParity = l_validateCharParity(charBuffer, charN, charBufferFlags);
 	l_stripCharParity(charBuffer, charN);
 
-	if (!validHamming)
+	if (!validParity || !validHamming)
 	{
-		std::cout << "ERROR, Hamming, frame " << frameNum << " (!detected, ^corrected):\n";
-		std::cout.write((char*)charBuffer, charN);
-		std::cout << "\n";
-		for (uint i = 0; i < charN; i++)
-		{
-			uch flag = charBufferFlags[i];
-			char c;
-			if (flag & FLAG_ER_HAMMING_CORRECTED)
-			{
-				c = '^';
-			}
-			else if (flag & FLAG_ER_HAMMING_DETECTED) 
-			{
-				c = '!';
-			}
-			else
-			{
-				c = ' ';
-			}
-			std::cout.put(c);
-		}
-		std::cout << "\n\n";
-	}
-
-	if (!validParity)
-	{
-		std::cout << "ERROR, ASCII parity, frame " << frameNum << ":\n";
-		std::cout.write((char*)charBuffer, charN);
-		std::cout << "\n";
-		for (uint i = 0; i < charN; i++)
-		{
-			std::cout.put((charBufferFlags[i] & FLAG_ER_PARITY) ? '^' : ' ');
-		}
-		std::cout << "\n\n";
+		printFrameError(charN);
+		if (!validHamming) printHammingErrors(charN);
+		if (!validParity) printParityErrors(charN);
+		std::cout << std::endl;
 	}
 
 	// write to file

@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	// check arguments
 	if (argc < 3)
 	{
-		std::cerr << "Usage: " << argv[0] << " hostname port [/ec (crc|hamming)] [/path <inputFile>] [/e <maxErrorsPerFrame>]" << std::endl;
+		std::cout << "Usage: " << argv[0] << " hostname port [/ec (crc|hamming)] [/path <inputFile>] [/e <maxErrorsPerFrame>]" << std::endl;
 		return 1;
 	}
 	else
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 	if (input == NULL)
 	{
 		// error opening input
-		std::cerr << "ERROR opening file for reading: " << paramInput << std::endl;
+		std::cout << "ERROR, unable to open file for reading: " << paramInput << std::endl;
 		return 1;
 	}
 
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	wsaResult = WSAStartup(wsaVersion, &wsaData);
 	if (wsaResult != NO_ERROR)
 	{
-		std::cerr << "ERROR, WSAStartup failed: " << wsaResult << std::endl;
+		std::cout << "ERROR, WSAStartup failed: " << wsaResult << std::endl;
 		return 1;
 	}
 
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 	if (sockTransmit == INVALID_SOCKET)
 	{
 		int errorNo = WSAGetLastError();
-		std::cerr << "ERROR opening socket: " << errorNo << std::endl;
+		std::cout << "ERROR, opening socket failed: " << errorNo << std::endl;
 		return 1;
 	}
 
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 	serverHost = gethostbyname(paramHost);
 	if (serverHost == NULL)
 	{
-		std::cerr << "ERROR, no such host" << std::endl;
+		std::cout << "ERROR, no such host." << std::endl;
 		return 1;
 	}
 
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
 	if (wsaResult == SOCKET_ERROR)
 	{
 		int errorNo = WSAGetLastError();
-		std::cerr << "ERROR connecting to server: " << errorNo << std::endl;
+		std::cout << "ERROR, connection to server failed: " << errorNo << std::endl;
 		return 1;
 	}
 	
@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
 				uint introducedErrors = l_introduceErrors(dataBuffer, dataN, paramMaxErrorsPerFrame, introducedErrorPos);
 				for (uint i = 0; i < introducedErrors; i++)
 				{
-					std::cout << "Error introduced... frame " << (frameNum) << " character " << ((introducedErrorPos[i] / bitsPerChar) + 1) << std::endl;
+					std::cout << "Error introduced, in frame " << frameNum << " character " << (introducedErrorPos[i] / bitsPerChar) + 1 << std::endl;
 				}
 			}
 
@@ -212,12 +212,12 @@ int main(int argc, char *argv[])
 			if (sentBytes == SOCKET_ERROR)
 			{
 				int errorNo = WSAGetLastError();
-				std::cerr << "ERROR sending: " << errorNo << std::endl;
+				std::cout << "ERROR, sending failed: " << errorNo << std::endl;
 				return 1;
 			}
 			else if (sentBytes != transmitN)
 			{
-				std::cerr << "ERROR, entire buffer was not sent for some reason." << std::endl;
+				std::cout << "ERROR, entire buffer was not sent for some reason." << std::endl;
 				return 1;
 			}
 		}
@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
 	if (wsaResult == SOCKET_ERROR)
 	{
 		int errorNo = WSAGetLastError();
-		std::cerr << "ERROR, closesocket: " << errorNo << std::endl;
+		std::cout << "ERROR, closesocket: " << errorNo << std::endl;
 		WSACleanup();
 		return 1;
 	}

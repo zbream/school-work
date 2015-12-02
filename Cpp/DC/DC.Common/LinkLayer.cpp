@@ -212,7 +212,7 @@ void l_encodeHdb3(uch dataBuffer[DATA_LIMIT], uint dataN)
 	bool evenParity = true;
 	bool previousPulseHI = false;
 
-	int i = 0;
+	uint i = 0;
 	while (i < dataN)
 	{
 		// get next 4 characters
@@ -288,7 +288,7 @@ void l_decodeHdb3(uch dataBuffer[DATA_LIMIT], uint dataN)
 	bool evenParity = true;
 	bool previousPulseHI = false;
 
-	int i = 0;
+	uint i = 0;
 	while (i < dataN)
 	{
 		// get next 4 characters
