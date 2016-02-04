@@ -1,0 +1,72 @@
+﻿// initialize myVal
+lvalue myVal
+push 5
+:=
+
+rvalue myVal
+show myVal:
+print
+pop
+
+// double myVal
+begin
+	lvalue a
+	rvalue myVal
+	:=
+	call DOMATH
+	lvalue myVal
+	rvalue b
+	:=
+end
+
+rvalue myVal
+show
+show (myVal+3)*2:
+print
+pop
+
+halt
+
+// add3,double what's in a, return as b
+label DOMATH
+	begin
+		lvalue a
+		rvalue a
+		:=
+		call ADD3
+		lvalue a
+		rvalue b
+		:=
+	end
+	begin
+		lvalue a
+		rvalue a
+		:=
+		call DOUBLE
+		lvalue b
+		rvalue b
+		:=
+	end
+return
+
+// double what's in a, return as b
+label DOUBLE
+	lvalue b
+
+	rvalue a
+	copy
+	+
+
+	:=
+return
+
+// add three to what's in a, return as b
+label ADD3
+	lvalue b
+	
+	rvalue a
+	push 3
+	+
+
+	:=
+return
