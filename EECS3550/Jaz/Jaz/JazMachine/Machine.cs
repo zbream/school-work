@@ -11,13 +11,13 @@ namespace Jaz.JazMachine
     {
         public Machine()
         {
-            this.Stack = new Stack<object>();
+            this.Stack = new StackManager();
             this.Memory = new MemoryManager();
             this.ReturnStack = new Stack<int>();
             this.Pointer = 0;
         }
 
-        public Stack<object> Stack { get; private set; }
+        public StackManager Stack { get; private set; }
 
         public MemoryManager Memory { get; private set; }
 

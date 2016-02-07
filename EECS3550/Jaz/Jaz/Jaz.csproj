@@ -59,6 +59,7 @@
     <Compile Include="JazExecutor\Executor.cs" />
     <Compile Include="JazMachine\Machine.cs" />
     <Compile Include="JazMachine\MemoryManager.cs" />
+    <Compile Include="JazMachine\StackManager.cs" />
     <Compile Include="JazParser\Parser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

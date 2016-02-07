@@ -11,11 +11,11 @@ namespace Jaz.JazExecutor.ExecutorAction.LogicalOperators
     {
         public bool Perform(Machine machine)
         {
-            bool a = ((int)machine.Stack.Pop()) != 0;
-            bool b = ((int)machine.Stack.Pop()) != 0;
+            bool a = (machine.Stack.PopInt() != 0);
+            bool b = (machine.Stack.PopInt() != 0);
 
             int result = (a && b) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }
@@ -30,10 +30,10 @@ namespace Jaz.JazExecutor.ExecutorAction.LogicalOperators
     {
         public bool Perform(Machine machine)
         {
-            bool a = ((int)machine.Stack.Pop()) != 0;
+            bool a = (machine.Stack.PopInt() != 0);
 
             int result = (!a) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }
@@ -48,11 +48,11 @@ namespace Jaz.JazExecutor.ExecutorAction.LogicalOperators
     {
         public bool Perform(Machine machine)
         {
-            bool a = ((int)machine.Stack.Pop()) != 0;
-            bool b = ((int)machine.Stack.Pop()) != 0;
+            bool a = (machine.Stack.PopInt() != 0);
+            bool b = (machine.Stack.PopInt() != 0);
 
             int result = (a || b) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }

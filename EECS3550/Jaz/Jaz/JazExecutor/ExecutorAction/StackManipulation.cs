@@ -21,7 +21,7 @@ namespace Jaz.JazExecutor.ExecutorAction.StackManipulation
 
         public bool Perform(Machine machine)
         {
-            machine.Stack.Push(value);
+            machine.Stack.PushInt(value);
 
             return true;
         }
@@ -44,7 +44,7 @@ namespace Jaz.JazExecutor.ExecutorAction.StackManipulation
         public bool Perform(Machine machine)
         {
             int value = machine.Memory.Read(variable);
-            machine.Stack.Push(value);
+            machine.Stack.PushInt(value);
 
             return true;
         }
@@ -66,7 +66,7 @@ namespace Jaz.JazExecutor.ExecutorAction.StackManipulation
 
         public bool Perform(Machine machine)
         {
-            machine.Stack.Push(value);
+            machine.Stack.PushString(value);
 
             return true;
         }
@@ -81,7 +81,7 @@ namespace Jaz.JazExecutor.ExecutorAction.StackManipulation
     {
         public bool Perform(Machine machine)
         {
-            machine.Stack.Pop();
+            machine.Stack.PopString();
 
             return true;
         }
@@ -96,8 +96,8 @@ namespace Jaz.JazExecutor.ExecutorAction.StackManipulation
     {
         public bool Perform(Machine machine)
         {
-            int value = (int)machine.Stack.Pop();
-            string variable = (string)machine.Stack.Pop();
+            int value = machine.Stack.PopInt();
+            string variable = (string)machine.Stack.PopString();
 
             machine.Memory.Write(variable, value);
 
@@ -114,7 +114,7 @@ namespace Jaz.JazExecutor.ExecutorAction.StackManipulation
     {
         public bool Perform(Machine machine)
         {
-            machine.Stack.Push(machine.Stack.Peek());
+            machine.Stack.CopyTop();
 
             return true;
         }

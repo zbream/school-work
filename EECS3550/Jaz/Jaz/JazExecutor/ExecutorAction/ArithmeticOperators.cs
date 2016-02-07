@@ -11,10 +11,10 @@ namespace Jaz.JazExecutor.ExecutorAction.ArithmeticOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
-            machine.Stack.Push(b + a);
+            machine.Stack.PushInt(b + a);
 
             return true;
         }
@@ -29,10 +29,10 @@ namespace Jaz.JazExecutor.ExecutorAction.ArithmeticOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
-            machine.Stack.Push(b - a);
+            machine.Stack.PushInt(b - a);
 
             return true;
         }
@@ -47,10 +47,10 @@ namespace Jaz.JazExecutor.ExecutorAction.ArithmeticOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
-            machine.Stack.Push(b * a);
+            machine.Stack.PushInt(b * a);
 
             return true;
         }
@@ -65,10 +65,10 @@ namespace Jaz.JazExecutor.ExecutorAction.ArithmeticOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
-            machine.Stack.Push((int)(b / a));
+            machine.Stack.PushInt(b / a);
 
             return true;
         }
@@ -83,10 +83,10 @@ namespace Jaz.JazExecutor.ExecutorAction.ArithmeticOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
-            machine.Stack.Push(b % a);
+            machine.Stack.PushInt(b % a);
 
             return true;
         }

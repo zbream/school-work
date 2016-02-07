@@ -11,11 +11,11 @@ namespace Jaz.JazExecutor.ExecutorAction.RelationalOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
             int result = (b != a) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }
@@ -30,11 +30,11 @@ namespace Jaz.JazExecutor.ExecutorAction.RelationalOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
             int result = (b <= a) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }
@@ -49,11 +49,11 @@ namespace Jaz.JazExecutor.ExecutorAction.RelationalOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
             int result = (b >= a) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }
@@ -68,11 +68,11 @@ namespace Jaz.JazExecutor.ExecutorAction.RelationalOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
             int result = (b < a) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }
@@ -87,11 +87,11 @@ namespace Jaz.JazExecutor.ExecutorAction.RelationalOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
             int result = (b > a) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }
@@ -106,11 +106,11 @@ namespace Jaz.JazExecutor.ExecutorAction.RelationalOperators
     {
         public bool Perform(Machine machine)
         {
-            int a = (int)machine.Stack.Pop();
-            int b = (int)machine.Stack.Pop();
+            int a = machine.Stack.PopInt();
+            int b = machine.Stack.PopInt();
 
             int result = (b == a) ? 1 : 0;
-            machine.Stack.Push(result);
+            machine.Stack.PushInt(result);
 
             return true;
         }

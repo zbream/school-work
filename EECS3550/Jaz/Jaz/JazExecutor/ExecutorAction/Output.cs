@@ -11,7 +11,7 @@ namespace Jaz.JazExecutor.ExecutorAction.Output
     {
         public bool Perform(Machine machine)
         {
-            string value = machine.Stack.Peek().ToString();
+            string value = machine.Stack.PeekString();
             Console.WriteLine(value);
 
             return true;

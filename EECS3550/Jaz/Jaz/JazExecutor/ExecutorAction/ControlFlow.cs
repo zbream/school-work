@@ -43,7 +43,7 @@ namespace Jaz.JazExecutor.ExecutorAction.ControlFlow
 
         public override bool Perform(Machine machine)
         {
-            int top = (int)machine.Stack.Pop();
+            int top = machine.Stack.PopInt();
             if (top == 0)
             {
                 return base.Perform(machine);
@@ -64,7 +64,7 @@ namespace Jaz.JazExecutor.ExecutorAction.ControlFlow
 
         public override bool Perform(Machine machine)
         {
-            int top = (int)machine.Stack.Pop();
+            int top = machine.Stack.PopInt();
             if (top != 0)
             {
                 return base.Perform(machine);
