@@ -18,13 +18,15 @@ namespace Jaz
         const string INPUT_FACTPROC = @"Inputs\factProc.jaz";
         const string INPUT_FOO = @"Inputs\foo.jaz";
         const string INPUT_RECTFACT = @"Inputs\rectFact.jaz";
+        const string INPUT_OPTEST = @"Inputs\operatorsTest.jaz";
+        const string INPUT_GTA = @"Inputs\guessTheAnswer.jaz";
 
         static void Main(string[] args)
         {
             Executor executor = new Executor();
 
             // parse commands
-            using (StreamReader stream = File.OpenText(test))
+            using (StreamReader stream = File.OpenText(INPUT_OPTEST))
             {
                 Parser.ParseProgram(executor, stream);
             }

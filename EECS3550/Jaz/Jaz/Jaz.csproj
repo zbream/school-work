@@ -75,9 +75,16 @@
     <None Include="Inputs\foo.jaz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Inputs\guessTheAnswer.jaz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Inputs\operatorsTest.jaz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Inputs\Outputs\demo.out" />
     <None Include="Inputs\Outputs\factProc.out" />
     <None Include="Inputs\Outputs\foo.out" />
+    <None Include="Inputs\Outputs\operatorsTest.out" />
     <None Include="Inputs\rectFact.jaz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
