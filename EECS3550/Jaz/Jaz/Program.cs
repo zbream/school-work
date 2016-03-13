@@ -12,31 +12,50 @@ namespace Jaz
 {
     class Program
     {
-        // TEST inputs
-        const string test = @"test.txt";
-        const string INPUT_DEMO = @"Inputs\demo.jaz";
-        const string INPUT_FACTPROC = @"Inputs\factProc.jaz";
-        const string INPUT_FOO = @"Inputs\foo.jaz";
-        const string INPUT_RECTFACT = @"Inputs\rectFact.jaz";
-        const string INPUT_OPTEST = @"Inputs\operatorsTest.jaz";
-        const string INPUT_GTA = @"Inputs\guessTheAnswer.jaz";
-
         static void Main(string[] args)
         {
-            Executor executor = new Executor();
-
-            // parse commands
-            using (StreamReader stream = File.OpenText(INPUT_OPTEST))
+            // get path of input
+            string inputPath;
+            if(args.Length > 0)
             {
-                Parser.ParseProgram(executor, stream);
+                inputPath = args[0];
             }
+            else
+            {
+                Console.Write("Enter path to a jaz file: ");
+                inputPath = Console.ReadLine();
+                Console.WriteLine("==========");
+            }
+            
+            try
+            {
+                Executor executor = new Executor();
 
-            // run program
-            Machine machine = new Machine();
-            executor.Execute(machine);
+                // parse commands
+                using (StreamReader stream = File.OpenText(inputPath))
+                {
+                    Parser.ParseProgram(executor, stream);
+                }
 
-            Console.WriteLine("\n==========\nProgram Finished. Press a key...");
-            Console.ReadKey(true);
+                // run program
+                Machine machine = new Machine();
+                executor.Execute(machine);
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("Unable to open input file.");
+                return;
+            }
+            catch (ParseException ex)
+            {
+                Console.WriteLine("Parse Error: {0}", ex.Message);
+                return;
+            }
+            catch (ExecuteException ex)
+            {
+                Console.WriteLine("Execute Error: {0}", ex.Message);
+                return;
+            }
         }
     }
 }

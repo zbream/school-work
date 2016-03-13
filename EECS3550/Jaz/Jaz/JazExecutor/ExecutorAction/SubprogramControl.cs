@@ -77,7 +77,7 @@ namespace Jaz.JazExecutor.ExecutorAction.SubprogramControl
             int destPointer;
             if (!labels.TryGetValue(destLabel, out destPointer))
             {
-                throw new ExecuteException("Label not found: " + destLabel);
+                throw new ExecuteException(string.Format("Label not found, \"{0}\".", destLabel));
             }
 
             machine.Memory.EnterSubroutine();

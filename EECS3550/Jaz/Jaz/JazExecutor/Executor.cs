@@ -36,7 +36,7 @@ namespace Jaz.JazExecutor
                 // assert that pointer remains within code
                 if (machine.Pointer > pointerMax)
                 {
-                    throw new ExecuteException("Execution has left the written code. Are you missing a halt or return?");
+                    throw new ExecuteException("Execution has left the written code, are you missing a halt or return?");
                 }
 
                 // perform, and move pointer if necessary
@@ -142,7 +142,7 @@ namespace Jaz.JazExecutor
                 case "call":
                     return new ExecutorAction.SubprogramControl.EAcall(rval, labels);
                 default:
-                    throw new ParseException("Unfamiliar command: \"" + lval + "\"");
+                    throw new ParseException(string.Format("Unfamiliar command, \"{0}\".", lval));
             }
         }
     }

@@ -27,7 +27,7 @@ namespace Jaz.JazMachine
 
         public int PopInt()
         {
-            return intEnforce(stack.Pop());
+            return enforceInt(stack.Pop());
         }
 
         public string PopString()
@@ -37,7 +37,7 @@ namespace Jaz.JazMachine
 
         public int PeekInt()
         {
-            return intEnforce(stack.Pop());
+            return enforceInt(stack.Pop());
         }
 
         public string PeekString()
@@ -50,7 +50,7 @@ namespace Jaz.JazMachine
             stack.Push(stack.Peek());
         }
 
-        private int intEnforce(object value)
+        private int enforceInt(object value)
         {
             if (value.GetType() == typeof(int))
             {

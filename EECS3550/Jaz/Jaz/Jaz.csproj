@@ -81,18 +81,9 @@
     <None Include="Inputs\operatorsTest.jaz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Inputs\Outputs\demo.out" />
-    <None Include="Inputs\Outputs\factProc.out" />
-    <None Include="Inputs\Outputs\foo.out" />
-    <None Include="Inputs\Outputs\operatorsTest.out" />
     <None Include="Inputs\rectFact.jaz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="test.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

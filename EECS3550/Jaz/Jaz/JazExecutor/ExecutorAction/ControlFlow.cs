@@ -23,7 +23,7 @@ namespace Jaz.JazExecutor.ExecutorAction.ControlFlow
             int destPointer;
             if (!labels.TryGetValue(destLabel, out destPointer))
             {
-                throw new ExecuteException("Label not found: " + destLabel);
+                throw new ExecuteException(string.Format("Label not found, \"{0}\".", destLabel));
             }
 
             machine.Pointer = destPointer;
