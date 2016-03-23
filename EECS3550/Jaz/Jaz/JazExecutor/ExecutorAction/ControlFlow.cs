@@ -1,8 +1,6 @@
-﻿using System;
+﻿// 3550 Programming Asignment ZackReam JordanKlamut
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Jaz.JazMachine;
 
 namespace Jaz.JazExecutor.ExecutorAction.ControlFlow

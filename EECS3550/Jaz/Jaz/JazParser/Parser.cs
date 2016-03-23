@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// 3550 Programming Asignment ZackReam JordanKlamut
+
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Jaz.JazExecutor;
 
 namespace Jaz.JazParser
@@ -12,20 +11,8 @@ namespace Jaz.JazParser
     {
         public static void ParseProgram(Executor executor, StreamReader stream)
         {
-            Parser parser = new Parser(executor);
-            parser.ParseToEnd(stream);
-        }
-
-        private Executor executor;
-
-        private Parser(Executor executor)
-        {
-            this.executor = executor;
-        }
-
-        private void ParseToEnd(StreamReader stream)
-        {
             string line, lval, rval;
+            withinBlockComment = false;
 
             while (!stream.EndOfStream)
             {
@@ -39,7 +26,7 @@ namespace Jaz.JazParser
             }
         }
 
-        private void handleLine(string line, out string lval, out string rval)
+        private static void handleLine(string line, out string lval, out string rval)
         {
             // handle comments
             line = trimComments(line);
@@ -61,9 +48,9 @@ namespace Jaz.JazParser
             }
         }
 
-        private bool withinBlockComment = false;
+        private static bool withinBlockComment = false;
 
-        private string trimComments(string line)
+        private static string trimComments(string line)
         {
             // Slide down the line with a head width of 2.
             // Handle comment state based on the current [0] and next [1] char.

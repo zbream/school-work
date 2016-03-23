@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// 3550 Programming Asignment ZackReam JordanKlamut
+
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Jaz.JazExecutor;
 using Jaz.JazMachine;
 using Jaz.JazParser;
@@ -22,7 +20,9 @@ namespace Jaz
             }
             else
             {
-                Console.Write("Enter path to a jaz file: ");
+                Console.WriteLine("JAZ Interpreter - EECS 3550 Programming Assignment");
+                Console.WriteLine("Zack Ream , Jordan Klamut");
+                Console.Write("\nEnter path to a jaz file: ");
                 inputPath = Console.ReadLine();
                 Console.WriteLine("==========");
             }
