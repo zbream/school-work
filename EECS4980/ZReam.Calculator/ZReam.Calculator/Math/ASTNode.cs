@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZReam.Calculator.RootAgent.Math
+namespace ZReam.Calculator.Math
 {
-    class ASTNode
+    public class ASTNode
     {
         public ASTNode(Token token, ASTNode left, ASTNode right)
         {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZReam.Calculator.RootAgent.Math
+namespace ZReam.Calculator.Math
 {
-    class AST
+    public class AST
     {
         private ASTNode root;
 
@@ -123,10 +123,10 @@ namespace ZReam.Calculator.RootAgent.Math
                     value = string.Format("{0} times {1}", getSpeech(node.Left, node.Token), getSpeech(node.Right, node.Token));
                     break;
                 case TokenType.TAdd:
-                    value = string.Format("{0} plus {1}", getTEX(node.Left, node.Token), getTEX(node.Right, node.Token));
+                    value = string.Format("{0} plus {1}", getSpeech(node.Left, node.Token), getSpeech(node.Right, node.Token));
                     break;
                 case TokenType.TSubtract:
-                    value = string.Format("{0} minus {1}", getTEX(node.Left, node.Token), getTEX(node.Right, node.Token));
+                    value = string.Format("{0} minus {1}", getSpeech(node.Left, node.Token), getSpeech(node.Right, node.Token));
                     break;
                 case TokenType.TNumber:
                 default:

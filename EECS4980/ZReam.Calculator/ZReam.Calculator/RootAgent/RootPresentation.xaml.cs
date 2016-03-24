@@ -12,12 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using ZReam.Calculator.RootAgent.Contracts;
+
 namespace ZReam.Calculator.RootAgent
 {
     /// <summary>
     /// Interaction logic for RootPresentation.xaml
     /// </summary>
-    public partial class RootPresentation : Window
+    public partial class RootPresentation : Window, IRootPresentation
     {
         public RootPresentation()
         {
@@ -27,8 +29,25 @@ namespace ZReam.Calculator.RootAgent
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-
+            
             Application.Current.Shutdown(0);
+        }
+
+        public void ShowInterface()
+        {
+            this.Show();
+        }
+
+        public void SetInputUI(UserControl control)
+        {
+            InputUI.Children.Clear();
+            InputUI.Children.Add(control);
+        }
+
+        public void SetOutputUI(UserControl control)
+        {
+            OutputUI.Children.Clear();
+            OutputUI.Children.Add(control);
         }
     }
 }

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ZReam.Calculator.RootAgent.Contracts;
-
-namespace ZReam.Calculator.RootAgent
+namespace ZReam.Calculator.RootAgent.Contracts
 {
-    class RootAbstraction : IRootAbstraction
+    class IRootController
     {
     }
 }

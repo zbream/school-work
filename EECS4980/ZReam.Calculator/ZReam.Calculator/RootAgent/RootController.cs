@@ -5,21 +5,39 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+using ZReam.Calculator.OutputAgent;
+using ZReam.Calculator.OutputAgent.Contracts;
+using ZReam.Calculator.RootAgent.Contracts;
+
 namespace ZReam.Calculator.RootAgent
 {
-    class RootController
+    class RootController : IRootController
     {
+        private IRootPresentation presentation;
+        private IRootAbstraction abstraction;
+
+        private IOutputController output;
+
         public void Initialize()
         {
-            RootPresentation p = new RootPresentation();
-            p.Show();
+            // initialize this agent
+            presentation = new RootPresentation();
+            abstraction = new RootAbstraction();
 
-            IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("-(5+7)*3^2");
+            // initialize output agent
+            output = new OutputController(this);
+            presentation.SetOutputUI(output.GetUI());
+
+            // do math example
+            IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("-(5*7)*3^2");
             Math.AST tree = Math.ASTParser.ParseTree(tokens);
             long result = tree.Result();
             string TeX = tree.RenderOutputTEX();
             string Speech = tree.RenderOutputSpeech();
-            Console.ReadKey(true);
+
+            // show the window
+            presentation.ShowInterface();
+            output.UpdateOutput(tree);
         }
     }
 }

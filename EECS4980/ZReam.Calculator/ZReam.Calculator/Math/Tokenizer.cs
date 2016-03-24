@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ZReam.Calculator.RootAgent.Math
+namespace ZReam.Calculator.Math
 {
     static class Tokenizer
     {

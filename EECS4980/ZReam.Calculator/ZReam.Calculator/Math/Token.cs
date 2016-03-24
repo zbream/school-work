@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZReam.Calculator.RootAgent.Math
+namespace ZReam.Calculator.Math
 {
-    class Token
+    public class Token
     {
         public Token(TokenType type) : this(type, 0) { }
 
@@ -99,7 +99,7 @@ namespace ZReam.Calculator.RootAgent.Math
         }
     }
 
-    enum TokenType
+    public enum TokenType
     {
         TNumber,
         TEquals,

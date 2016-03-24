@@ -5,8 +5,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZReam.Calculator.RootAgent"
         mc:Ignorable="d"
-        Title="RootPresentation" Height="300" Width="300">
+        Title="RootPresentation" 
+        Width="500" MinWidth="500"
+        Height="336" MinHeight="336" MaxHeight="336">
     <Grid>
+        <Grid.Resources>
+            <Style x:Key="labelStyle" TargetType="Label">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         
+        <Grid x:Name="InputUI" Grid.Row="0">
+            <Label Style="{StaticResource labelStyle}">InputUI</Label>
+        </Grid>
+        <Separator Grid.Row="1" />
+        <Grid x:Name="OutputUI" Grid.Row="2">
+            <Label Style="{StaticResource labelStyle}">OutputUI</Label>
+        </Grid>
     </Grid>
 </Window>

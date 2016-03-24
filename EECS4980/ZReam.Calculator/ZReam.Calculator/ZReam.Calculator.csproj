@@ -41,6 +41,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -59,12 +60,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="RootAgent\Math\AST.cs" />
-    <Compile Include="RootAgent\Math\ASTNode.cs" />
-    <Compile Include="RootAgent\Math\ASTParser.cs" />
-    <Compile Include="RootAgent\Math\ParseException.cs" />
-    <Compile Include="RootAgent\Math\Token.cs" />
-    <Compile Include="RootAgent\Math\Tokenizer.cs" />
+    <Compile Include="OutputAgent\Contracts\IOutputAbstraction.cs" />
+    <Compile Include="OutputAgent\Contracts\IOutputController.cs" />
+    <Compile Include="OutputAgent\Contracts\IOutputPresentation.cs" />
+    <Compile Include="OutputAgent\OutputAbstraction.cs" />
+    <Compile Include="OutputAgent\OutputController.cs" />
+    <Compile Include="OutputAgent\OutputPresentation.xaml.cs">
+      <DependentUpon>OutputPresentation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RootAgent\Contracts\IRootAbstraction.cs" />
+    <Compile Include="RootAgent\Contracts\IRootController.cs" />
+    <Compile Include="RootAgent\Contracts\IRootPresentation.cs" />
+    <Compile Include="Math\AST.cs" />
+    <Compile Include="Math\ASTNode.cs" />
+    <Compile Include="Math\ASTParser.cs" />
+    <Compile Include="Math\ParseException.cs" />
+    <Compile Include="Math\Token.cs" />
+    <Compile Include="Math\Tokenizer.cs" />
     <Compile Include="RootAgent\RootAbstraction.cs" />
     <Compile Include="RootAgent\RootController.cs" />
     <Compile Include="RootAgent\RootPresentation.xaml.cs">
@@ -74,6 +86,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="OutputAgent\OutputPresentation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RootAgent\RootPresentation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -106,7 +122,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="InputAgent\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

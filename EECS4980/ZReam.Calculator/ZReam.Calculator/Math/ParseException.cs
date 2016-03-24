@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZReam.Calculator.RootAgent.Math
+namespace ZReam.Calculator.Math
 {
     [Serializable]
     public class ParseException : Exception
