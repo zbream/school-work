@@ -18,7 +18,7 @@ namespace ZReam.Calculator.RootAgent.Math
             // a minus is...
             // binary: follows operand or right parenthesis
             // unary: follows operator or left parenthesis
-            bool isMinusUnary = false;
+            bool isMinusUnary = true;
 
             // parse each character
             int i = 0;

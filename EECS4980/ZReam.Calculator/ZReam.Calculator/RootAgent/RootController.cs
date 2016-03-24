@@ -14,7 +14,8 @@ namespace ZReam.Calculator.RootAgent
             RootPresentation p = new RootPresentation();
             p.Show();
 
-            IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("(234---43)*-6=");
+            IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("-(234----43)*-6=");
+            Math.ASTNode tree = Math.ASTParser.ParseTree(tokens);
             Console.ReadKey(true);
         }
     }

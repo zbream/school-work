@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ZReam.Calculator.RootAgent.Math
 {
-    struct Token
+    class Token
     {
         public Token(TokenType type) : this(type, 0) { }
 
@@ -49,7 +49,7 @@ namespace ZReam.Calculator.RootAgent.Math
                 case TokenType.TSubtract:
                     return 2;
                 default:
-                    throw new Exception("Not an operator.");
+                    throw new ParseException("Not an operator.");
             }
         }
 
@@ -57,11 +57,18 @@ namespace ZReam.Calculator.RootAgent.Math
         {
             if (IsOperator())
             {
-                return (Type == TokenType.TExponent);
+                switch (Type)
+                {
+                    case TokenType.TExponent:
+                    case TokenType.TNegative:
+                        return true;
+                    default:
+                        return false;
+                }
             }
             else
             {
-                throw new Exception("Not an operator.");
+                throw new ParseException("Not an operator.");
             }            
         }
 

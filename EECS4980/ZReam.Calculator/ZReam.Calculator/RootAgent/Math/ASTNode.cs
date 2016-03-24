@@ -20,5 +20,10 @@ namespace ZReam.Calculator.RootAgent.Math
         public ASTNode Left { get; }
 
         public ASTNode Right { get; }
+
+        public override string ToString()
+        {
+            return Token.ToString();
+        }
     }
 }
