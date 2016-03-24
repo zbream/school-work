@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="RootAgent\Math\AST.cs" />
     <Compile Include="RootAgent\Math\ASTNode.cs" />
     <Compile Include="RootAgent\Math\ASTParser.cs" />
     <Compile Include="RootAgent\Math\ParseException.cs" />

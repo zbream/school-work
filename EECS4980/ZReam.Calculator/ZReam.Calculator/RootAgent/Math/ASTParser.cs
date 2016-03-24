@@ -8,9 +8,9 @@ namespace ZReam.Calculator.RootAgent.Math
 {
     class ASTParser
     {
-        public static ASTNode ParseTree(IEnumerable<Token> tokens)
+        public static AST ParseTree(IEnumerable<Token> tokens)
         {
-            return new ASTParser().parse(tokens);
+            return new AST(new ASTParser().parse(tokens));
         }
 
         private ASTParser() { }
