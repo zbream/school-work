@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Markup;
 
-namespace ZReam.Calculator
+namespace ZReam.Calculator.Converters
 {
     public class BaseConverter : MarkupExtension
     {

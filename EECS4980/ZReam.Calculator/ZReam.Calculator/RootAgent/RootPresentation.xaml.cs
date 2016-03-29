@@ -33,7 +33,7 @@ namespace ZReam.Calculator.RootAgent
             Application.Current.Shutdown(0);
         }
 
-        public void ShowInterface()
+        public void ShowUI()
         {
             this.Show();
         }

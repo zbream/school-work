@@ -60,7 +60,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BaseConverter.cs" />
+    <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Converters\BoolToOnOffConverter.cs" />
+    <Compile Include="Converters\InverseBoolToVisibilityConverter.cs" />
+    <Compile Include="InputAgent\Contracts\IInputAbstraction.cs" />
+    <Compile Include="InputAgent\Contracts\IInputController.cs" />
+    <Compile Include="InputAgent\Contracts\IInputPresentation.cs" />
+    <Compile Include="InputAgent\InputAbstraction.cs" />
+    <Compile Include="InputAgent\InputController.cs" />
+    <Compile Include="InputAgent\InputPresentation.xaml.cs">
+      <DependentUpon>InputPresentation.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OutputAgent\Contracts\IOutputAbstraction.cs" />
     <Compile Include="OutputAgent\Contracts\IOutputController.cs" />
     <Compile Include="OutputAgent\Contracts\IOutputPresentation.cs" />
@@ -87,6 +97,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="InputAgent\InputPresentation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OutputAgent\OutputPresentation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -123,9 +137,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="InputAgent\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

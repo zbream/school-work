@@ -7,41 +7,30 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Input;
+using ZReam.Calculator.InputAgent.Contracts;
 
-using ZReam.Calculator.Math;
-using ZReam.Calculator.OutputAgent.Contracts;
-
-namespace ZReam.Calculator.OutputAgent
+namespace ZReam.Calculator.InputAgent
 {
-    class OutputAbstraction : IOutputAbstraction
+    class InputAbstraction : IInputAbstraction
     {
-        private AST currentOutput;
-        public AST CurrentOutput
+        public InputAbstraction(Action equalsAction)
         {
-            get
-            {
-                return currentOutput;
-            }
-            set
-            {
-                currentOutput = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CurrentOutputTEX));
-            }
+            EqualsCommand = new EqualsCommand(equalsAction);
         }
 
-        public string CurrentOutputTEX
+        private string currentInputString;
+        public string CurrentInputString
         {
             get
             {
-                if (CurrentOutput != null)
-                {
-                    return CurrentOutput.RenderOutputTEX();
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                return currentInputString;
+            }
+
+            set
+            {
+                currentInputString = value;
+                OnPropertyChanged();
             }
         }
 
@@ -59,10 +48,33 @@ namespace ZReam.Calculator.OutputAgent
             }
         }
 
+        public EqualsCommand EqualsCommand { get; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    class EqualsCommand : ICommand
+    {
+        private Action equalsAction;
+
+        public EqualsCommand(Action equalsAction)
+        {
+            this.equalsAction = equalsAction;
+        }
+
+        public void Execute(object parameter)
+        {
+            equalsAction();
+        }
+
+        public event EventHandler CanExecuteChanged;
+        public bool CanExecute(object parameter)
+        {
+            return true;
         }
     }
 }

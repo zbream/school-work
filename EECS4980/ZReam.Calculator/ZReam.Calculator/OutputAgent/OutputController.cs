@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+
 using ZReam.Calculator.Math;
 using ZReam.Calculator.OutputAgent.Contracts;
 using ZReam.Calculator.RootAgent.Contracts;
-
 
 namespace ZReam.Calculator.OutputAgent
 {
@@ -21,13 +21,11 @@ namespace ZReam.Calculator.OutputAgent
         public OutputController(IRootController root)
         {
             this.root = root;
-
+            
             // initialize this agent
             abstraction = new OutputAbstraction();
             presentation = new OutputPresentation();
             presentation.GetUI().DataContext = abstraction;
-
-            abstraction.IsSpeechEnabled = true;    
         }
 
         public UserControl GetUI()
