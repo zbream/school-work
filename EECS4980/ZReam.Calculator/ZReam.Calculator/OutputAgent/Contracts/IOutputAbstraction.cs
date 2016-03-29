@@ -11,5 +11,7 @@ namespace ZReam.Calculator.OutputAgent.Contracts
     interface IOutputAbstraction
     {
         AST CurrentOutput { get; set; }
+
+        bool IsSpeechEnabled { get; set; }
     }
 }

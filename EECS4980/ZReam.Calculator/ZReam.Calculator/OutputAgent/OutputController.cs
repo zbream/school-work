@@ -23,8 +23,11 @@ namespace ZReam.Calculator.OutputAgent
             this.root = root;
 
             // initialize this agent
-            presentation = new OutputPresentation();
             abstraction = new OutputAbstraction();
+            presentation = new OutputPresentation();
+            presentation.GetUI().DataContext = abstraction;
+
+            abstraction.IsSpeechEnabled = true;    
         }
 
         public UserControl GetUI()
@@ -35,21 +38,16 @@ namespace ZReam.Calculator.OutputAgent
         public void UpdateOutput(AST syntaxTree)
         {
             abstraction.CurrentOutput = syntaxTree;
-
-            if (syntaxTree != null)
-            {
-                presentation.OutputTEX(syntaxTree.RenderOutputTEX());
-                presentation.OutputSpeech(syntaxTree.RenderOutputSpeech());
-            }
+            RepeatSpeech();
         }
 
-        public void RepeatOutput()
+        public void RepeatSpeech()
         {
             AST syntaxTree = abstraction.CurrentOutput;
 
-            if (syntaxTree != null)
+            if (syntaxTree != null && abstraction.IsSpeechEnabled)
             {
-                presentation.OutputSpeech(syntaxTree.RenderOutputSpeech());
+                presentation.PlaySpeech(syntaxTree.RenderOutputSpeech());
             }
         }
     }

@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseConverter.cs" />
     <Compile Include="OutputAgent\Contracts\IOutputAbstraction.cs" />
     <Compile Include="OutputAgent\Contracts\IOutputController.cs" />
     <Compile Include="OutputAgent\Contracts\IOutputPresentation.cs" />

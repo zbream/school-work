@@ -37,23 +37,20 @@ namespace ZReam.Calculator.OutputAgent
             return this;
         }
 
-        public void OutputTEX(string tex)
+        public void PlaySpeech(string text)
         {
-            TEX.Text = tex;
+            StopSpeech();
+            synthesizer.SpeakAsync(text);
         }
 
-        public void OutputSpeech(string text)
-        {
-            if (Speech.IsChecked.Value)
-            {
-                synthesizer.SpeakAsyncCancelAll();
-                synthesizer.SpeakAsync(text);
-            }
-        }
-
-        private void Speech_Unchecked(object sender, RoutedEventArgs e)
+        public void StopSpeech()
         {
             synthesizer.SpeakAsyncCancelAll();
+        }
+
+        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            StopSpeech();
         }
     }
 }

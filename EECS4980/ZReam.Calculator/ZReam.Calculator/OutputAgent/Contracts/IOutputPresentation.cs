@@ -13,8 +13,8 @@ namespace ZReam.Calculator.OutputAgent.Contracts
     {
         UserControl GetUI();
 
-        void OutputTEX(string tex);
+        void PlaySpeech(string text);
 
-        void OutputSpeech(string text);
+        void StopSpeech();
     }
 }

@@ -15,6 +15,6 @@ namespace ZReam.Calculator.OutputAgent.Contracts
 
         void UpdateOutput(AST syntaxTree);
 
-        void RepeatOutput();
+        void RepeatSpeech();
     }
 }

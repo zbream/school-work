@@ -29,11 +29,9 @@ namespace ZReam.Calculator.RootAgent
             presentation.SetOutputUI(output.GetUI());
 
             // do math example
-            IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("-(5*7)*3^2");
+            //IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("-(5+7)*3^2");
+            IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("(5+7)*(3+2)");
             Math.AST tree = Math.ASTParser.ParseTree(tokens);
-            long result = tree.Result();
-            string TeX = tree.RenderOutputTEX();
-            string Speech = tree.RenderOutputSpeech();
 
             // show the window
             presentation.ShowInterface();
