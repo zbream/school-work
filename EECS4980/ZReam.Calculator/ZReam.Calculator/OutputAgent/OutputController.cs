@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-using ZReam.Calculator.Math;
 using ZReam.Calculator.OutputAgent.Contracts;
 using ZReam.Calculator.RootAgent.Contracts;
 
@@ -17,6 +17,8 @@ namespace ZReam.Calculator.OutputAgent
         IOutputAbstraction abstraction;
 
         IRootController root;
+
+        private SpeechSynthesizer speechSynthesizer;
         
         public OutputController(IRootController root)
         {
@@ -26,6 +28,8 @@ namespace ZReam.Calculator.OutputAgent
             abstraction = new OutputAbstraction();
             presentation = new OutputPresentation();
             presentation.GetUI().DataContext = abstraction;
+
+            InitializeSpeechSynthesis();
         }
 
         public UserControl GetUI()
@@ -33,20 +37,49 @@ namespace ZReam.Calculator.OutputAgent
             return presentation.GetUI();
         }
 
-        public void UpdateOutput(AST syntaxTree)
+        public void UpdateOutput(string outputVisible, string outputAudible)
         {
-            abstraction.CurrentOutput = syntaxTree;
+            abstraction.CurrentOutputVisible = outputVisible;
+            abstraction.CurrentOutputAudible = outputAudible;
             RepeatSpeech();
         }
 
         public void RepeatSpeech()
         {
-            AST syntaxTree = abstraction.CurrentOutput;
-
-            if (syntaxTree != null && abstraction.IsSpeechEnabled)
+            if (abstraction.IsSpeechEnabled && !string.IsNullOrWhiteSpace(abstraction.CurrentOutputAudible))
             {
-                presentation.PlaySpeech(syntaxTree.RenderOutputSpeech());
+                PlaySpeech(abstraction.CurrentOutputAudible);
             }
+        }
+
+        private void InitializeSpeechSynthesis()
+        {
+            speechSynthesizer = new SpeechSynthesizer();
+
+            // wire necessary events
+            abstraction.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName.Equals(nameof(abstraction.IsSpeechEnabled))) SpeechEnabledChanged();
+            };
+        }
+
+        private void SpeechEnabledChanged()
+        {
+            if (!abstraction.IsSpeechEnabled)
+            {
+                StopSpeech();
+            }
+        }
+
+        private void PlaySpeech(string text)
+        {
+            StopSpeech();
+            speechSynthesizer.SpeakAsync(text);
+        }
+
+        private void StopSpeech()
+        {
+            speechSynthesizer.SpeakAsyncCancelAll();
         }
     }
 }

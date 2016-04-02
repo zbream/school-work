@@ -20,6 +20,8 @@ namespace ZReam.Calculator.InputAgent
 
         IRootController root;
 
+        private SpeechRecognitionEngine speechRecognition;
+
         public InputController(IRootController root)
         {
             this.root = root;
@@ -41,9 +43,7 @@ namespace ZReam.Calculator.InputAgent
         {
             root.NewInput(abstraction.CurrentInputString);
         }
-
-        private SpeechRecognitionEngine speechRecognition;
-
+        
         private void InitializeSpeechRecognition()
         {
             speechRecognition = new SpeechRecognitionEngine();
@@ -59,10 +59,13 @@ namespace ZReam.Calculator.InputAgent
             speechRecognition.LoadGrammar(math);
 
             // wire necessary events
-            abstraction.PropertyChanged += (sender, e) => { if (e.PropertyName.Equals(nameof(abstraction.IsSpeechEnabled))) SpeechEnabledChanged(); };
             speechRecognition.SpeechRecognized += SpeechRecognition_SpeechRecognized;
             speechRecognition.SpeechHypothesized += SpeechRecognition_SpeechHypothesized;
             speechRecognition.SpeechRecognitionRejected += SpeechRecognition_SpeechRecognitionRejected;
+            abstraction.PropertyChanged += (sender, e) => 
+            {
+                if (e.PropertyName.Equals(nameof(abstraction.IsSpeechEnabled))) SpeechEnabledChanged();
+            };
 
             SpeechEnabledChanged();
         }
@@ -76,6 +79,7 @@ namespace ZReam.Calculator.InputAgent
             else
             {
                 speechRecognition.RecognizeAsyncCancel();
+                abstraction.CurrentInputString = string.Empty;
             }
         }
 
@@ -94,7 +98,5 @@ namespace ZReam.Calculator.InputAgent
             abstraction.CurrentInputString = e.Result.Semantics.Value.ToString();
             SubmitInput();
         }
-
-        
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,34 +22,14 @@ namespace ZReam.Calculator.OutputAgent
     /// </summary>
     public partial class OutputPresentation : UserControl, IOutputPresentation
     {
-        SpeechSynthesizer synthesizer;
-
         public OutputPresentation()
         {
             InitializeComponent();
-
-            synthesizer = new SpeechSynthesizer();
         }
 
         public UserControl GetUI()
         {
             return this;
-        }
-
-        public void PlaySpeech(string text)
-        {
-            StopSpeech();
-            synthesizer.SpeakAsync(text);
-        }
-
-        public void StopSpeech()
-        {
-            synthesizer.SpeakAsyncCancelAll();
-        }
-
-        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-            StopSpeech();
         }
     }
 }

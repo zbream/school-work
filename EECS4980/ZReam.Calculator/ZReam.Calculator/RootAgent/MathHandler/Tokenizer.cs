@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ZReam.Calculator.Math
+namespace ZReam.Calculator.RootAgent.MathHandler
 {
     static class Tokenizer
     {
@@ -78,7 +78,7 @@ namespace ZReam.Calculator.Math
                     case ' ':
                         break;
                     default:
-                        throw new ParseException(string.Format("Invalid character in input, '{0}'.", input[i]));
+                        throw new ParseException(string.Format("Invalid character, '{0}'.", input[i]));
                 }
 
                 // next character

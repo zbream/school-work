@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZReam.Calculator.Math
+namespace ZReam.Calculator.RootAgent.MathHandler
 {
     public class AST
     {
@@ -46,7 +46,7 @@ namespace ZReam.Calculator.Math
             switch(node.Token.Type)
             {
                 case TokenType.TExponent:
-                    return (long)System.Math.Pow(getValue(node.Left), getValue(node.Right));
+                    return (long)Math.Pow(getValue(node.Left), getValue(node.Right));
                 case TokenType.TNegative:
                     return (-1 * getValue(node.Left));
                 case TokenType.TMultiply:

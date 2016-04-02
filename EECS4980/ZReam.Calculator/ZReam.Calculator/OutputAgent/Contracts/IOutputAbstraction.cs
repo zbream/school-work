@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel;
 
-using ZReam.Calculator.Math;
-
 namespace ZReam.Calculator.OutputAgent.Contracts
 {
     interface IOutputAbstraction : INotifyPropertyChanged
     {
-        AST CurrentOutput { get; set; }
+        string CurrentOutputVisible { get; set; }
 
-        string CurrentOutputTEX { get; }
+        string CurrentOutputAudible { get; set; }
 
         bool IsSpeechEnabled { get; set; }
     }

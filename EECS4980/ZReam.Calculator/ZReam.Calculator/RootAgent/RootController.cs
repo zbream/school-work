@@ -35,22 +35,45 @@ namespace ZReam.Calculator.RootAgent
             output = new OutputController(this);
             presentation.SetOutputUI(output.GetUI());
 
-            // do math example
-            //IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("-(5+7)*3^2");
-            //IEnumerable<Math.Token> tokens = Math.Tokenizer.FromString("(5+7)*(3+2)");
-            //Math.AST tree = Math.ASTParser.ParseTree(tokens);
-
             // show the window
             presentation.ShowUI();
-            //output.UpdateOutput(tree);
         }
 
         public void NewInput(string inputString)
         {
-            var tokens = Math.Tokenizer.FromString(inputString);
-            var tree = Math.ASTParser.ParseTree(tokens);
+            string outputVisible, outputAudible;
 
-            output.UpdateOutput(tree);
+            try
+            {
+                var tokens = MathHandler.Tokenizer.FromString(inputString);
+                var tree = MathHandler.ASTParser.ParseTree(tokens);
+
+                outputVisible = tree.RenderOutputTEX();
+                outputAudible = tree.RenderOutputSpeech();
+            }
+            catch (MathHandler.ParseException)
+            {
+                outputVisible = "Parse Error: invalid grammar";
+                outputAudible = "Parsing error, invalid grammar";
+            }
+            catch (InvalidOperationException)
+            {
+                // probably a stack error, which means invalid operator use
+                outputVisible = "Parse Error: invalid grammar";
+                outputAudible = "Parsing error, invalid grammar";
+            }
+            catch (OverflowException)
+            {
+                outputVisible = "Math Error: overflow";
+                outputAudible = "Math error, overflow";
+            }
+
+            output.UpdateOutput(outputVisible, outputAudible);
+        }
+
+        public void RepeatSpeech()
+        {
+            output.RepeatSpeech();
         }
     }
 }

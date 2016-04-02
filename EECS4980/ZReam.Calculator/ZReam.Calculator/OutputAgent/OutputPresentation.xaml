@@ -21,7 +21,7 @@
 
             <ToggleButton IsChecked="{Binding IsSpeechEnabled, Mode=TwoWay}"
                           Grid.Row="1" Grid.Column="0"  Width="75" Height="75" 
-                          FontSize="16" Unchecked="ToggleButton_Unchecked">
+                          FontSize="16">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" >
                     <Label Padding="0" HorizontalContentAlignment="Center">Speech</Label>
                     <Label Padding="0" HorizontalContentAlignment="Center" 
@@ -29,11 +29,11 @@
                 </StackPanel>
             </ToggleButton>
 
-            <TextBox Text="{Binding CurrentOutputTEX, Mode=OneWay}"
+            <TextBox Text="{Binding CurrentOutputVisible, Mode=OneWay}"
                      Grid.Row="1" Grid.Column="1"
                      TextAlignment="Center" VerticalContentAlignment="Center"
                      FontFamily="Lucida Console" FontSize="16"
-                     IsReadOnly="True" />
+                     IsReadOnly="True" TextWrapping="Wrap" />
 
         </Grid>
     </GroupBox>

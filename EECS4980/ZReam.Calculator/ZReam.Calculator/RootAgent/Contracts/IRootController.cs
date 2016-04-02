@@ -3,5 +3,7 @@
     interface IRootController
     {
         void NewInput(string inputString);
+
+        void RepeatSpeech();
     }
 }

@@ -8,40 +8,37 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-using ZReam.Calculator.Math;
 using ZReam.Calculator.OutputAgent.Contracts;
 
 namespace ZReam.Calculator.OutputAgent
 {
     class OutputAbstraction : IOutputAbstraction
     {
-        private AST currentOutput;
-        public AST CurrentOutput
+        private string currentOutputVisible;
+        public string CurrentOutputVisible
         {
             get
             {
-                return currentOutput;
+                return currentOutputVisible;
             }
             set
             {
-                currentOutput = value;
+                currentOutputVisible = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(CurrentOutputTEX));
             }
         }
 
-        public string CurrentOutputTEX
+        private string currentOutputAudible;
+        public string CurrentOutputAudible
         {
             get
             {
-                if (CurrentOutput != null)
-                {
-                    return CurrentOutput.RenderOutputTEX();
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                return currentOutputAudible;
+            }
+            set
+            {
+                currentOutputAudible = value;
+                OnPropertyChanged();
             }
         }
 

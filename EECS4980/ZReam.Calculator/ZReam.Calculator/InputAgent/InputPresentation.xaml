@@ -30,7 +30,7 @@
                 </StackPanel>
             </ToggleButton>
             
-            <TextBox Text="{Binding CurrentInputString, Mode=TwoWay}"
+            <TextBox Text="{Binding CurrentInputString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Grid.Row="1" Grid.Column="1"
                      TextAlignment="Center" VerticalContentAlignment="Center"
                      FontFamily="Lucida Console" FontSize="16" TextWrapping="Wrap"
