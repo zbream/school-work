@@ -63,6 +63,7 @@
     <Compile Include="Converters\BaseConverter.cs" />
     <Compile Include="Converters\BoolToOnOffConverter.cs" />
     <Compile Include="Converters\InverseBoolToVisibilityConverter.cs" />
+    <Compile Include="Grammars\EmbeddedGrammars.cs" />
     <Compile Include="InputAgent\Contracts\IInputAbstraction.cs" />
     <Compile Include="InputAgent\Contracts\IInputController.cs" />
     <Compile Include="InputAgent\Contracts\IInputPresentation.cs" />
@@ -128,6 +129,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Grammars\Math.cfg" />
+    <EmbeddedResource Include="Grammars\Math.grxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

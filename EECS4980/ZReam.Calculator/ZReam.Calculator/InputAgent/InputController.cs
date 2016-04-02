@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Text;
@@ -47,10 +48,14 @@ namespace ZReam.Calculator.InputAgent
         {
             speechRecognition = new SpeechRecognitionEngine();
             speechRecognition.SetInputToDefaultAudioDevice();
-            //recognition.SetInputToWaveFile(@"D:\Users\Zack\Desktop\t.wav");
+            //speechRecognition.SetInputToWaveFile(@"D:\Users\Zack\Desktop\t.wav");
 
             // math grammar
-            Grammar math = new Grammar(@"D:\Users\Zack\Desktop\test4.xml");
+            Grammar math;
+            using (Stream stream = Grammars.EmbeddedGrammars.MathCompiled)
+            {
+                math = new Grammar(stream);
+            }
             speechRecognition.LoadGrammar(math);
 
             // wire necessary events
