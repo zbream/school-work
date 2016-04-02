@@ -6,6 +6,8 @@ namespace ZReam.Calculator.OutputAgent.Contracts
     {
         UserControl GetUI();
 
+        void ToggleSpeech(bool enable);
+
         void UpdateOutput(string outputVisible, string outputAudible);
 
         void RepeatSpeech();

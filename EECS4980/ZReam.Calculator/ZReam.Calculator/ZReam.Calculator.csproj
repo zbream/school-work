@@ -131,6 +131,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Grammars\Math.cfg" />
     <EmbeddedResource Include="Grammars\Math.grxml" />
+    <EmbeddedResource Include="Grammars\Commands.grxml" />
+    <EmbeddedResource Include="Grammars\Commands.cfg" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -7,6 +7,8 @@ namespace ZReam.Calculator.Grammars
     {
         private const string MATH_RAW = "ZReam.Calculator.Grammars.Math.grxml";
         private const string MATH_COMPILED = "ZReam.Calculator.Grammars.Math.cfg";
+        private const string COMMANDS_RAW = "ZReam.Calculator.Grammars.Commands.grxml";
+        private const string COMMANDS_COMPILED = "ZReam.Calculator.Grammars.Commands.cfg";
 
         private static Stream GetEmbeddedResourceStream(string resourceName)
         {
@@ -29,5 +31,20 @@ namespace ZReam.Calculator.Grammars
             }
         }
 
+        public static Stream CommandsRaw
+        {
+            get
+            {
+                return GetEmbeddedResourceStream(COMMANDS_RAW);
+            }
+        }
+
+        public static Stream CommandsCompiled
+        {
+            get
+            {
+                return GetEmbeddedResourceStream(COMMANDS_COMPILED);
+            }
+        }
     }
 }

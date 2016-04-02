@@ -13,10 +13,9 @@ namespace ZReam.Calculator.OutputAgent
 {
     class OutputController : IOutputController
     {
-        IOutputPresentation presentation;
-        IOutputAbstraction abstraction;
-
-        IRootController root;
+        private IOutputPresentation presentation;
+        private IOutputAbstraction abstraction;
+        private IRootController root;
 
         private SpeechSynthesizer speechSynthesizer;
         
@@ -35,6 +34,11 @@ namespace ZReam.Calculator.OutputAgent
         public UserControl GetUI()
         {
             return presentation.GetUI();
+        }
+
+        public void ToggleSpeech(bool enable)
+        {
+            abstraction.IsSpeechEnabled = enable;
         }
 
         public void UpdateOutput(string outputVisible, string outputAudible)

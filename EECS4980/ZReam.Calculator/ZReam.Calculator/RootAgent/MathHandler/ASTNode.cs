@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ZReam.Calculator.RootAgent.MathHandler
+﻿namespace ZReam.Calculator.RootAgent.MathHandler
 {
-    public class ASTNode
+    class ASTNode
     {
         public ASTNode(Token token, ASTNode left, ASTNode right)
         {

@@ -26,11 +26,9 @@ namespace ZReam.Calculator.RootAgent
             InitializeComponent();
         }
 
-        protected override void OnClosed(EventArgs e)
+        public void RegisterOnClose(EventHandler handler)
         {
-            base.OnClosed(e);
-            
-            Application.Current.Shutdown(0);
+            Closed += handler;
         }
 
         public void ShowUI()

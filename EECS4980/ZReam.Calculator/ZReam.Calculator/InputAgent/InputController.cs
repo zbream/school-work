@@ -15,10 +15,9 @@ namespace ZReam.Calculator.InputAgent
 {
     class InputController : IInputController
     {
-        IInputPresentation presentation;
-        IInputAbstraction abstraction;
-
-        IRootController root;
+        private IInputPresentation presentation;
+        private IInputAbstraction abstraction;
+        private IRootController root;
 
         private SpeechRecognitionEngine speechRecognition;
 
@@ -39,6 +38,11 @@ namespace ZReam.Calculator.InputAgent
             return presentation.GetUI();
         }
 
+        public void ToggleSpeech(bool enable)
+        {
+            abstraction.IsSpeechEnabled = enable;
+        }
+
         private void SubmitInput()
         {
             root.NewInput(abstraction.CurrentInputString);
@@ -51,12 +55,18 @@ namespace ZReam.Calculator.InputAgent
             //speechRecognition.SetInputToWaveFile(@"D:\Users\Zack\Desktop\t.wav");
 
             // math grammar
-            Grammar math;
             using (Stream stream = Grammars.EmbeddedGrammars.MathCompiled)
             {
-                math = new Grammar(stream);
+                Grammar math = new Grammar(stream) { Name = "Math" };
+                speechRecognition.LoadGrammar(math);
             }
-            speechRecognition.LoadGrammar(math);
+
+            // commands grammar
+            using (Stream stream = Grammars.EmbeddedGrammars.CommandsCompiled)
+            {
+                Grammar commands = new Grammar(stream) { Name = "Commands" };
+                speechRecognition.LoadGrammar(commands);
+            }
 
             // wire necessary events
             speechRecognition.SpeechRecognized += SpeechRecognition_SpeechRecognized;
@@ -67,36 +77,88 @@ namespace ZReam.Calculator.InputAgent
                 if (e.PropertyName.Equals(nameof(abstraction.IsSpeechEnabled))) SpeechEnabledChanged();
             };
 
-            SpeechEnabledChanged();
+            speechRecognition.RecognizeAsync(RecognizeMode.Multiple);
         }
 
         private void SpeechEnabledChanged()
         {
-            if (abstraction.IsSpeechEnabled)
+            if (!abstraction.IsSpeechEnabled)
             {
-                speechRecognition.RecognizeAsync(RecognizeMode.Multiple);
-            }
-            else
-            {
-                speechRecognition.RecognizeAsyncCancel();
                 abstraction.CurrentInputString = string.Empty;
             }
         }
 
         private void SpeechRecognition_SpeechHypothesized(object sender, SpeechHypothesizedEventArgs e)
         {
-            abstraction.CurrentInputString = e.Result.Text;
+            if (abstraction.IsSpeechEnabled && e.Result.Grammar.Name.Equals("Math"))
+            {
+                if (e.Result.Grammar.Name.Equals("Math"))
+                {
+                    abstraction.CurrentInputString = e.Result.Text;
+                }
+                else
+                {
+                    abstraction.CurrentInputString = string.Empty;
+                }
+            }
         }
 
         private void SpeechRecognition_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
         {
-            abstraction.CurrentInputString = string.Empty;
+            if (abstraction.IsSpeechEnabled)
+            {
+                abstraction.CurrentInputString = string.Empty;
+            }
         }
 
         private void SpeechRecognition_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-            abstraction.CurrentInputString = e.Result.Semantics.Value.ToString();
-            SubmitInput();
+            if (abstraction.IsSpeechEnabled)
+            {
+                switch (e.Result.Grammar.Name)
+                {
+                    case "Math":
+                        abstraction.CurrentInputString = e.Result.Semantics.Value.ToString();
+                        SubmitInput();
+                        break;
+                    case "Commands":
+                        abstraction.CurrentInputString = string.Empty;
+                        switch (e.Result.Semantics["command"].Value.ToString())
+                        {
+                            case "repeat":
+                                root.RepeatSpeech();
+                                break;
+                            case "exit":
+                                root.Shutdown();
+                                break;
+                            case "mode":
+                                {
+                                    bool enable = (e.Result.Semantics["onoff"].Value.Equals("on"));
+                                    if (e.Result.Semantics["inout"].Value.Equals("in"))
+                                    {
+                                        root.ToggleSpeechInput(enable);
+                                    }
+                                    else
+                                    {
+                                        root.ToggleSpeechOutput(enable);
+                                    }
+                                }
+                                break;
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                // only allow enabling speech input
+                if (e.Result.Grammar.Name.Equals("Commands")
+                    && e.Result.Semantics["command"].Value.Equals("mode")
+                    && e.Result.Semantics["inout"].Value.Equals("in")
+                    && e.Result.Semantics["onoff"].Value.Equals("on"))
+                {
+                    root.ToggleSpeechInput(true);
+                }
+            }
         }
     }
 }

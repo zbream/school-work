@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ZReam.Calculator.RootAgent.MathHandler
 {
-    public class AST
+    class AST
     {
         private ASTNode root;
 
         public AST(ASTNode rootNode)
         {
             this.root = rootNode;
-        }
-
-        public long Result()
-        {
-            return (getValue(root));
         }
 
         public string RenderOutputTEX()
@@ -39,6 +30,11 @@ namespace ZReam.Calculator.RootAgent.MathHandler
             }
 
             return string.Format("{0} , equals {1}", getSpeech(root, null), resultString);
+        }
+
+        public long Result()
+        {
+            return (getValue(root));
         }
 
         private static long getValue(ASTNode node)

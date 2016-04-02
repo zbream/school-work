@@ -18,15 +18,13 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <Grid x:Name="InputUI" Grid.Row="0">
             <Label Style="{StaticResource labelStyle}">InputUI</Label>
         </Grid>
-        <Separator Grid.Row="1" />
-        <Grid x:Name="OutputUI" Grid.Row="2">
+        <Grid x:Name="OutputUI" Grid.Row="1">
             <Label Style="{StaticResource labelStyle}">OutputUI</Label>
         </Grid>
     </Grid>

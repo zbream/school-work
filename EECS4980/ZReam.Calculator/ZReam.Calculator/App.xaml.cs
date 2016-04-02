@@ -25,7 +25,7 @@ namespace ZReam.Calculator
                 Shutdown(0);
             }
 
-            new RootAgent.RootController().Initialize();
+            new RootAgent.RootController();
         }
     }
 }

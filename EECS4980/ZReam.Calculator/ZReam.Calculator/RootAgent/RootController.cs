@@ -17,11 +17,10 @@ namespace ZReam.Calculator.RootAgent
     {
         private IRootPresentation presentation;
         private IRootAbstraction abstraction;
-
         private IInputController input;
         private IOutputController output;
         
-        public void Initialize()
+        public RootController()
         {
             // initialize this agent
             presentation = new RootPresentation();
@@ -36,7 +35,23 @@ namespace ZReam.Calculator.RootAgent
             presentation.SetOutputUI(output.GetUI());
 
             // show the window
+            presentation.RegisterOnClose((sender, e) => { Shutdown(); });
             presentation.ShowUI();
+        }
+
+        public void Shutdown()
+        {
+            Application.Current.Shutdown(0);
+        }
+
+        public void ToggleSpeechInput(bool enable)
+        {
+            input.ToggleSpeech(enable);
+        }
+
+        public void ToggleSpeechOutput(bool enable)
+        {
+            output.ToggleSpeech(enable);
         }
 
         public void NewInput(string inputString)
