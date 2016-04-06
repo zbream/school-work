@@ -5,9 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZReam.Calculator.RootAgent"
         mc:Ignorable="d"
-        Title="RootPresentation" 
-        Width="500" MinWidth="500"
-        Height="336" MinHeight="336" MaxHeight="336">
+        Title="Speech Calculator 2016 - Zack Ream" 
+        Icon="/ZReam.Calculator;component/Resources/calc.ico"
+        Width="500" MinWidth="500" ResizeMode="CanResizeWithGrip"
+        Height="300" MinHeight="300" MaxHeight="300">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+            <GradientStop Color="WhiteSmoke" Offset="1"/>
+            <GradientStop Color="White"/>
+        </LinearGradientBrush>
+    </Window.Background>
     <Grid>
         <Grid.Resources>
             <Style x:Key="labelStyle" TargetType="Label">
@@ -18,13 +25,15 @@
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid x:Name="InputUI" Grid.Row="0">
             <Label Style="{StaticResource labelStyle}">InputUI</Label>
         </Grid>
-        <Grid x:Name="OutputUI" Grid.Row="1">
+        <Separator Grid.Row="1"/>
+        <Grid x:Name="OutputUI" Grid.Row="2">
             <Label Style="{StaticResource labelStyle}">OutputUI</Label>
         </Grid>
     </Grid>

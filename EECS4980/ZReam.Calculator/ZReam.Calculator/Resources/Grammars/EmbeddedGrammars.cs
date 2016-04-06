@@ -1,18 +1,19 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace ZReam.Calculator.Grammars
+namespace ZReam.Calculator.Resources.Grammars
 {
     public static class EmbeddedGrammars
     {
-        private const string MATH_RAW = "ZReam.Calculator.Grammars.Math.grxml";
-        private const string MATH_COMPILED = "ZReam.Calculator.Grammars.Math.cfg";
-        private const string COMMANDS_RAW = "ZReam.Calculator.Grammars.Commands.grxml";
-        private const string COMMANDS_COMPILED = "ZReam.Calculator.Grammars.Commands.cfg";
+        private const string MATH_RAW = "Math.grxml";
+        private const string MATH_COMPILED = "Math.cfg";
+        private const string COMMANDS_RAW = "Commands.grxml";
+        private const string COMMANDS_COMPILED = "Commands.cfg";
 
         private static Stream GetEmbeddedResourceStream(string resourceName)
         {
-            return Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            string fullName = typeof(EmbeddedGrammars).Namespace + "." + resourceName;
+            return Assembly.GetExecutingAssembly().GetManifestResourceStream(fullName);
         }
 
         public static Stream MathRaw

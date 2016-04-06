@@ -8,8 +8,8 @@
 
         void ToggleSpeechOutput(bool enable);
 
-        void NewInput(string inputString);
+        void Calculate(string inputString);
 
-        void RepeatSpeech();
+        void RepeatOutput();
     }
 }

@@ -18,7 +18,7 @@ namespace ZReam.Calculator.RootAgent.MathHandler
 
             // parse each character
             int i = 0;
-            while (i < input.Length)
+            while (i < input?.Length)
             {
                 switch (input[i])
                 {

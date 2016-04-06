@@ -15,6 +15,9 @@ namespace ZReam.Calculator.InputAgent
 {
     class InputController : IInputController
     {
+        private const string GRAMMAR_MATH = "Math";
+        private const string GRAMMAR_COMMANDS = "Commands";
+
         private IInputPresentation presentation;
         private IInputAbstraction abstraction;
         private IRootController root;
@@ -45,7 +48,7 @@ namespace ZReam.Calculator.InputAgent
 
         private void SubmitInput()
         {
-            root.NewInput(abstraction.CurrentInputString);
+            root.Calculate(abstraction.CurrentInputString);
         }
         
         private void InitializeSpeechRecognition()
@@ -55,16 +58,16 @@ namespace ZReam.Calculator.InputAgent
             //speechRecognition.SetInputToWaveFile(@"D:\Users\Zack\Desktop\t.wav");
 
             // math grammar
-            using (Stream stream = Grammars.EmbeddedGrammars.MathCompiled)
+            using (Stream stream = Resources.Grammars.EmbeddedGrammars.MathCompiled)
             {
-                Grammar math = new Grammar(stream) { Name = "Math" };
+                Grammar math = new Grammar(stream) { Name = GRAMMAR_MATH };
                 speechRecognition.LoadGrammar(math);
             }
 
             // commands grammar
-            using (Stream stream = Grammars.EmbeddedGrammars.CommandsCompiled)
+            using (Stream stream = Resources.Grammars.EmbeddedGrammars.CommandsCompiled)
             {
-                Grammar commands = new Grammar(stream) { Name = "Commands" };
+                Grammar commands = new Grammar(stream) { Name = GRAMMAR_COMMANDS };
                 speechRecognition.LoadGrammar(commands);
             }
 
@@ -90,9 +93,9 @@ namespace ZReam.Calculator.InputAgent
 
         private void SpeechRecognition_SpeechHypothesized(object sender, SpeechHypothesizedEventArgs e)
         {
-            if (abstraction.IsSpeechEnabled && e.Result.Grammar.Name.Equals("Math"))
+            if (abstraction.IsSpeechEnabled)
             {
-                if (e.Result.Grammar.Name.Equals("Math"))
+                if (e.Result.Grammar.Name.Equals(GRAMMAR_MATH))
                 {
                     abstraction.CurrentInputString = e.Result.Text;
                 }
@@ -117,16 +120,16 @@ namespace ZReam.Calculator.InputAgent
             {
                 switch (e.Result.Grammar.Name)
                 {
-                    case "Math":
+                    case GRAMMAR_MATH:
                         abstraction.CurrentInputString = e.Result.Semantics.Value.ToString();
                         SubmitInput();
                         break;
-                    case "Commands":
+                    case GRAMMAR_COMMANDS:
                         abstraction.CurrentInputString = string.Empty;
                         switch (e.Result.Semantics["command"].Value.ToString())
                         {
                             case "repeat":
-                                root.RepeatSpeech();
+                                root.RepeatOutput();
                                 break;
                             case "exit":
                                 root.Shutdown();
@@ -151,7 +154,7 @@ namespace ZReam.Calculator.InputAgent
             else
             {
                 // only allow enabling speech input
-                if (e.Result.Grammar.Name.Equals("Commands")
+                if (e.Result.Grammar.Name.Equals(GRAMMAR_COMMANDS)
                     && e.Result.Semantics["command"].Value.Equals("mode")
                     && e.Result.Semantics["inout"].Value.Equals("in")
                     && e.Result.Semantics["onoff"].Value.Equals("on"))

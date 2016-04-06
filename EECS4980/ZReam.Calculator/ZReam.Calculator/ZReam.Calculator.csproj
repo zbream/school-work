@@ -38,6 +38,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\calc.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -61,9 +64,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Converters\BoolToImageConverter.cs" />
     <Compile Include="Converters\BoolToOnOffConverter.cs" />
     <Compile Include="Converters\InverseBoolToVisibilityConverter.cs" />
-    <Compile Include="Grammars\EmbeddedGrammars.cs" />
+    <Compile Include="Resources\Grammars\EmbeddedGrammars.cs" />
     <Compile Include="InputAgent\Contracts\IInputAbstraction.cs" />
     <Compile Include="InputAgent\Contracts\IInputController.cs" />
     <Compile Include="InputAgent\Contracts\IInputPresentation.cs" />
@@ -129,10 +133,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Grammars\Math.cfg" />
-    <EmbeddedResource Include="Grammars\Math.grxml" />
-    <EmbeddedResource Include="Grammars\Commands.grxml" />
-    <EmbeddedResource Include="Grammars\Commands.cfg" />
+    <EmbeddedResource Include="Resources\Grammars\Math.cfg" />
+    <EmbeddedResource Include="Resources\Grammars\Math.grxml" />
+    <EmbeddedResource Include="Resources\Grammars\Commands.grxml" />
+    <EmbeddedResource Include="Resources\Grammars\Commands.cfg" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -142,7 +146,17 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\calc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_volume_off_black_48dp_1x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_mic_black_48dp_1x.png" />
+    <Resource Include="Resources\ic_mic_off_black_48dp_1x.png" />
+    <Resource Include="Resources\ic_volume_up_black_48dp_1x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

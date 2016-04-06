@@ -54,7 +54,7 @@ namespace ZReam.Calculator.RootAgent
             output.ToggleSpeech(enable);
         }
 
-        public void NewInput(string inputString)
+        public void Calculate(string inputString)
         {
             string outputVisible, outputAudible;
 
@@ -86,7 +86,7 @@ namespace ZReam.Calculator.RootAgent
             output.UpdateOutput(outputVisible, outputAudible);
         }
 
-        public void RepeatSpeech()
+        public void RepeatOutput()
         {
             output.RepeatSpeech();
         }
