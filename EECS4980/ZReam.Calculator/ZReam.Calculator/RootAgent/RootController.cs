@@ -69,18 +69,23 @@ namespace ZReam.Calculator.RootAgent
             catch (MathHandler.ParseException)
             {
                 outputVisible = "Parse Error: invalid grammar";
-                outputAudible = "Parsing error, invalid grammar";
+                outputAudible = "Invalid grammar detected";
             }
             catch (InvalidOperationException)
             {
                 // probably a stack error, which means invalid operator use
                 outputVisible = "Parse Error: invalid grammar";
-                outputAudible = "Parsing error, invalid grammar";
+                outputAudible = "Invalid grammar detected";
             }
             catch (OverflowException)
             {
                 outputVisible = "Math Error: overflow";
-                outputAudible = "Math error, overflow";
+                outputAudible = "Overflow";
+            }
+            catch (Exception)
+            {
+                outputVisible = "Unknown Error";
+                outputAudible = "Error";
             }
 
             output.UpdateOutput(outputVisible, outputAudible);
