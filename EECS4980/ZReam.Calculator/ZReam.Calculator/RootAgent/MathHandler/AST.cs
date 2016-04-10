@@ -19,7 +19,7 @@ namespace ZReam.Calculator.RootAgent.MathHandler
         public string RenderOutputSpeech()
         {
             string resultString;
-            long result = Result();
+            double result = Result();
             if (result < 0)
             {
                 resultString = "negative " + (-1 * result);
@@ -32,17 +32,17 @@ namespace ZReam.Calculator.RootAgent.MathHandler
             return string.Format("{0} , equals {1}", getSpeech(root, null), resultString);
         }
 
-        public long Result()
+        public double Result()
         {
             return (getValue(root));
         }
 
-        private static long getValue(ASTNode node)
+        private static double getValue(ASTNode node)
         {
             switch(node.Token.Type)
             {
                 case TokenType.TExponent:
-                    return (long)Math.Round(Math.Pow(getValue(node.Left), getValue(node.Right)), 0);
+                    return Math.Pow(getValue(node.Left), getValue(node.Right));
                 case TokenType.TNegative:
                     return (-1 * getValue(node.Left));
                 case TokenType.TMultiply:
