@@ -42,7 +42,7 @@ namespace ZReam.Calculator.RootAgent.MathHandler
             switch(node.Token.Type)
             {
                 case TokenType.TExponent:
-                    return (long)Math.Pow(getValue(node.Left), getValue(node.Right));
+                    return (long)Math.Round(Math.Pow(getValue(node.Left), getValue(node.Right)), 0);
                 case TokenType.TNegative:
                     return (-1 * getValue(node.Left));
                 case TokenType.TMultiply:

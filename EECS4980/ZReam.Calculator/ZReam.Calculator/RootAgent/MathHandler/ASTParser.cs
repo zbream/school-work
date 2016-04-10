@@ -13,10 +13,14 @@ namespace ZReam.Calculator.RootAgent.MathHandler
         private Stack<Token> operatorStack = new Stack<Token>();
         private Stack<ASTNode> outputStack = new Stack<ASTNode>();
 
+        private bool hasEquals = false;
+
         private ASTNode parse(IEnumerable<Token> tokens)
         {
             foreach (Token token in tokens)
             {
+                if (hasEquals) break;
+
                 switch (token.Type)
                 {
                     case TokenType.TNumber:
@@ -35,7 +39,8 @@ namespace ZReam.Calculator.RootAgent.MathHandler
                         }
                         else
                         {
-                            // handle equals
+                            // equals is the last character
+                            hasEquals = true;
                         }
                         break;
                 }

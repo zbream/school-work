@@ -87,6 +87,9 @@
     <Compile Include="RootAgent\Contracts\IRootAbstraction.cs" />
     <Compile Include="RootAgent\Contracts\IRootController.cs" />
     <Compile Include="RootAgent\Contracts\IRootPresentation.cs" />
+    <Compile Include="RootAgent\Dialogs\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RootAgent\MathHandler\AST.cs" />
     <Compile Include="RootAgent\MathHandler\ASTNode.cs" />
     <Compile Include="RootAgent\MathHandler\ASTParser.cs" />
@@ -107,6 +110,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="OutputAgent\OutputPresentation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RootAgent\Dialogs\AboutDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -134,7 +141,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Grammars\Math.cfg" />
-    <EmbeddedResource Include="Resources\Grammars\Math.grxml" />
+    <EmbeddedResource Include="Resources\Grammars\Math.grxml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Grammars\Commands.grxml" />
     <EmbeddedResource Include="Resources\Grammars\Commands.cfg" />
     <None Include="Properties\Settings.settings">

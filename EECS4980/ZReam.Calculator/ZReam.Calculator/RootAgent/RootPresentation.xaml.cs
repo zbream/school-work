@@ -55,6 +55,11 @@ namespace ZReam.Calculator.RootAgent
             base.OnSourceInitialized(e);
             WindowUtil.HideMaximizeButton(this);
         }
+
+        private void AboutClick(object sender, RoutedEventArgs e)
+        {
+            new Dialogs.AboutDialog() { Owner = this }.ShowDialog();
+        }
     }
 
     internal static class WindowUtil
