@@ -19,8 +19,17 @@ namespace ZReam.Calculator.RootAgent.MathHandler
         public string RenderOutputSpeech()
         {
             string resultString;
+
             double result = Result();
-            if (result < 0)
+            if (double.IsPositiveInfinity(result))
+            {
+                resultString = "infinity";
+            }
+            else if (double.IsNegativeInfinity(result))
+            {
+                resultString = "negative infinity";
+            }
+            else if (result < 0)
             {
                 resultString = "negative " + (-1 * result);
             }
