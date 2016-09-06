@@ -41,8 +41,35 @@ void setTriangle(float *raw, int iTriangle, Triangle triangle)
 	setPoint(raw, 3 * iTriangle + 2, triangle.p3);
 }
 
-// NOTE: ignores topRadius
-float *generateCone(float baseRadius, float height, float topRadius, int nbrOfSteps, int &nbrOfValues)
+//// CROSS-SECTION TRIANGLES
+//float *generateCone(float baseRadius, float height, float topRadius, int nbrOfSteps, int &nbrOfValues)
+//{
+//	// a triangle for each step
+//	int numTriangles = nbrOfSteps;
+//
+//	nbrOfValues = numTriangles * 3 * 3;
+//	float *points = new float[nbrOfValues];
+//
+//	// divide base into equal radians
+//	float radPerDivision = 2 * PI / nbrOfSteps;
+//
+//	// draw a triangle at each division
+//	Triangle tri;
+//	for (int i = 0; i < nbrOfSteps; ++i)
+//	{
+//		float rad = i * radPerDivision;
+//
+//		tri.p1.set(0, 0, 0);
+//		tri.p2.set(0, height, 0);
+//		tri.p3.set(cos(rad) * baseRadius, 0, sin(rad) * baseRadius);
+//
+//		setTriangle(points, i, tri);
+//	}
+//
+//	return points;
+//}
+
+float *generateStandardCone(float baseRadius, float height, int nbrOfSteps, int &nbrOfValues)
 {
 	// a triangle for each step
 	int numTriangles = nbrOfSteps;
@@ -53,18 +80,62 @@ float *generateCone(float baseRadius, float height, float topRadius, int nbrOfSt
 	// divide base into equal radians
 	float radPerDivision = 2 * PI / nbrOfSteps;
 
-	// draw a triangle at each division
+	// draw a triangle between each division
 	Triangle tri;
 	for (int i = 0; i < nbrOfSteps; ++i)
 	{
-		float rad = i * radPerDivision;
+		float rad0 = i * radPerDivision;
+		float rad1 = (i + 1) * radPerDivision;
 
-		tri.p1.set(0, 0, 0);
-		tri.p2.set(0, height, 0);
-		tri.p3.set(cos(rad) * baseRadius, 0, sin(rad) * baseRadius);
-
+		tri.p1.set(cos(rad0) * baseRadius, 0, sin(rad0) * baseRadius);
+		tri.p2.set(cos(rad1) * baseRadius, 0, sin(rad1) * baseRadius);
+		tri.p3.set(0, height, 0);
 		setTriangle(points, i, tri);
 	}
 
 	return points;
+}
+
+float *generateTruncatedCone(float baseRadius, float height, float topRadius, int nbrOfSteps, int &nbrOfValues)
+{
+	// two triangles for each step
+	int numTriangles = 2 * nbrOfSteps;
+
+	nbrOfValues = numTriangles * 3 * 3;
+	float *points = new float[nbrOfValues];
+
+	// divide base into equal radians
+	float radPerDivision = 2 * PI / nbrOfSteps;
+
+	// draw a plane (two triangles) between each division
+	Triangle tri;
+	for (int i = 0; i < nbrOfSteps; ++i)
+	{
+		float rad0 = i * radPerDivision;
+		float rad1 = (i + 1) * radPerDivision;
+
+		tri.p1.set(cos(rad0) * baseRadius, 0, sin(rad0) * baseRadius);
+		tri.p2.set(cos(rad1) * baseRadius, 0, sin(rad1) * baseRadius);
+		tri.p3.set(cos(rad0) * topRadius, height, sin(rad0) * topRadius);
+		setTriangle(points, 2 * i, tri);
+
+		tri.p1.set(cos(rad0) * topRadius, height, sin(rad0) * topRadius);
+		tri.p2.set(cos(rad1) * topRadius, height, sin(rad1) * topRadius);
+		tri.p3.set(cos(rad1) * baseRadius, 0, sin(rad1) * baseRadius);
+		setTriangle(points, 2 * i + 1, tri);
+	}
+
+	return points;
+}
+
+float *generateCone(float baseRadius, float height, float topRadius, int nbrOfSteps, int &nbrOfValues)
+{
+	if (topRadius == 0) 
+	{
+		return generateStandardCone(baseRadius, height, nbrOfSteps, nbrOfValues);
+	}
+	else
+	{
+		return generateTruncatedCone(baseRadius, height, topRadius, nbrOfSteps, nbrOfValues);
+	}
 }
