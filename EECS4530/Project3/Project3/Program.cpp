@@ -157,32 +157,38 @@ void keypress(unsigned char key, int x, int y) {
 	switch (key) {
 	case 'q':
 	case 'Q':
+		std::cout << "User => Quit" << std::endl;
 		exit(0);
 		break;
 	case '0':
 		light0On = !light0On;
+		std::cout << "User => Light0: " << (light0On ? "On" : "Off") << std::endl;
 		glUniform1f(light0OnLocation, light0On ? GL_TRUE : GL_FALSE);
 		glutPostRedisplay();
 		break;
 	case '1':
 		light1On = !light1On;
+		std::cout << "User => Light1: " << (light1On ? "On" : "Off") << std::endl;
 		glUniform1f(light1OnLocation, light1On ? GL_TRUE : GL_FALSE);
 		glutPostRedisplay();
 		break;
 	case '2':
 		light2On = !light2On;
+		std::cout << "User => Light2: " << (light2On ? "On" : "Off") << std::endl;
 		glUniform1f(light2OnLocation, light2On ? GL_TRUE : GL_FALSE);
 		glutPostRedisplay();
 		break;
 	case '3':
 		// material down
 		materialID = (materialID != 0 ? materialID - 1 : 23);
+		std::cout << "User => Material: " << materialID << std::endl;
 		glUniform1i(materialIDLocation, materialID);
 		glutPostRedisplay();
 		break;
 	case '4':
 		// material up
 		materialID = (materialID != 23 ? materialID + 1 : 0);
+		std::cout << "User => Material: " << materialID << std::endl;
 		glUniform1i(materialIDLocation, materialID);
 		glutPostRedisplay();
 		break;
@@ -193,15 +199,22 @@ void keypress(unsigned char key, int x, int y) {
 
 int main(int argCount, char *argValues[]) {
 	glutInit(&argCount, argValues);
-
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(500, 500);
-	glutCreateWindow("Interpolation - Project3 - Zack Ream");
-
 	glutInitContextVersion(3, 1);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
-	glewInit();
+	glutCreateWindow("Interpolation - Project3 - Zack Ream");
+
+	std::cout << "Initializing...";
+
+	if (glewInit()) {
+		std::cerr << "Unable to initialize GLEW." << std::endl;
+		exit(EXIT_FAILURE);
+	}
 	init();
+
+	std::cout << "Done." << std::endl;
+
 	glutKeyboardFunc(keypress);
 	glutDisplayFunc(display);
 	glutTimerFunc(1000 / 30, timer, 1);
