@@ -55,19 +55,4 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://zbream.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = DES\\DES.vcxproj
-		SccProjectName1 = DES
-		SccLocalPath1 = DES
-		SccProjectUniqueName2 = AES\\AES.vcxproj
-		SccProjectName2 = AES
-		SccLocalPath2 = AES
-		SccProjectUniqueName3 = Analysis\\Analysis.csproj
-		SccProjectName3 = Analysis
-		SccLocalPath3 = Analysis
-	EndGlobalSection
 EndGlobal
