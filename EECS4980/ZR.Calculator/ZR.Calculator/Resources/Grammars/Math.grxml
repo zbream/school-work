@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<grammar version="1.0" xml:lang="en-US" mode="voice" root="task" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
+	<rule id="task" scope="public">
+		<tag>rules.R = '';</tag>
+		<ruleref uri="#expr"/>
+		<item>equals</item>
+		<tag>rules.R += '=';</tag>
+		<tag>out = rules.R;</tag>
+	</rule>
+	
+	<rule id="expr">
+		<one-of>
+			<item>
+				<one-of>
+					<item>minus</item>
+					<item>negative</item>
+				</one-of>
+				<tag>rules.R += '-';</tag>
+				<ruleref uri="#expr"/>
+				<ruleref uri="#exprPRIME"/>
+			</item>
+			<item>
+				<ruleref uri="#term"/>
+				<ruleref uri="#exprPRIME"/>
+			</item>
+		</one-of>
+	</rule>
+	
+	<rule id="exprPRIME">
+		<item repeat="0-1">
+			<one-of>
+				<item>
+					<one-of>
+						<item>plus</item>
+						<item>add</item>
+					</one-of>
+					<tag>rules.R += '+';</tag>
+					<ruleref uri="#term"/>
+					<ruleref uri="#exprPRIME"/>
+				</item>
+				<item>
+					<one-of>
+						<item>minus</item>
+						<item>subtract</item>
+					</one-of>
+					<tag>rules.R += '-';</tag>
+					<ruleref uri="#term"/>
+					<ruleref uri="#exprPRIME"/>
+				</item>
+			</one-of>
+		</item>
+	</rule>
+	
+	<rule id="term">
+		<ruleref uri="#factor"/>
+		<ruleref uri="#termPRIME"/>
+	</rule>
+	
+	<rule id="termPRIME">
+		<item repeat="0-1">
+			<one-of>
+				<item>
+					<one-of>
+						<item>times</item>
+						<item>multiplied by</item>
+					</one-of>
+					<tag>rules.R += '*';</tag>
+					<ruleref uri="#factor"/>
+					<ruleref uri="#termPRIME"/>
+				</item>
+			</one-of>
+		</item>
+	</rule>
+	
+	<rule id="factor">
+		<ruleref uri="#value"/>
+		<ruleref uri="#factorPRIME"/>
+	</rule>
+	
+	<rule id="factorPRIME">
+		<item repeat="0-1">
+			<one-of>
+				<item>
+					<one-of>
+						<item>to the power of</item>
+						<item>to the</item>
+						<item>exponent</item>
+					</one-of>
+					<tag>rules.R += '^';</tag>
+					<ruleref uri="#value"/>
+					<ruleref uri="#factorPRIME"/>
+				</item>
+			</one-of>
+		</item>
+	</rule>
+	
+	<rule id="value">
+		<one-of>
+			<item>
+				<one-of>
+					<item>quantity</item>
+					<item>open parenthesis</item>
+					<item>open parentheses</item>
+				</one-of>
+				<tag>rules.R += '(';</tag>
+				<ruleref uri="#expr"/>
+				<one-of>
+					<item>end quantity</item>
+					<item>close parenthesis</item>
+					<item>close parentheses</item>
+				</one-of>
+				<tag>rules.R += ')';</tag>
+			</item>
+			<item>
+				<ruleref uri="#number"/>
+			</item>
+		</one-of>
+	</rule>
+	
+	<rule id="number">
+		<tag>out = 0;</tag>
+		<item repeat="1-">
+			<one-of>
+				<item>zero <tag>out *= 10; out += 0;</tag></item>
+				<item>one <tag>out *= 10; out += 1;</tag></item>
+				<item>two <tag>out *= 10; out += 2;</tag></item>
+				<item>three <tag>out *= 10; out += 3;</tag></item>
+				<item>four <tag>out *= 10; out += 4;</tag></item>
+				<item>five <tag>out *= 10; out += 5;</tag></item>
+				<item>six <tag>out *= 10; out += 6;</tag></item>
+				<item>seven <tag>out *= 10; out += 7;</tag></item>
+				<item>eight <tag>out *= 10; out += 8;</tag></item>
+				<item>nine <tag>out *= 10; out += 9;</tag></item>
+			</one-of>
+		</item>
+		<tag>rules.R += out;</tag>
+	</rule>
+</grammar>

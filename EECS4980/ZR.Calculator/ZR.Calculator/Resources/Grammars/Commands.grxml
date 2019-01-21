@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<grammar version="1.0" xml:lang="en-US" mode="voice" root="command" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
+  <rule id="command" scope="public">
+    <one-of>
+      <item>
+        <tag>out.command = 'repeat';</tag>
+        <item>repeat</item>
+        <item repeat="0-1">that</item>
+      </item>
+      
+      <item>
+        <tag>out.command = 'mode';</tag>
+        <one-of>
+          <item>disable <tag>out.onoff = 'off';</tag></item>
+          <item>enable <tag>out.onoff = 'on';</tag></item>
+        </one-of>
+        <item repeat="0-1">speech</item>
+        <one-of>
+          <item>input <tag>out.inout = 'in';</tag></item>
+          <item>output <tag>out.inout = 'out';</tag></item>
+        </one-of>
+      </item>
+
+      <item>
+        <tag>out.command = 'exit';</tag>
+        <one-of>
+          <item>exit</item>
+          <item>close</item>
+          <item>quit</item>
+        </one-of>
+        <item repeat="0-1">
+          <item repeat="0-1">the</item>
+          <item>program</item>
+        </item>
+      </item>
+    </one-of>
+  </rule>
+</grammar>
