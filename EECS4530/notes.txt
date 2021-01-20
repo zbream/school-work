@@ -1,0 +1,20 @@
+To configure a new project, Right-Click Project -> Properties
+
+Configuration
+All Configurations
+
+Platform
+All Platforms
+
+Configuration Properties -> C/C++ -> General -> Additional Include Directories
+$(ProjectDir)..\..\_libs\freeglut\include;$(ProjectDir)..\..\_libs\glew\include;%(AdditionalIncludeDirectories)
+
+Configuration Properties -> Linker -> General -> Additional Library Directories
+$(ProjectDir)..\..\_libs\freeglut\lib;$(ProjectDir)..\..\_libs\glew\lib\Release\Win32;%(AdditionalLibraryDirectories)
+
+Configuration Properties -> Linker -> Input -> Additional Dependencies
+freeglut.lib;glew32s.lib
+
+Configuration Properties -> Build Events -> Post-Build Event
+xcopy /y /d "$(ProjectDir)..\..\_libs\freeglut\bin\freeglut.dll" "$(TargetDir)"
+xcopy /y /d "$(ProjectDir)..\..\_libs\glew\bin\Release\Win32\glew32.dll" "$(TargetDir)"
